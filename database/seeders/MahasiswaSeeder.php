@@ -19,8 +19,6 @@ class MahasiswaSeeder extends Seeder
             'gender' => 'L',
             'phone' => '08123456789',
             'address' => 'Jl. Jend. Sudirman No. 123, Jakarta Pusat, Indonesia',
-            'prodi' => 'Teknik Informatika',
-            'fakultas' => 'Fakultas Teknik',
             'semester' => '5',
         ]);
     }

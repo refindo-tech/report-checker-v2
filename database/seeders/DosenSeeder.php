@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Dosen;
+use App\Models\Prodi;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,7 +14,7 @@ class DosenSeeder extends Seeder
      */
     public function run(): void
     {
-        Dosen::create([
+        Prodi::create([
             'user_id' => 2,
             'nip' => '123456789',
             'gender' => 'L',

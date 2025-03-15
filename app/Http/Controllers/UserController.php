@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('id_kampus', Auth::user()->id_kampus)->with('dosen', 'mahasiswa')->get();
+        $users = User::all();
 
         return view('user.index', compact('users'));
     }
