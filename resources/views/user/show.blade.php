@@ -32,17 +32,19 @@
                     </div>
                 </x-panel.tool-bar>
             </x-slot>
-            <x-slot name="tagpanel">
+            {{-- <x-slot name="tagpanel">
                 isi-tag-panel
-            </x-slot>
+            </x-slot> --}}
             <div class="card">
                 <div class="card-body">
                     <p><strong>Role:</strong>
                         @if ($user->roles->isNotEmpty())
                             @foreach ($user->roles as $role)
-                                @if ($role->name == 'Admin')
+                                @if ($role->name == 'AdminPT')
                                     <span class="badge bg-danger text-white">{{ $role->name }}</span>
-                                @elseif($role->name == 'Dosen')
+                                @elseif($role->name == 'SuperAdmin')
+                                    <span class="badge bg-danger text-white">{{ $role->name }}</span>
+                                @elseif($role->name == 'Prodi')
                                     <span class="badge bg-primary text-white">{{ $role->name }}</span>
                                 @else
                                     <span class="badge bg-success text-white">{{ $role->name }}</span>
@@ -63,18 +65,19 @@
                                 alt="{{ $user->name }}" style="max-width: 50px">
                         @endif
                     </p>
-                    @if ($user->dosen != null)
-                        <p><strong>NIP:</strong> {{ $user->dosen->nip }}</p>
-                        <p><strong>Gender:</strong> {{ $user->dosen->gender === 'L' ? 'Laki-Laki' : 'Perempuan' }}</p>
-                        <p><strong>Alamat:</strong> {{ $user->dosen->address }}</p>
-                        <p><strong>No HP:</strong> {{ $user->dosen->phone }}</p>
+                    @if ($user->prodi != null)
+                        <p><strong>NIP:</strong> {{ $user->prodi->nip ?? '-' }}</p>
+                        <p><strong>Gender:</strong>{{ $user->prodi ? ($user->prodi->gender === 'L' ? 'Laki-Laki' : 'Perempuan') : '-' }}
+                        </p>
+                        <p><strong>Alamat:</strong> {{ $user->prodi->address ?? '-' }}</p>
+                        <p><strong>No HP:</strong> {{ $user->prodi->phone ?? '-' }}</p>
                     @elseif($user->Mahasiswa != null)
-                        <p><strong>NIM:</strong> {{ $user->Mahasiswa->nim }}</p>
-                        <p><strong>Gender:</strong> {{ $user->Mahasiswa->gender === 'L' ? 'Laki-Laki' : 'Perempuan' }}</p>
-                        <p><strong>Alamat:</strong> {{ $user->Mahasiswa->address }}</p>
-                        <p><strong>No HP:</strong> {{ $user->Mahasiswa->phone }}</p>
-                        <p><strong>Prodi:</strong> {{ $user->Mahasiswa->prodi }}</p>
-                        <p><strong>Semester:</strong> {{ $user->Mahasiswa->semester }}</p>
+                        <p><strong>NIM:</strong> {{ $user->Mahasiswa->nim ?? '-' }}</p>
+                        <p><strong>Gender:</strong>
+                            {{ $user->Mahasiswa->gender === 'L' ? 'Laki-Laki' : 'Perempuan' ?? '-' }}</p>
+                        <p><strong>Alamat:</strong> {{ $user->Mahasiswa->address ?? '-' }}</p>
+                        <p><strong>No HP:</strong> {{ $user->Mahasiswa->phone ?? '-' }}</p>
+                        <p><strong>Semester:</strong> {{ $user->Mahasiswa->semester ?? '-' }}</p>
                     @endif
 
                     <a href="{{ route('user.edit', $user) }}" class="btn btn-primary">Edit</a>

@@ -31,6 +31,8 @@ Route::middleware(['permission:lihat-user'])->prefix('settings/user')->group(fun
     Route::get('/edit/{id}', [UserController::class, 'edit'])->middleware('permission:edit-user')->name('user.edit');
     Route::put('/{id}', [UserController::class, 'update'])->middleware('permission:edit-user')->name('user.update');
     Route::delete('/{id}', [UserController::class, 'destroy'])->middleware('permission:hapus-user')->name('user.destroy');
+    Route::get('/get-fakultas/{kampus_id}', [UserController::class, 'getFakultasByKampus'])->name('user.getFakultasByKampus');
+    Route::get('/get-prodi/{fakultas_id}', [UserController::class, 'getProdiByFakultas'])->name('user.getProdiByFakultas');
 });
 
 // ROLE

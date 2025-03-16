@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/master_profil', [MasterController::class, 'master_profil'])->name('master_profil');
 }); */
 //TOOLS
-Route::middleware(['auth', 'role:Super Admin', 'verified'])->prefix('tools')->group(function () {
+Route::middleware(['auth', 'role:SuperAdmin', 'verified'])->prefix('tools')->group(function () {
 
 
     Route::resource('app_fiturs', AppFiturController::class);
@@ -62,11 +62,13 @@ Route::middleware(['auth', 'role:Super Admin', 'verified'])->prefix('tools')->gr
 //Profil Admin
 // groups middleware
 Route::middleware('auth')->group(function () {
-    Route::middleware('role:Super Admin|Admin PT|Prodi|Mahasiswa')->prefix('settings/profile')->group(function () {
+    Route::middleware('role:SuperAdmin|AdminPT|Prodi|Mahasiswa')->prefix('settings/profile')->group(function () {
         Route::get('/profil', [MasterController::class, 'master_profil'])->name('profil_admin');
         Route::get('/profil/edit', [MasterController::class, 'master_profil_edit'])->name('profil_admin.edit');
         Route::put('/profil', [MasterController::class, 'master_profil_update'])->name('profil_admin.update');
         Route::put('/profil/password', [UserController::class, 'changePassword'])->name('profil_admin.password');
+        Route::get('/get-programstudi', [UserController::class, 'getProgramStudi'])->name('profil_admin.getProgramStudi');
+
 
     });
 });

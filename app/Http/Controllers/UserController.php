@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dosen;
+use App\Models\Fakultas;
 use App\Models\Kampus;
 use App\Models\Mahasiswa;
+use App\Models\Prodi;
+use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +26,12 @@ class UserController extends Controller
     public function create()
     {
         $kampus = Kampus::all();
-        return view('user.create', compact('kampus'));
+        $prodi = ProgramStudi::all();
+        $fakultas = Fakultas::all();
+        $fakultasRole = Fakultas::where('id_kampus', auth()->user()->id_kampus)->with('kampus')->get();
+        // dd($fakultasRole);
+        // $programStudi = ProgramStudi::where('id_fakultas', $fakultasRole->id)->with('fakultas.kampus')->get();
+        return view('user.create', compact('kampus', 'prodi', 'fakultas', 'fakultasRole'));
     }
 
     public function store(Request $request)
@@ -42,12 +50,13 @@ class UserController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        if ($request->role == 'Dosen') {
+        if ($request->role == 'Prodi') {
 
             // dd(request()->all());
             // Simpan data ke database
             $user = User::create([
                 'id_kampus' => $request->id_kampus,
+                'id_prodi' => $request->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
@@ -55,9 +64,9 @@ class UserController extends Controller
             ]);
 
             // assign Role menggunakan spatie
-            $user->assignRole('Dosen');
+            $user->assignRole('Prodi');
 
-            Dosen::create([
+            Prodi::create([
                 'user_id' => $user->id,
                 'nip' => $request->nip,
                 'gender' => $request->gender,
@@ -69,6 +78,7 @@ class UserController extends Controller
             // Simpan data ke database
             $user = User::create([
                 'id_kampus' => $request->id_kampus,
+                'id_prodi' => $request->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
@@ -83,29 +93,40 @@ class UserController extends Controller
                 'gender' => $request->gender,
                 'phone' => $request->phone,
                 'address' => $request->alamat,
-                'prodi' => $request->prodi,
-                'fakultas' => $request->fakultas,
                 'semester' => $request->semester,
             ]);
-        } else {
+        } elseif ($request->role == 'AdminPT') {
+            // dd(request()->all());
             // Simpan data ke database
             $user = User::create([
                 'id_kampus' => $request->id_kampus,
+                'id_prodi' => $request->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'role' => $request->role,
             ]);
-            // assign Role menggunakan spatie
-            $user->assignRole('Admin');
 
-            Dosen::create([
+            // assign Role menggunakan spatie
+            $user->assignRole('AdminPT');
+
+            Prodi::create([
                 'user_id' => $user->id,
                 'nip' => $request->nip,
                 'gender' => $request->gender,
                 'phone' => $request->phone,
                 'address' => $request->alamat,
             ]);
+        } else {
+            // Simpan data ke database
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'role' => $request->role,
+            ]);
+            // assign Role menggunakan spatie
+            $user->assignRole('SuperAdmin');
         }
 
 
@@ -118,41 +139,43 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $users = User::with('dosen', 'mahasiswa', 'kampus')->findOrFail($id);
+        $users = User::with('prodi', 'mahasiswa', 'kampus')->findOrFail($id);
         $kampus = Kampus::all();
+        $fakultas = Fakultas::where('id_kampus', $users->id_kampus)->get();
+        $prodi = ProgramStudi::where('id_fakultas', $users->id_fakultas)->get();
         // dd($users->name);
 
-        return view('user.edit', compact('users', 'kampus'));
+        return view('user.edit', compact('users', 'kampus', 'fakultas', 'prodi'));
     }
 
     public function update(Request $request, $id)
     {
-        $user = User::with('dosen', 'mahasiswa')->find($id);
+        $user = User::with('prodi', 'mahasiswa')->find($id);
         // dd($request->all(), $user);
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
 
         $rules = [
-            'id_kampus' => ['required'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
         ];
 
         $validated = $request->validate($rules);
 
-        if ($user->dosen !== null) {
+        if ($user->prodi !== null) {
             // Simpan data ke database
             // update ke database
             $user->update([
                 'id_kampus' => $request->id_kampus,
+                'id_prodi' => $request->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
             ]);
 
-            $dosen = Dosen::where('user_id', $user->id)->first();
+            $prodi = Prodi::where('user_id', $user->id)->first();
 
-            $dosen->update([
+            $prodi->update([
                 'user_id' => $user->id,
                 'nip' => $request->nip,
                 'gender' => $request->gender,
@@ -176,14 +199,12 @@ class UserController extends Controller
                 'gender' => $request->gender,
                 'phone' => $request->phone,
                 'address' => $request->alamat,
-                'prodi' => $request->prodi,
                 'semester' => $request->semester,
             ]);
         } else {
             // dd($user);
             // update ke database
             $user->update([
-                'id_kampus' => $request->id_kampus,
                 'name' => $request->name,
                 'email' => $request->email,
             ]);
@@ -218,7 +239,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::with('dosen', 'mahasiswa', 'roles', 'kampus')->findOrFail($id);
+        $user = User::with('prodi', 'mahasiswa', 'roles', 'kampus')->findOrFail($id);
         // dd($user);
         return view('user.show', compact('user'));
     }
@@ -240,5 +261,18 @@ class UserController extends Controller
         }
 
         return redirect()->route('user.index')->with('success', 'Data berhasil dihapus.');
+    }
+
+
+    public function getFakultasByKampus($kampus_id)
+    {
+        $fakultas = Fakultas::where('id_kampus', $kampus_id)->get();
+        return response()->json($fakultas);
+    }
+
+    public function getProdiByFakultas($fakultas_id)
+    {
+        $prodi = ProgramStudi::where('id_fakultas', $fakultas_id)->get();
+        return response()->json($prodi);
     }
 }

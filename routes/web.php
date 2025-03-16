@@ -41,3 +41,4 @@ require __DIR__ . '/mainmenu-kampus.php';
 require __DIR__ . '/mainmenu-finalReport.php';
 require __DIR__ . '/mainmenu-cplMikroskil.php';
 require __DIR__ . '/mainmenu-assessment.php';
+require __DIR__ . '/mainmenu-programStudi.php';

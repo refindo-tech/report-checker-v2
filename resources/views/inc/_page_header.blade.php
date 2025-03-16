@@ -97,7 +97,7 @@
                     </div>
                 </a>
                 <div class="dropdown-divider m-0"></div>
-                @if (auth()->user()->getRoleNames()->first() == 'Admin')
+                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
                     <a href="#" class="dropdown-item" data-action="app-reset">
                         <span data-i18n="drpdwn.reset_layout">Reset Layout</span>
                     </a>
@@ -127,7 +127,7 @@
                         </div>
                     </div> --}}
                 @endif
-                @if (auth()->user()->getRoleNames()->first() !== 'Admin')
+                @if (auth()->user()->getRoleNames()->first() !== 'SuperAdmin')
                     <div class="dropdown-divider m-0"></div>
                     <a href="#" class="dropdown-item" data-action="app-fullscreen">
                         <span data-i18n="drpdwn.fullscreen">Fullscreen</span>

@@ -49,22 +49,22 @@
 
                                     {{-- Informasi Tambahan --}}
                                     <ul class="list-group list-group-flush text-left">
-                                        @if (Auth::user()->getRoleNames()->first() == 'Dosen' || Auth::user()->getRoleNames()->first() == 'Admin')
+                                        @if (Auth::user()->getRoleNames()->first() == 'Prodi' || Auth::user()->getRoleNames()->first() == 'AdminPT')
                                             <li class="list-group-item">
-                                                <strong>NIP:</strong> {{ $user->dosen->nip ?? '-' }}
+                                                <strong>NIP:</strong> {{ $user->prodi->nip ?? '-' }}
                                             </li>
                                             <li class="list-group-item">
                                                 <strong>Gender:</strong>
-                                                {{ isset($user->dosen->gender) ? ($user->dosen->gender === 'L' ? 'Laki-Laki' : 'Perempuan') : '-' }}
+                                                {{ isset($user->prodi->gender) ? ($user->prodi->gender === 'L' ? 'Laki-Laki' : 'Perempuan') : '-' }}
                                             </li>
                                             <li class="list-group-item">
                                                 <strong>Kampus:</strong> {{ $user->kampus->name ?? '-' }}
                                             </li>
                                             <li class="list-group-item">
-                                                <strong>Alamat:</strong> {{ $user->dosen->address ?? '-' }}
+                                                <strong>Alamat:</strong> {{ $user->prodi->address ?? '-' }}
                                             </li>
                                             <li class="list-group-item">
-                                                <strong>No HP:</strong> {{ $user->dosen->phone ?? '-' }}
+                                                <strong>No HP:</strong> {{ $user->prodi->phone ?? '-' }}
                                             </li>
                                         @elseif(Auth::user()->getRoleNames()->first() == 'Mahasiswa')
                                             <li class="list-group-item">

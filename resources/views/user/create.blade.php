@@ -27,17 +27,73 @@
             @csrf
             <x-panel.show title="Tambah" subtitle="Pengguna">
                 <div class="form-group">
-                    <label for="kampus">Kampus</label>
-                    <select class="select2 form-control w-100" id="single-default" name="id_kampus" id="id_kampus" required>
-                        <option value="" selected disabled>Pilih Kampus</option>
-                        @foreach ($kampus as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
+                    <label for="role">Role</label>
+                    <select name="role" id="role" class="form-control" required onchange="toggleRoleFields()">
+                        <option value="">-- Pilih Role --</option>
+                        @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                            <option value="SuperAdmin" {{ old('role') == 'SuperAdmin' ? 'selected' : '' }}>Super Admin
+                            </option>
+                        @endif
+                        <option value="AdminPT" {{ old('role') == 'AdminPT' ? 'selected' : '' }}>Admin PT</option>
+                        <option value="Prodi" {{ old('role') == 'Prodi' ? 'selected' : '' }}>Prodi</option>
+                        <option value="Mahasiswa" {{ old('role') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                     </select>
-                    @error('id_kampus')
+                    @error('role')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                    <!-- Pilih Kampus -->
+                    <div class="form-group" id="kampusFields">
+                        <label for="kampus">Kampus</label>
+                        <select class="form-control select2" name="id_kampus" id="id_kampus" required>
+                            <option value="" selected disabled>Pilih Kampus</option>
+                            @foreach ($kampus as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Pilih Fakultas -->
+                    <div class="form-group" id="fakultasFields" style="display: none;">
+                        <label for="fakultas">Fakultas</label>
+                        <select class="form-control select4" name="id_fakultas" id="id_fakultas" required>
+                            <option value="" selected disabled>Pilih Fakultas</option>
+                        </select>
+                    </div>
+
+                    <!-- Pilih Program Studi -->
+                    <div class="form-group" id="programStudiFields" style="display: none;">
+                        <label for="prodi">Program Studi</label>
+                        <select class="form-control select3" name="id_prodi" id="id_prodi" required>
+                            <option value="" selected disabled>Pilih Prodi</option>
+                        </select>
+                    </div>
+                @else
+                    @php
+                        $kampus_id = auth()->user()->id_kampus;
+                    @endphp
+
+                    <!-- Hidden Kampus -->
+                    <input type="hidden" name="id_kampus" id="id_kampus" value="{{ $kampus_id }}">
+
+                    <!-- Pilih Fakultas -->
+                    <div class="form-group" id="fakultasFields">
+                        <label for="fakultas">Fakultas</label>
+                        <select class="form-control select4" name="id_fakultas" id="id_fakultas" required>
+                            <option value="" selected disabled>Pilih Fakultas</option>
+                        </select>
+                    </div>
+
+                    <!-- Pilih Program Studi -->
+                    <div class="form-group" id="programStudiFields" style="display: none;">
+                        <label for="prodi">Program Studi</label>
+                        <select class="form-control select3" name="id_prodi" id="id_prodi" required>
+                            <option value="" selected disabled>Pilih Prodi</option>
+                        </select>
+                    </div>
+                @endif
+
                 <div class="form-group">
                     <label for="name">Nama</label>
                     <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
@@ -59,21 +115,25 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="role">Role</label>
                     <select name="role" id="role" class="form-control" required onchange="toggleRoleFields()">
                         <option value="">-- Pilih Role --</option>
-                        <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="Dosen" {{ old('role') == 'Dosen' ? 'selected' : '' }}>Dosen</option>
+                        @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                            <option value="SuperAdmin" {{ old('role') == 'SuperAdmin' ? 'selected' : '' }}>Super Admin
+                            </option>
+                        @endif
+                        <option value="AdminPT" {{ old('role') == 'AdminPT' ? 'selected' : '' }}>Admin PT</option>
+                        <option value="Prodi" {{ old('role') == 'Prodi' ? 'selected' : '' }}>Prodi</option>
                         <option value="Mahasiswa" {{ old('role') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                     </select>
                     @error('role')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
-                </div>
+                </div> --}}
 
                 <!-- Form tambahan untuk Dosen -->
-                <div id="dosenFields" style="display: none;">
+                <div id="prodiFields" style="display: none;">
                     <div class="form-group">
                         <label for="nip">NIP</label>
                         <input type="text" name="nip" id="nip" class="form-control">
@@ -141,20 +201,6 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="prodi">Program Studi</label>
-                        <input type="text" name="prodi" id="prodi" class="form-control">
-                        @error('prodi')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="fakultas">Fakultas</label>
-                        <input type="text" name="fakultas" id="fakultas" class="form-control">
-                        @error('fakultas')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
                         <label for="semester">Semester</label>
                         <input type="text" name="semester" id="semester" class="form-control">
                         @error('semester')
@@ -162,7 +208,6 @@
                         @enderror
                     </div>
                 </div>
-
                 <x-slot name="panelcontentfoot">
                     <x-button type="submit" color="primary" :label="__('Save')" class="ml-auto" />
                 </x-slot>
@@ -174,25 +219,213 @@
 @section('pages-script')
     <script src="/admin/js/formplugins/select2/select2.bundle.js"></script>
     <script>
-        function toggleRoleFields() {
-            var role = document.getElementById("role").value;
-
-            // Tampilkan dosenFields jika role adalah "Dosen" atau "Admin"
-            document.getElementById("dosenFields").style.display = (role === "Dosen" || role === "Admin") ? "block" :
-            "none";
-
-            // Tampilkan mahasiswaFields hanya jika role adalah "Mahasiswa"
-            document.getElementById("mahasiswaFields").style.display = (role === "Mahasiswa") ? "block" : "none";
-        }
-
-        // Panggil fungsi saat halaman dimuat agar form yang sesuai tetap muncul saat validasi gagal
-        document.addEventListener("DOMContentLoaded", function() {
-            toggleRoleFields();
-        });
-    </script>
-    <script>
         $('.select2').select2({
             placeholder: "Pilih Kampus",
         });
+        $('.select3').select2({
+            placeholder: "Pilih Program Studi",
+        });
+        $('.select4').select2({
+            placeholder: "Pilih Fakultas",
+        });
     </script>
+    {{-- <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("role").addEventListener("change", function() {
+                var role = document.getElementById("role").value;
+
+                // Sembunyikan semua terlebih dahulu
+                document.getElementById("kampusFields").style.display = "none";
+                document.getElementById("fakultasFields").style.display = "none";
+                document.getElementById("prodiFields").style.display = "none";
+                document.getElementById("programStudiFields").style.display = "none";
+                document.getElementById("mahasiswaFields").style.display = "none";
+
+                // Jika role adalah Mahasiswa, Admin PT, atau Prodi, tampilkan semua
+                if (role === "Prodi" || role === "AdminPT" || role === "Mahasiswa") {
+                    document.getElementById("kampusFields").style.display = "block";
+                    document.getElementById("fakultasFields").style.display = "block";
+                    document.getElementById("prodiFields").style.display = "block";
+                    document.getElementById("programStudiFields").style.display = "block";
+                    // Pastikan required atribut ada
+                    document.getElementById("id_fakultas").setAttribute("required", "required");
+                    document.getElementById("id_prodi").setAttribute("required", "required");
+                }
+
+                // Jika role adalah Mahasiswa, tampilkan mahasiswaFields
+                if (role === "Mahasiswa") {
+                    document.getElementById("mahasiswaFields").style.display = "block";
+                }
+
+                // Jika role adalah SuperAdmin, hanya tampilkan kampus
+                if (role === "SuperAdmin") {
+                    // document.getElementById("kampusFields").style.display = "block";
+                    document.getElementById("id_fakultas").removeAttribute("required");
+                    document.getElementById("id_prodi").removeAttribute("required");
+                }
+            })
+            // Panggil sekali saat halaman dimuat agar tampilan sesuai jika ada nilai old
+            var roleEl = document.getElementById("role");
+            if (roleEl) {
+                var event = new Event("change");
+                roleEl.dispatchEvent(event);
+            }
+        });
+    </script> --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Panggil fungsi saat halaman selesai dimuat
+            toggleRoleFields();
+
+            document.getElementById("role").addEventListener("change", toggleRoleFields);
+        });
+
+        function toggleRoleFields() {
+            var role = document.getElementById("role");
+            if (!role) {
+                console.error("Elemen dengan id 'role' tidak ditemukan!");
+                return;
+            }
+
+            var roleValue = role.value;
+            var prodiFields = document.getElementById("prodiFields");
+            var mahasiswaFields = document.getElementById("mahasiswaFields");
+
+            if (prodiFields && mahasiswaFields) {
+                prodiFields.style.display = "none";
+                mahasiswaFields.style.display = "none";
+
+                if (roleValue === "Prodi" || roleValue === "AdminPT") {
+                    prodiFields.style.display = "block";
+                } else if (roleValue === "Mahasiswa") {
+                    mahasiswaFields.style.display = "block";
+                }
+            } else {
+                console.error("ID prodiFields atau mahasiswaFields tidak ditemukan!");
+            }
+        }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var role = "{{ auth()->user()->getRoleNames()->first() }}";
+            var kampus_id = "{{ auth()->user()->id_kampus }}";
+
+            // Jika role bukan SuperAdmin, otomatis ambil fakultas berdasarkan kampus
+            if (role !== "SuperAdmin") {
+                loadFakultas(kampus_id);
+            }
+
+            // Event untuk SuperAdmin yang memilih kampus
+            $('#id_kampus').change(function() {
+                var kampus_id = $(this).val();
+                if (kampus_id) {
+                    loadFakultas(kampus_id);
+                } else {
+                    $('#fakultasFields, #programStudiFields').hide();
+                }
+            });
+
+            // Event untuk memilih fakultas dan mengambil prodi
+            $('#id_fakultas').change(function() {
+                var fakultas_id = $(this).val();
+                if (fakultas_id) {
+                    loadProdi(fakultas_id);
+                } else {
+                    $('#programStudiFields').hide();
+                }
+            });
+
+            // Function untuk mengambil daftar fakultas berdasarkan kampus
+            function loadFakultas(kampus_id) {
+                $.ajax({
+                    url: '{{ route('user.getFakultasByKampus', ['kampus_id' => '__KAMPUS_ID__']) }}'
+                        .replace('__KAMPUS_ID__', kampus_id),
+                    type: 'GET',
+                    success: function(data) {
+                        $('#id_fakultas').empty().append(
+                            '<option value="" selected disabled>Pilih Fakultas</option>');
+                        $.each(data, function(key, value) {
+                            $('#id_fakultas').append('<option value="' + value.id + '">' + value
+                                .name + '</option>');
+                        });
+                        $('#fakultasFields').show();
+                    }
+                });
+            }
+
+            // Function untuk mengambil daftar program studi berdasarkan fakultas
+            function loadProdi(fakultas_id) {
+                $.ajax({
+                    url: '{{ route('user.getProdiByFakultas', ['fakultas_id' => '__FAKULTAS_ID__']) }}'
+                        .replace('__FAKULTAS_ID__', fakultas_id),
+                    type: 'GET',
+                    success: function(data) {
+                        $('#id_prodi').empty().append(
+                            '<option value="" selected disabled>Pilih Prodi</option>');
+                        $.each(data, function(key, value) {
+                            $('#id_prodi').append('<option value="' + value.id + '">' + value
+                                .name + '</option>');
+                        });
+                        $('#programStudiFields').show();
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#id_kampus').change(function() {
+                var kampus_id = $(this).val();
+                var role = $('#role').val();
+
+                if (kampus_id) {
+                    // Jika bukan SuperAdmin, ambil fakultas yang sesuai
+                    if (role !== "SuperAdmin") {
+                        $.ajax({
+                            url: '{{ route('user.getFakultasByKampus', ['kampus_id' => '__KAMPUS_ID__']) }}'
+                                .replace('__KAMPUS_ID__', kampus_id),
+                            type: 'GET',
+                            success: function(data) {
+                                $('#id_fakultas').empty().append(
+                                    '<option value="" selected disabled>Pilih Fakultas</option>'
+                                );
+                                $.each(data, function(key, value) {
+                                    $('#id_fakultas').append('<option value="' + value
+                                        .id + '">' + value.name + '</option>');
+                                });
+                                $('#fakultasFields').show();
+                            }
+                        });
+                    }
+                } else {
+                    $('#fakultasFields, #prodiFields').hide();
+                }
+            });
+
+            $('#id_fakultas').change(function() {
+                var fakultas_id = $(this).val();
+                if (fakultas_id) {
+                    $.ajax({
+                        url: '{{ route('user.getProdiByFakultas', ['fakultas_id' => '__FAKULTAS_ID__']) }}'
+                            .replace('__FAKULTAS_ID__', fakultas_id),
+                        type: 'GET',
+                        success: function(data) {
+                            $('#id_prodi').empty().append(
+                                '<option value="" selected disabled>Pilih Prodi</option>');
+                            $.each(data, function(key, value) {
+                                $('#id_prodi').append('<option value="' + value.id +
+                                    '">' + value.name + '</option>');
+                            });
+                            $('#prodiFields').show();
+                        }
+                    });
+                } else {
+                    $('#prodiFields').hide();
+                }
+            });
+        });
+    </script>
+
 @endsection

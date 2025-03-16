@@ -22,7 +22,7 @@
         </div>
         <x-row-column :column="1">
             <x-slot name='column1'>
-                <x-panel.show title="Profil" subtitle="{{ auth()->user()->role }}">
+                <x-panel.show title="Profil" subtitle="{{ Auth::user()->getRoleNames()->first() }}">
                     <form action="{{ route('profil_admin.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -54,30 +54,12 @@
                                         class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-12 pt-2">
-                                <div class="form-group">
-                                    <label for="kampus">Kampus</label>
-                                    <select class="select2 form-control w-100" id="single-default" name="id_kampus"
-                                        required>
-                                        <option value="" disabled>Pilih Kampus</option>
-                                        @foreach ($kampus as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('id_kampus', $users->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('id_kampus')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            @if (Auth::user()->getRoleNames()->first() == 'Dosen' || Auth::user()->getRoleNames()->first() == 'Admin')
+                            @if (Auth::user()->getRoleNames()->first() == 'Prodi' || Auth::user()->getRoleNames()->first() == 'AdminPT')
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nip">NIP</label>
                                         <input type="number" name="nip"
-                                            value="{{ old('nip', $users->dosen->nip ?? '') }}" class="form-control">
+                                            value="{{ old('nip', $users->prodi->nip ?? '') }}" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -85,10 +67,10 @@
                                         <label for="gender">Gender</label>
                                         <select name="gender" class="form-control">
                                             <option value="L"
-                                                {{ ($users->dosen->gender ?? '') == 'L' ? 'selected' : '' }}>Laki-laki
+                                                {{ ($users->prodi->gender ?? '') == 'L' ? 'selected' : '' }}>Laki-laki
                                             </option>
                                             <option value="P"
-                                                {{ ($users->dosen->gender ?? '') == 'P' ? 'selected' : '' }}>Perempuan
+                                                {{ ($users->prodi->gender ?? '') == 'P' ? 'selected' : '' }}>Perempuan
                                             </option>
                                         </select>
                                     </div>
@@ -97,14 +79,15 @@
                                     <div class="form-group">
                                         <label for="phone">Phone</label>
                                         <input type="text" name="phone"
-                                            value="{{ old('phone', $users->dosen->phone ?? '') }}" class="form-control">
+                                            value="{{ old('phone', $users->prodi->phone ?? '') }}" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="alamat">Alamat</label>
                                         <input type="text" name="alamat"
-                                            value="{{ old('alamat', $users->dosen->address ?? '') }}" class="form-control">
+                                            value="{{ old('alamat', $users->prodi->address ?? '') }}"
+                                            class="form-control">
                                     </div>
                                 </div>
                             @elseif(Auth::user()->getRoleNames()->first() == 'Mahasiswa')
@@ -267,6 +250,13 @@
         $('.select2').select2({
             placeholder: "Pilih Kampus",
         });
+        $('.select3').select2({
+            placeholder: "Pilih Fakultas",
+        });
+        $('.select4').select2({
+            placeholder: "Pilih Program Studi",
+        });
     </script>
+
 
 @endsection

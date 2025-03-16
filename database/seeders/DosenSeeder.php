@@ -15,7 +15,7 @@ class DosenSeeder extends Seeder
     public function run(): void
     {
         Prodi::create([
-            'user_id' => 2,
+            'user_id' => 8,
             'nip' => '123456789',
             'gender' => 'L',
             'phone' => '08123456789',
