@@ -165,23 +165,23 @@ class FinalReportController extends Controller
         return redirect()->route('report.index')->with('success', 'Berkas berhasil dihapus.');
     }
 
-    public function cetak_pdf($id)
+    public function cetak_pdf()
     {
-        $report = finalReport::with('user', 'reviewer', 'mahasiswa', 'dosen')->find($id);
-        $kampus = Kampus::where('id', $report->user->id_kampus)->first();
+        // $report = finalReport::with('user', 'reviewer', 'mahasiswa', 'dosen')->find($id);
+        // $kampus = Kampus::where('id', $report->user->id_kampus)->first();
         // dd($report, $kampus);    
-        $pivotData = laprak_has_mikroskill::with('mikroskill', 'report')->where('id_laprak', $report->id)->get();
+        // $pivotData = laprak_has_mikroskill::with('mikroskill', 'report')->where('id_laprak', $report->id)->get();
         // dd($pivotData);
 
-        $opciones_ssl = array(
-            "ssl" => array(
-                "verify_peer" => false,
-                "verify_peer_name" => false,
-            ),
-        );
+        // $opciones_ssl = array(
+        //     "ssl" => array(
+        //         "verify_peer" => false,
+        //         "verify_peer_name" => false,
+        //     ),
+        // );
 
-        $img_path = public_path('admin/img/logountirta.png');
-        $img_kampus = public_path('storage/kampus/' . $kampus->image);
+        // $img_path = public_path('admin/img/logountirta.png');
+        // $img_kampus = public_path('storage/kampus/' . $kampus->image);
         // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
         // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
         // $img_base_64 = base64_encode($data);
@@ -191,11 +191,11 @@ class FinalReportController extends Controller
 
         // Pastikan data dikirim sebagai array
         $pdf = PDF::loadView('final_report.print', [
-            'report' => $report,
-            'kampus' => $kampus,
-            'pivotData' => $pivotData,
-            'path_img' => $img_path,
-            'img_kampus' => $img_kampus,
+            // 'report' => $report,
+            // 'kampus' => $kampus,
+            // 'pivotData' => $pivotData,
+            // 'path_img' => $img_path,
+            // 'img_kampus' => $img_kampus,
         ]);
 
         // Download file PDF
