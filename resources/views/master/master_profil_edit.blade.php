@@ -77,6 +77,34 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="fakultas">Fakultas</label>
+                                        <select name="fakultas" id="fakultas" class="form-control">
+                                            <option value="">-- Pilih Fakultas --</option>
+                                            @foreach ($fakultas as $fak)
+                                                <option value="{{ $fak->id }}"
+                                                    {{ old('fakultas', $users->programStudi->id_fakultas ?? '') == $fak->id ? 'selected' : '' }}>
+                                                    {{ $fak->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="prodi">Program Studi</label>
+                                        <select name="prodi" id="prodi" class="form-control">
+                                            <option value="">-- Pilih Program Studi --</option>
+                                            @foreach ($programstudi as $prodi)
+                                                <option value="{{ $prodi->id }}"
+                                                    {{ old('prodi', optional($users->programStudi)->id) == $prodi->id ? 'selected' : '' }}>
+                                                    {{ $prodi->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="phone">Phone</label>
                                         <input type="text" name="phone"
                                             value="{{ old('phone', $users->prodi->phone ?? '') }}" class="form-control">
@@ -113,18 +141,30 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="prodi">Prodi</label>
-                                        <input type="text" name="prodi"
-                                            value="{{ old('prodi', $users->mahasiswa->prodi ?? '') }}"
-                                            class="form-control">
+                                        <label for="fakultas">Fakultas</label>
+                                        <select name="fakultas" id="fakultas" class="form-control">
+                                            <option value="">-- Pilih Fakultas --</option>
+                                            @foreach ($fakultas as $fak)
+                                                <option value="{{ $fak->id }}"
+                                                    {{ old('fakultas', $users->programStudi->id_fakultas ?? '') == $fak->id ? 'selected' : '' }}>
+                                                    {{ $fak->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fakultas">Fakultas</label>
-                                        <input type="text" name="fakultas"
-                                            value="{{ old('fakultas', $users->mahasiswa->fakultas ?? '') }}"
-                                            class="form-control">
+                                        <label for="prodi">Program Studi</label>
+                                        <select name="prodi" id="prodi" class="form-control">
+                                            <option value="">-- Pilih Program Studi --</option>
+                                            @foreach ($programstudi as $prodi)
+                                                <option value="{{ $prodi->id }}"
+                                                    {{ old('prodi', optional($users->programStudi)->id) == $prodi->id ? 'selected' : '' }}>
+                                                    {{ $prodi->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

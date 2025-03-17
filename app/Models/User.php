@@ -89,6 +89,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Fakultas::class, 'id_fakultas');
     }
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'id_prodi');
+    }
     // public function prodi()
     // {
     //     return $this->belongsTo(Prodi::class, 'id_prodi');

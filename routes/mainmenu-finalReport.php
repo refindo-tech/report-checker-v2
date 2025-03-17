@@ -28,10 +28,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/index/{id}', [FinalReportController::class, 'indexMahasiswa'])->name('report.indexMahasiswa');
         Route::get('/index', [FinalReportController::class, 'index'])->name('report.index');
         Route::get('/cetak', [FinalReportController::class, 'cetak_pdf'])->name('report.print');
+        Route::get('/test-mikroskill/{id}', [FinalReportController::class, 'tesMikroskill'])->name('report.testMikroskill');
+        Route::post('/test-mikroskill/{id}', [FinalReportController::class, 'tesMikroskillStore'])->name('report.tesMikroskillStore');
     });
 
-    Route::middleware('role:Admin PT|Prodi')->prefix('report')->group(function () {
-        Route::get('/indexDosen', [FinalReportController::class, 'indexDosen'])->name('report.indexDosen');
+    Route::middleware('role:AdminPT|Prodi')->prefix('report')->group(function () {
+        Route::get('/indexProdi', [FinalReportController::class, 'indexDosen'])->name('report.indexDosen');
+        Route::get('/indexAdmin', [FinalReportController::class, 'indexAdmin'])->name('report.indexAdmin');
+        Route::get('/indexAdmin/{id}', [FinalReportController::class, 'indexProdi'])->name('report.indexProdi');
     });
 
     // Rute untuk menambah barang masuk (Admin, Gudang)

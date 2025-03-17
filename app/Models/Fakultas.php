@@ -23,6 +23,6 @@ class Fakultas extends Model
 
     public function prodi()
     {
-        return $this->hasMany(ProgramStudi::class);
+        return $this->hasMany(ProgramStudi::class, 'id_fakultas');
     }
 }

@@ -1,4 +1,13 @@
-@if (Auth::user()->getRoleNames()->first() == 'AdminPT' || Auth::user()->getRoleNames()->first() == 'Prodi')
+@if (Auth::user()->getRoleNames()->first() == 'AdminPT')
+    <li class="nav-title">Unggah Berkas</li>
+    {{-- @can('lihat-produk') --}}
+    <li class="{{ Request::is('report/*') ? 'active' : '' }}">
+        <a href="{{ route('report.indexAdmin') }}" title="report Admin" data-filter-tags="admin profil">
+            <i class="fa fa-flag"></i>
+            <span class="nav-link-text" data-i18n="nav.admin_profil">Pengajuan Konversi</span>
+        </a>
+    </li>
+@elseif (Auth::user()->getRoleNames()->first() == 'Prodi')
     <li class="nav-title">Unggah Berkas</li>
     {{-- @can('lihat-produk') --}}
     <li class="{{ Request::is('report/*') ? 'active' : '' }}">

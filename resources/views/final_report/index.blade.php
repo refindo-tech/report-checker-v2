@@ -52,17 +52,17 @@
                                         @csrf
                                         <div class="mb-3">
                                             <label for="mitra">Laporan Akhir</label>
-                                            <input class="form-control" name="file" type="file" id="file"
+                                            <input class="form-control" name="laprak" type="file" id="laprak"
                                                 accept=".pdf, .doc, .docx" data-show-errors="true" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="mitra">Sertifikat</label>
-                                            <input class="form-control" name="file" type="file" id="file"
+                                            <input class="form-control" name="sertifikat" type="file" id="sertifikat"
                                                 accept=".pdf, .doc, .docx" data-show-errors="true" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="mitra">Dokumentasi</label>
-                                            <input class="form-control" name="file" type="file" id="file"
+                                            <input class="form-control" name="dokumentasi" type="file" id="dokumentasi"
                                                 accept=".pdf, .doc, .docx" data-show-errors="true" required>
                                         </div>
                                         @error('file')
@@ -102,16 +102,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="jenisKegiatan">Jenis Kegiatan</label>
-                                            <select class="select2 form-control w-100" id="single-default" name="jenisKegiatan"
-                                                id="jenisKegiatan" required>
-                                                {{-- <option value="" selected disabled>Pilih Kegiatan</option>
-                                                <option value="Magang Bersertifikat">Magang</option>
-                                                <option value="Studi Independen">Studi Independen</option>
-                                                <option value="Pertukan Mahasiswa Merdeka">Pertukan Mahasiswa Merdeka</option> --}}
+                                            <select class="select2 form-control w-100" id="single-default"
+                                                name="jenisKegiatan" id="jenisKegiatan" required>
                                                 <option value="Kampus Mengajar">Kampus Mengajar</option>
-                                                {{-- <option value="Wirausaha Merdeka">Wirausaha Merdeka</option>
-                                                <option value="Praktisi Mengajar">Praktisi Mengajar</option>
-                                                <option value="Magang Mandiri">Magang Mandiri</option> --}}
                                             </select>
                                             @error('jenisKegiatan')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -133,10 +126,10 @@
             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>NIM</th>
+                        <th>Pengajuan Ke</th>
                         <th>Nama</th>
                         <th>Status</th>
+                        <th>Nilai Tes</th>
                         <th>Berkas Laporan Akhir</th>
                         <th>Berkas Sertifikat</th>
                         <th>Berkas Dokumentasi</th>
@@ -144,7 +137,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
+                    {{-- @php
                         $reports = [
                             ['id' => 1, 'nim' => '123456789', 'name' => 'Ahmad', 'status' => 1, 'berkas' => 'laporan1.pdf'],
                             ['id' => 2, 'nim' => '987654321', 'name' => 'Budi', 'status' => 2, 'berkas' => 'laporan2.pdf'],
@@ -152,29 +145,26 @@
                             ['id' => 4, 'nim' => '321654987', 'name' => 'Dewi', 'status' => 4, 'berkas' => 'laporan4.pdf'],
                             ['id' => 5, 'nim' => '741852963', 'name' => 'Eko', 'status' => 5, 'berkas' => 'laporan5.pdf'],
                         ];
-                    @endphp
-            
-                    @foreach ($reports as $index => $report)
+                    @endphp --}}
+                    @foreach ($report as $report)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $report['nim'] }}</td>
-                            <td>{{ $report['name'] }}</td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $report->user->name }}</td>
                             <td>
-                                @if ($report['status'] == 1)
+                                @if ($report->status == 1)
                                     <span class="badge badge-primary">Menunggu Validasi</span>
-                                @elseif ($report['status'] == 2)
+                                @elseif ($report->status == 2)
                                     <span class="badge badge-warning">Menunggu Penilaian</span>
-                                @elseif ($report['status'] == 3)
+                                @elseif ($report->status == 3)
                                     <span class="badge badge-danger">Tidak Valid</span>
-                                @elseif ($report['status'] == 4)
-                                    <span class="badge badge-success">Valid</span>
-                                @elseif ($report['status'] == 5)
-                                    <span class="badge badge-info">Berhasil Dinilai</span>
+                                @elseif ($report->status == 4)
+                                    <span class="badge badge-success">Berhasil Dinilai</span>
                                 @endif
                             </td>
+                            <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
                             <td>
-                                @if ($report['berkas'])
-                                    <a href="{{ asset('storage/report/' . $report['berkas']) }}" target="_blank">
+                                @if ($report->laprak)
+                                    <a href="{{ asset('storage/report/' . $report->laprak) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
                                 @else
@@ -182,8 +172,8 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($report['berkas'])
-                                    <a href="{{ asset('storage/report/' . $report['berkas']) }}" target="_blank">
+                                @if ($report->sertifikat)
+                                    <a href="{{ asset('storage/sertifikat/' . $report->sertifikat) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
                                 @else
@@ -191,8 +181,8 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($report['berkas'])
-                                    <a href="{{ asset('storage/report/' . $report['berkas']) }}" target="_blank">
+                                @if ($report->dokumentasi)
+                                    <a href="{{ asset('storage/dokumentasi/' . $report->dokumentasi) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
                                 @else
@@ -203,26 +193,25 @@
                                 <a href="#" class="btn btn-info">
                                     <i class="fa fa-eye"></i>
                                 </a>
-            
-                                @if ($report['status'] == 5)
+
+                                @if ($report->status == 4)
                                     <a href="#" class="btn btn-info">
                                         <i class="fa fa-download"></i>
                                     </a>
                                 @endif
-            
-                                @if (in_array($report['status'], [1, 2, 3, 4]))
-                                <a href="#" 
-                                    class="btn btn-success">
-                                    <i class="fa fa-clipboard"></i>
-                                </a>
-                            @endif
+
+                                @if ($report->status == 1)
+                                    <a href="{{ route('report.testMikroskill', $report->id) }}" class="btn btn-success">
+                                        <i class="fa fa-clipboard"></i>
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-            
-                        
+
+
         </x-panel.show>
     </main>
 @endsection
