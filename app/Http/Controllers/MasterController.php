@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dosen;
+use App\Models\Fakultas;
 use App\Models\Kampus;
 use App\Models\Mahasiswa;
+use App\Models\Prodi;
+use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,14 +18,17 @@ class MasterController extends Controller
 {
     public function master_profil()
     {
-        $user = User::where('id', Auth::user()->id)->with('dosen', 'mahasiswa')->first();
+        $user = User::where('id', Auth::user()->id)->with('prodi', 'mahasiswa')->first();
+        // dd($user);
         return view('master.master_profil', compact('user'));
     }
     public function master_profil_edit()
     {
-        $users = User::where('id', Auth::user()->id)->with('dosen', 'mahasiswa', 'kampus')->first();
-        $kampus = Kampus::all();
-        return view('master.master_profil_edit', compact('users', 'kampus'));
+        $users = User::where('id', Auth::user()->id)->with('prodi', 'mahasiswa', 'kampus', 'fakultas')->first();
+        // $kampus = Kampus::all();
+        // $fakultas = Fakultas::where('id_kampus', $users->id_kampus)->get();
+        // $programstudi = ProgramStudi::where('id_fakultas', $fakultas->first()->id)->get();
+        return view('master.master_profil_edit', compact('users'));
     }
     public function master_profil_update(Request $request)
     {
@@ -59,14 +65,14 @@ class MasterController extends Controller
 
             // update data product
             User::where('id', $id)->update([
-                'id_kampus' => $request->id_kampus,
+                'id_kampus' => $user->id_kampus,
                 'name' => $request->name,
                 'email' => $request->email,
                 'image' => $imageName,
             ]);
-            if ($user->roles[0]->name == 'Dosen' || $user->roles[0]->name == 'Admin') {
+            if ($user->roles[0]->name == 'Prodi' || $user->roles[0]->name == 'AdminPT') {
 
-                Dosen::updateOrCreate(
+                Prodi::updateOrCreate(
                     ['user_id' => $id], // Kondisi pencarian
                     [
                         'nip' => $request->nip,
@@ -84,8 +90,6 @@ class MasterController extends Controller
                         'gender' => $request->gender,
                         'phone' => $request->phone,
                         'address' => $request->address,
-                        'prodi' => $request->prodi,
-                        'fakultas' => $request->fakultas,
                         'semester' => $request->semester,
                     ]
                 );
@@ -106,13 +110,13 @@ class MasterController extends Controller
 
             // update data product tanpa menyertakan file gambar
             User::where('id', $id)->update([
-                'id_kampus' => $request->id_kampus,
+                'id_kampus' => $user->id_kampus,
                 'name' => $request->name,
                 'email' => $request->email,
             ]);
-            if ($user->roles[0]->name == 'Dosen' || $user->roles[0]->name == 'Admin') {
+            if ($user->roles[0]->name == 'Prodi' || $user->roles[0]->name == 'AdminPT') {
 
-                Dosen::updateOrCreate(
+                Prodi::updateOrCreate(
                     ['user_id' => $id], // Kondisi pencarian
                     [
                         'nip' => $request->nip,
@@ -130,8 +134,6 @@ class MasterController extends Controller
                         'gender' => $request->gender,
                         'phone' => $request->phone,
                         'address' => $request->address,
-                        'prodi' => $request->prodi,
-                        'fakultas' => $request->fakultas,
                         'semester' => $request->semester,
                     ]
                 );

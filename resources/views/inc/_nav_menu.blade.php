@@ -9,7 +9,7 @@
     {{-- @if (auth()->user()->getRoleNames()->first() == 'Admin') --}}
         @include('inc.mainmenu._menu_master')
     {{-- @endif --}}
-    @if (auth()->user()->getRoleNames()->first() == 'Super Admin')
+    @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
         @if (App\Helpers\Fitures::isMainMenuTemplateActive())
             @include('inc.mainmenu._menu_depelover')
             @include('inc.mainmenu._menu_intel_app')

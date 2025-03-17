@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         ]);
         
         // assign Role menggunakan spatie
-        $admin->assignRole('Super Admin');
+        $admin->assignRole('SuperAdmin');
 
         $admin = User::create([
             'id_kampus' => 1,
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         // assign Role menggunakan spatie
-        $admin->assignRole('Admin PT');
+        $admin->assignRole('AdminPT');
 
         $admin = User::create([
             'id_kampus' => 2,
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         // assign Role menggunakan spatie
-        $admin->assignRole('Admin PT');
+        $admin->assignRole('AdminPT');
         
         $admin = User::create([
             'id_kampus' => 3,
@@ -57,7 +57,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         // assign Role menggunakan spatie
-        $admin->assignRole('Admin PT');
+        $admin->assignRole('AdminPT');
         
         $admin = User::create([
             'id_kampus' => 4,
@@ -68,7 +68,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         // assign Role menggunakan spatie
-        $admin->assignRole('Admin PT');
+        $admin->assignRole('AdminPT');
         
         $admin = User::create([
             'id_kampus' => 5,
@@ -79,7 +79,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         // assign Role menggunakan spatie
-        $admin->assignRole('Admin PT');
+        $admin->assignRole('AdminPT');
         
         $admin = User::create([
             'id_kampus' => 6,
@@ -90,7 +90,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         // assign Role menggunakan spatie
-        $admin->assignRole('Admin PT');
+        $admin->assignRole('AdminPT');
         
         $dosen = User::create([
             'id_kampus' => 1,

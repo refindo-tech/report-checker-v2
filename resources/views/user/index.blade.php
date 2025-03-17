@@ -48,9 +48,10 @@
                                 <span
                                     class="badge 
                                         @switch($user->getRoleNames()->first())
-                                            @case('Admin') bg-danger @break
-                                            @case('Dosen') bg-success @break
-                                            @case('Mahasiswa') bg-primary @break
+                                            @case('SuperAdmin') bg-danger @break
+                                            @case('AdminPT') bg-primary @break
+                                            @case('Prodi') bg-success @break
+                                            @case('Mahasiswa') bg-secondary @break
                                             @default bg-secondary
                                         @endswitch">
                                     {{ $user->getRoleNames()->first() ?? 'Tidak Tersedia' }}

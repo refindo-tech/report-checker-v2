@@ -1,4 +1,4 @@
-@if (Auth::user()->getRoleNames()->first() == 'Admin PT' || Auth::user()->getRoleNames()->first() == 'Prodi')
+@if (Auth::user()->getRoleNames()->first() == 'AdminPT' || Auth::user()->getRoleNames()->first() == 'Prodi')
     <li class="nav-title">Unggah Berkas</li>
     {{-- @can('lihat-produk') --}}
     <li class="{{ Request::is('report/*') ? 'active' : '' }}">
@@ -28,14 +28,28 @@
         </a>
     </li>
 @endcan
-@can('lihat-kampus' || 'lihat-assessment')
-    <li class="nav-title">Master Data</li>
-@endcan
 @can('lihat-kampus')
+    <li class="nav-title">Master Data</li>
     <li class="{{ Request::is('kampus/*') ? 'active' : '' }}">
         <a href="{{ route('kampus.index') }}" title="Profil Admin" data-filter-tags="admin profil">
             <i class="fa fa-building-columns"></i>
             <span class="nav-link-text" data-i18n="nav.admin_profil">Kampus</span>
+        </a>
+    </li>
+@endcan
+@can('lihat-kampus')
+    <li class="{{ Request::is('fakultas/*') ? 'active' : '' }}">
+        <a href="{{ route('fakultas.index') }}" title="Profil Admin" data-filter-tags="admin profil">
+            <i class="fa-solid fa-building-un"></i>
+            <span class="nav-link-text" data-i18n="nav.admin_profil">Fakultas</span>
+        </a>
+    </li>
+@endcan
+@can('lihat-kampus')
+    <li class="{{ Request::is('programstudi/*') ? 'active' : '' }}">
+        <a href="{{ route('programstudi.index') }}" title="Profil Admin" data-filter-tags="admin profil">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span class="nav-link-text" data-i18n="nav.admin_profil">Program Studi</span>
         </a>
     </li>
 @endcan
@@ -93,7 +107,7 @@
         @endcan
     </ul>
 </li>
-@if (Auth::user()->getRoleNames()->first() == 'Super Admin')
+@if (Auth::user()->getRoleNames()->first() == 'SuperAdmin')
     <li class="{{ Request::is('tools/*') ? 'active open' : '' }}">
         <a href="#" title="Tools" data-filter-tags="tools">
             <i class="fal fa-wrench"></i>

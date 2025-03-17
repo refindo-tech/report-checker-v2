@@ -62,9 +62,9 @@ class User extends Authenticatable
         });
     }
 
-    public function dosen()
+    public function prodi()
     {
-        return $this->hasOne(Dosen::class);
+        return $this->hasOne(Prodi::class);
     }
 
     public function mahasiswa()
@@ -85,4 +85,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Kampus::class, 'id_kampus');
     }
+    public function fakultas()
+    {
+        return $this->belongsTo(Fakultas::class, 'id_fakultas');
+    }
+    // public function prodi()
+    // {
+    //     return $this->belongsTo(Prodi::class, 'id_prodi');
+    // }
 }

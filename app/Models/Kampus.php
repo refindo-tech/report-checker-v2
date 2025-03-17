@@ -27,4 +27,8 @@ class Kampus extends Model
     {
         return $this->hasMany(CplMikroskil::class);
     }
+    public function fakultas()
+    {
+        return $this->hasMany(Fakultas::class);
+    }
 }

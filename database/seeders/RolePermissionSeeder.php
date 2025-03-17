@@ -53,14 +53,14 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'print-assessment']);
 
         // buat role dengan spatie models
-        Role::create(['name' => 'Super Admin']);
-        Role::create(['name' => 'Admin PT']);
+        Role::create(['name' => 'SuperAdmin']);
+        Role::create(['name' => 'AdminPT']);
         Role::create(['name' => 'Prodi']);
         Role::create(['name' => 'Mahasiswa']);
 
         // cari role berdasarkan name
-        $roleSuperAdmin = Role::findByName('Super Admin');
-        $roleAdmin = Role::findByName('Admin PT');
+        $roleSuperAdmin = Role::findByName('SuperAdmin');
+        $roleAdmin = Role::findByName('AdminPT');
         $roleProdi = Role::findByName('Prodi');
         $roleMahasiswa = Role::findByName('Mahasiswa');
 
