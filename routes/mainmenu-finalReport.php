@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:lihat-laporan-akhir')->prefix('report')->group(function () {
         Route::get('/index/{id}', [FinalReportController::class, 'indexMahasiswa'])->name('report.indexMahasiswa');
         Route::get('/index', [FinalReportController::class, 'index'])->name('report.index');
-        Route::get('/cetak/{id}', [FinalReportController::class, 'cetak_pdf'])->name('report.print');
+        Route::get('/cetak', [FinalReportController::class, 'cetak_pdf'])->name('report.print');
     });
 
     Route::middleware('role:Admin PT|Prodi')->prefix('report')->group(function () {

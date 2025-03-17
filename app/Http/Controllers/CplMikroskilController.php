@@ -15,11 +15,11 @@ class CplMikroskilController extends Controller
      */
     public function index()
     {
-        $mikroskill = CplMikroskil::where('id_kampus', Auth::user()->id_kampus)->with('kampus')->get();
+        // $mikroskill = CplMikroskil::where('id_kampus', Auth::user()->id_kampus)->with('kampus')->get();
         // dd($mikroskill);
         // $kampus = Kampus::all();
         // dd($mikroskill);
-        return view('cpl_mikroskil.index', compact('mikroskill'));
+        return view('cpl_mikroskil.index');
     }
 
 

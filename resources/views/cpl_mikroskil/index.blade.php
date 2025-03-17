@@ -19,21 +19,21 @@
         <div class="subheader">
             @component('inc._page_heading', [
                 'icon' => 'fa-solid fa-list-check',
-                'heading1' => 'Rubrik CPL',
-                'heading2' => 'Mikroskil',
+                'heading1' => 'Komponen',
+                'heading2' => 'Mikroskill',
             ])
             @endcomponent
         </div>
         {{-- NOTED : TAMBAHKAN FILTERING BY KAMPUS atau nama cpl atau sks --}}
         {{-- TINGGAL ngasih nilai ke student dengan cpl ini abis itu testing --}}
 
-        <x-panel.show title="Rubrik" subtitle="Mikroskill">
+        <x-panel.show title="Mata Kuliah" subtitle="Konversi">
             @can('tambah-mikroskill')
                 <x-slot name="paneltoolbar">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <!-- Button Upload -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
-                            <i class="fa fa-plus"></i> Tambah Data Rubrik
+                            <i class="fa fa-plus"></i> Tambah Mata Kuliah
                         </button>
                     </div>
                     <!-- Modal Large -->
@@ -42,7 +42,7 @@
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Tambah Capaian Target</h5>
+                                    <h5 class="modal-title">Tambah Mata Kuliah Konversi</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -55,13 +55,17 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Capaian Target</th>
+                                                    <th>Nama Program Studi</th>
+                                                    <th>Nama Mata Kuliah</th>
                                                     <th>SKS</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="input-container">
                                                 <tr>
+                                                    <td>
+                                                        <textarea class="form-control" name="rubrik[]" maxlength="150" required></textarea>
+                                                    </td>
                                                     <td>
                                                         <textarea class="form-control" name="rubrik[]" maxlength="150" required></textarea>
                                                     </td>
@@ -93,57 +97,96 @@
                 </x-slot>
             @endcan
 
-
-            <!-- Tabel -->
-            @can('lihat-mikroskill')
-                <h3>Data CPL Mikroskil (Edit Langsung)</h3>
-                <table id="dt-basic-example" class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Kampus</th>
-                            <th>Rubrik CPL</th>
-                            <th>SKS</th>
-                            @can('hapus-mikroskill')
-                                <th>Aksi</th>
-                            @endcan
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($mikroskill as $item)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>
-                                    <label for="">{{ optional($item->kampus)->name }}</label>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control editable" data-id="{{ $item->id }}"
-                                        data-column="name" value="{{ $item->name }}">
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control editable" data-id="{{ $item->id }}"
-                                        data-column="sks" value="{{ $item->sks }}">
-                                </td>
-                                @can('hapus-mikroskill')
-                                    <td>
-                                        <a href="javascript:void(0);" onclick="confirmDelete({{ $item->id }})"
-                                            class="btn btn-danger">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-
-                                        <form id="delete-form-{{ $item->id }}"
-                                            action="{{ route('mikroskil.destroy', $item->id) }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    </td>
-                                @endcan
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            {{--TABEL--}}    
+            @can(abilities: 'lihat-mikroskill')
+            <h3>Daftar Mata Kuliah</h3>
+            <table id="dt-basic-example" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Program Studi</th>
+                        <th>Nama Mata Kuliah</th>
+                        <th>SKS</th>
+                        @can('hapus-mikroskill')
+                            <th>Aksi</th>
+                        @endcan
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <label for="">Teknik Informatika</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control editable" data-id="1" data-column="name" value="Pemrograman Web">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control editable" data-id="1" data-column="sks" value="3">
+                        </td>
+                        @can('hapus-mikroskill')
+                            <td>
+                                <a href="javascript:void(0);" onclick="confirmDelete(1)" class="btn btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <form id="delete-form-1" action="#" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </td>
+                        @endcan
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>
+                            <label for="">Sistem Informasi</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control editable" data-id="2" data-column="name" value="Basis Data">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control editable" data-id="2" data-column="sks" value="4">
+                        </td>
+                        @can('hapus-mikroskill')
+                            <td>
+                                <a href="javascript:void(0);" onclick="confirmDelete(2)" class="btn btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <form id="delete-form-2" action="#" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </td>
+                        @endcan
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>
+                            <label for="">Teknik Elektro</label>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control editable" data-id="3" data-column="name" value="Sistem Digital">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control editable" data-id="3" data-column="sks" value="3">
+                        </td>
+                        @can('hapus-mikroskill')
+                            <td>
+                                <a href="javascript:void(0);" onclick="confirmDelete(3)" class="btn btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <form id="delete-form-3" action="#" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </td>
+                        @endcan
+                    </tr>
+                </tbody>
+            </table>
             @endcan
+
+        
         </x-panel.show>
     </main>
 @endsection

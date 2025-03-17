@@ -17,12 +17,12 @@
         <div class="subheader">
             @component('inc._page_heading', [
                 'icon' => 'graduation-cap',
-                'heading1' => 'Laporan Akhir',
+                'heading1' => 'Pengajuan Berkas',
                 'heading2' => 'MBKM',
             ])
             @endcomponent
         </div>
-        <x-panel.show title="Daftar" subtitle="Laporan Akhir">
+        <x-panel.show title="Daftar" subtitle="Pengajuan Berkas">
             <x-slot name="paneltoolbar">
                 @can('tambah-laporan-akhir')
                     <x-panel.tool-bar>
@@ -51,6 +51,17 @@
                                     <form action="{{ route('report.store') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="mb-3">
+                                            <label for="mitra">Laporan Akhir</label>
+                                            <input class="form-control" name="file" type="file" id="file"
+                                                accept=".pdf, .doc, .docx" data-show-errors="true" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="mitra">Sertifikat</label>
+                                            <input class="form-control" name="file" type="file" id="file"
+                                                accept=".pdf, .doc, .docx" data-show-errors="true" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="mitra">Dokumentasi</label>
                                             <input class="form-control" name="file" type="file" id="file"
                                                 accept=".pdf, .doc, .docx" data-show-errors="true" required>
                                         </div>
@@ -93,14 +104,14 @@
                                             <label for="jenisKegiatan">Jenis Kegiatan</label>
                                             <select class="select2 form-control w-100" id="single-default" name="jenisKegiatan"
                                                 id="jenisKegiatan" required>
-                                                <option value="" selected disabled>Pilih Kampus</option>
+                                                {{-- <option value="" selected disabled>Pilih Kegiatan</option>
                                                 <option value="Magang Bersertifikat">Magang</option>
                                                 <option value="Studi Independen">Studi Independen</option>
-                                                <option value="Pertukan Mahasiswa Merdeka">Pertukan Mahasiswa Merdeka</option>
+                                                <option value="Pertukan Mahasiswa Merdeka">Pertukan Mahasiswa Merdeka</option> --}}
                                                 <option value="Kampus Mengajar">Kampus Mengajar</option>
-                                                <option value="Wirausaha Merdeka">Wirausaha Merdeka</option>
+                                                {{-- <option value="Wirausaha Merdeka">Wirausaha Merdeka</option>
                                                 <option value="Praktisi Mengajar">Praktisi Mengajar</option>
-                                                <option value="Magang Mandiri">Magang Mandiri</option>
+                                                <option value="Magang Mandiri">Magang Mandiri</option> --}}
                                             </select>
                                             @error('jenisKegiatan')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -122,147 +133,96 @@
             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                 <thead>
                     <tr>
-                        <th>Unggah berkas ke</th>
+                        <th>No</th>
+                        <th>NIM</th>
                         <th>Nama</th>
                         <th>Status</th>
-                        <th>Berkas</th>
-                        <th>SKS Terkonversi</th>
+                        <th>Berkas Laporan Akhir</th>
+                        <th>Berkas Sertifikat</th>
+                        <th>Berkas Dokumentasi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (auth()->user()->getRoleNames()->first() == 'Admin' || auth()->user()->getRoleNames()->first() == 'Dosen')
-                        @foreach ($report as $report)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $report->user->name }}</td>
-                                <td>
-                                    @if ($report->status == 1)
-                                        <span class="badge badge-primary">Waiting</span>
-                                    @elseif ($report->status == 2)
-                                        <span class="badge badge-warning">Review</span>
-                                    @elseif ($report->status == 3)
-                                        <span class="badge badge-danger">Rejected</span>
-                                    @else
-                                        <span class="badge badge-success">Approved</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($report->berkas)
-                                        <a href="{{ asset('storage/report/' . $report->berkas) }}" target="_blank">
-                                            <i class="fas fa-file-pdf" style="font-size: 24px;"></i> {{-- Bisa diubah ukurannya sesuai keinginan --}}
-                                        </a>
-                                    @else
-                                        <span class="text-danger">Belum diisi</span>
-                                    @endif
-                                </td>
-                                {{-- @if ($report->status == 0) --}}
-                                <td>
-                                    @if ($report->nilai != null)
-                                        {{ $report->nilai }}
-                                    @elseif($report->status == 0)
-                                        <span class="text-success">Sedang Proses</span>
-                                    @elseif($report->status == 1 || $report->status == 2)
-                                        <span class="text-danger">Sedang Ditinjau</span>
-                                    @elseif($report->status == 3)
-                                        <span class="text-danger">Belum memenuhi syarat</span>
-                                    @endif
-                                </td>
-                                {{-- @endif --}}
-                                @canany(['edit-laporan-akhir', 'hapus-laporan-akhir', 'review-laporan-akhir'])
-                                    <td>
-                                        <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                        @if ($report->nilai != null)
-                                            <a href="{{ route('report.print', $report->id) }}" class="btn btn-info">
-                                                <i class="fa fa-download"></i>
-                                            </a>
-                                        @endif
-
-                                        {{-- Tombol Edit --}}
-                                        {{-- @can('edit-laporan-akhir')
-                                    <a href="{{ route('report.edit', $report->id) }}" class="btn btn-warning">Edit</a>
-                                @endcan --}}
-
-                                        {{-- Tombol Hapus --}}
-                                        {{-- @can('hapus-laporan-akhir')
-                                            <button type="button" class="btn btn-danger"
-                                                onclick="confirmDelete({{ $report->id }})">
-                                                <i class="fa fa-trash"></i></button>
-                                        @endcan --}}
-
-                                        {{-- Form Hapus --}}
-                                        {{-- @can('hapus-laporan-akhir')
-                                            <form id="delete-form-{{ $report->id }}"
-                                                action="{{ route('report.destroy', $report->id) }}" method="POST"
-                                                style="display:none;">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                        @endcan --}}
-                                        @can('review-laporan-akhir')
-                                            @if ($report->status == 1 || $report->status == 2)
-                                                <a href="{{ route('report.review', $report->id) }}"
-                                                    class="btn btn-success">review</a>
-                                            @endif
-                                        @endcan
-                                    </td>
-                                @endcanany
-                            </tr>
-                        @endforeach
-                    @else
-                        @foreach ($reportUser as $report)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $report->user->name }}</td>
-                                <td>
-                                    @if ($report->status == 1)
-                                        <span class="badge badge-primary">Waiting</span>
-                                    @elseif ($report->status == 2)
-                                        <span class="badge badge-warning">Review</span>
-                                    @elseif ($report->status == 3)
-                                        <span class="badge badge-danger">Rejected</span>
-                                    @else
-                                        <span class="badge badge-success">Accepted</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($report->berkas)
-                                        <a href="{{ asset('storage/report/' . $report->berkas) }}" target="_blank">
-                                            <i class="fas fa-file-pdf"></i>
-                                        </a>
-                                    @else
-                                        <span class="text-danger">Belum diisi</span>
-                                    @endif
-                                </td>
-                                {{-- @if ($report->status == 0) --}}
-                                <td>
-                                    @if ($report->nilai != null)
-                                        {{ $report->nilai }}
-                                    @elseif($report->status == 0)
-                                        <span class="text-success">Sedang Proses</span>
-                                    @elseif($report->status == 1 || $report->status == 2)
-                                        <span class="text-danger">Sedang Ditinjau</span>
-                                    @elseif($report->status == 3)
-                                        <span class="text-danger">Belum memenuhi syarat</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">
-                                        <i class="fa fa-eye"></i>
+                    @php
+                        $reports = [
+                            ['id' => 1, 'nim' => '123456789', 'name' => 'Ahmad', 'status' => 1, 'berkas' => 'laporan1.pdf'],
+                            ['id' => 2, 'nim' => '987654321', 'name' => 'Budi', 'status' => 2, 'berkas' => 'laporan2.pdf'],
+                            ['id' => 3, 'nim' => '456123789', 'name' => 'Citra', 'status' => 3, 'berkas' => null],
+                            ['id' => 4, 'nim' => '321654987', 'name' => 'Dewi', 'status' => 4, 'berkas' => 'laporan4.pdf'],
+                            ['id' => 5, 'nim' => '741852963', 'name' => 'Eko', 'status' => 5, 'berkas' => 'laporan5.pdf'],
+                        ];
+                    @endphp
+            
+                    @foreach ($reports as $index => $report)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $report['nim'] }}</td>
+                            <td>{{ $report['name'] }}</td>
+                            <td>
+                                @if ($report['status'] == 1)
+                                    <span class="badge badge-primary">Menunggu Validasi</span>
+                                @elseif ($report['status'] == 2)
+                                    <span class="badge badge-warning">Menunggu Penilaian</span>
+                                @elseif ($report['status'] == 3)
+                                    <span class="badge badge-danger">Tidak Valid</span>
+                                @elseif ($report['status'] == 4)
+                                    <span class="badge badge-success">Valid</span>
+                                @elseif ($report['status'] == 5)
+                                    <span class="badge badge-info">Berhasil Dinilai</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($report['berkas'])
+                                    <a href="{{ asset('storage/report/' . $report['berkas']) }}" target="_blank">
+                                        <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
-                                    @if ($report->nilai != null)
-                                        <a href="{{ route('report.print', $report->id) }}" class="btn btn-info">
-                                            <i class="fa fa-download"></i>
-                                        </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
+                                @else
+                                    <span class="text-danger">Belum diisi</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($report['berkas'])
+                                    <a href="{{ asset('storage/report/' . $report['berkas']) }}" target="_blank">
+                                        <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
+                                    </a>
+                                @else
+                                    <span class="text-danger">Belum diisi</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($report['berkas'])
+                                    <a href="{{ asset('storage/report/' . $report['berkas']) }}" target="_blank">
+                                        <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
+                                    </a>
+                                @else
+                                    <span class="text-danger">Belum diisi</span>
+                                @endif
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-info">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+            
+                                @if ($report['status'] == 5)
+                                    <a href="#" class="btn btn-info">
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                @endif
+            
+                                @if (in_array($report['status'], [1, 2, 3, 4]))
+                                <a href="#" 
+                                    class="btn btn-success">
+                                    <i class="fa fa-clipboard"></i>
+                                </a>
+                            @endif
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
+            
+                        
         </x-panel.show>
     </main>
 @endsection

@@ -156,7 +156,7 @@
                                 @endif
                             </td>
                             {{-- @if ($report->status == 0) --}}
-                            <td>
+                            {{-- <td>
                                 @if ($report->nilai != null)
                                     {{ $report->nilai }}
                                 @elseif($report->status == 0)
@@ -166,7 +166,7 @@
                                 @elseif($report->status == 3)
                                     <span class="text-danger">Belum memenuhi syarat</span>
                                 @endif
-                            </td>
+                            </td> --}}
                             {{-- @endif --}}
                             @canany(['edit-laporan-akhir', 'hapus-laporan-akhir', 'review-laporan-akhir'])
                                 <td>

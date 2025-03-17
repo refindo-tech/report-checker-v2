@@ -4,7 +4,7 @@
     <li class="{{ Request::is('report/*') ? 'active' : '' }}">
         <a href="{{ route('report.indexDosen') }}" title="report Admin" data-filter-tags="admin profil">
             <i class="fa fa-flag"></i>
-            <span class="nav-link-text" data-i18n="nav.admin_profil">Laporan Akhir</span>
+            <span class="nav-link-text" data-i18n="nav.admin_profil">Pengajuan Konversi</span>
         </a>
     </li>
 @else
@@ -14,17 +14,17 @@
         <li class="{{ Request::is('report/*') ? 'active' : '' }}">
             <a href="{{ route('report.index') }}" title="report Admin" data-filter-tags="admin profil">
                 <i class="fa fa-flag"></i>
-                <span class="nav-link-text" data-i18n="nav.admin_profil">Laporan Akhir</span>
+                <span class="nav-link-text" data-i18n="nav.admin_profil">Pengajuan Konversi</span>
             </a>
         </li>
     @endcan
 @endif
 @can('lihat-mikroskill')
-    <li class="nav-title">Capaian Pembelajaran Lulusan (CPL)</li>
+    <li class="nav-title">Komponen Mikroskill</li>
     <li class="{{ Request::is('mikroskil/*') ? 'active' : '' }}">
         <a href="{{ route('mikroskil.index') }}" title="cpl" data-filter-tags="admin profil">
             <i class="fa-solid fa-check-to-slot"></i>
-            <span class="nav-link-text" data-i18n="nav.admin_profil">Rubrik CPL Mikroskill</span>
+            <span class="nav-link-text" data-i18n="nav.admin_profil">Komponen Mikroskill</span>
         </a>
     </li>
 @endcan
