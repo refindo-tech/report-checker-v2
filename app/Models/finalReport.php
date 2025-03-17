@@ -15,14 +15,21 @@ class finalReport extends Model
         'user_id',
         'reviewer_id',
         'status',
-        'berkas',
+        'laprak',
+        'sertifikat',
+        'dokumentasi',
         'feedback',
-        'nilai',
+        'nilai_sertifikat',
+        'nilai_dokumentasi',
         'mitra',
         'addressMitra',
         'start_date',
         'end_date',
         'JenisKegiatan',
+        'laprak_status',
+        'sertifikat_status',
+        'dokumentasi_status',
+        'mikroskill_status',
     ];
 
     public function user()

@@ -39,19 +39,33 @@
                         </div>
                     </x-panel.tool-bar>
                 </x-slot>
-                <div class="form-group">
-                    <label for="id_kampus">Kampus</label>
-                    <select class="form-control select2" id="id_kampus" name="id_kampus" required>
-                        <option value="" disabled selected>Pilih Kampus</option>
-                        @foreach ($kampus as $item)
-                            <option value="{{ $item->id }}"
-                                {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
-                                {{ $item->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
+                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                    <div class="form-group">
+                        <label for="id_kampus">Kampus</label>
+                        <select class="form-control select2" id="id_kampus" name="id_kampus" required>
+                            <option value="" disabled selected>Pilih Kampus</option>
+                            @foreach ($kampus as $item)
+                                <option value="{{ $item->id }}"
+                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    <div class="form-group">
+                        <label for="id_kampus">Kampus</label>
+                        <select class="form-control select2" id="id_kampus" name="id_kampus" required>
+                            <option value="" disabled selected>Pilih Kampus</option>
+                            @foreach ($kampusRole as $item)
+                                <option value="{{ $item->id }}"
+                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
                 <div class="form-group" id="fakultasFields" style="display: none;">
                     <label for="id_fakultas">Fakultas</label>
                     <select class="form-control select2" id="id_fakultas" name="id_fakultas">
@@ -206,7 +220,7 @@
                             $.each(data, function(key, value) {
                                 $('#id_fakultas').append(
                                     `<option value="${value.id}" ${selectedFakultas == value.id ? 'selected' : ''}>${value.name}</option>`
-                                    );
+                                );
                             });
                             $('#fakultasFields').show();
                         }
@@ -228,7 +242,7 @@
                             $.each(data, function(key, value) {
                                 $('#id_prodi').append(
                                     `<option value="${value.id}" ${selectedProdi == value.id ? 'selected' : ''}>${value.name}</option>`
-                                    );
+                                );
                             });
                             $('#prodiFields').show();
                         }

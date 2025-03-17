@@ -34,40 +34,109 @@
                             <i class="fal fa-ellipsis-v"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-animated dropdown-menu-right">
-                            <a class="dropdown-item" href="{{ route('report.index') }}">Kembali</a>
+                            <a class="dropdown-item" href="{{ route('report.indexMahasiswa', $report->user_id) }}">Kembali</a>
                         </div>
                     </x-panel.tool-bar>
                 </x-slot>
 
                 <div class="row">
                     <!-- Pilih Status -->
+
+                    <!-- Validasi Berkas -->
                     <div class="col-md-12">
-                        <label for="status">Status Laporan</label>
+                        {{-- <label>Validasi Berkas</label> --}}
                         <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="approve" value="0"
-                                    required>
-                                <label class="form-check-label text-success" for="approve">Approved</label>
+                            <div class="mb-2">
+                                <strong>Laporan Akhir</strong>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="laprak" id="laprak_valid"
+                                            value="1" required>
+                                        <label class="form-check-label text-success" for="laprak_valid">Valid</label>
+                                    </div> &NonBreakingSpace;&NonBreakingSpace;
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="laprak" id="laprak_invalid"
+                                            value="0" required>
+                                        <label class="form-check-label text-danger" for="laprak_invalid">Tidak Valid</label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="reject" value="3"
-                                    required>
-                                <label class="form-check-label text-danger" for="reject">Rejected</label>
+
+                            <div class="mb-2">
+                                <strong>Sertifikat</strong>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sertifikat"
+                                            id="sertifikat_valid" value="1" required>
+                                        <label class="form-check-label text-success" for="sertifikat_valid">Valid</label>
+                                    </div> &NonBreakingSpace;&NonBreakingSpace;
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sertifikat"
+                                            id="sertifikat_invalid" value="0" required>
+                                        <label class="form-check-label text-danger" for="sertifikat_invalid">Tidak
+                                            Valid</label>
+                                    </div>
+                                </div>
+                                <input type="number" class="form-control mt-2" name="nilai_sertifikat"
+                                    id="nilai_sertifikat" placeholder="Masukkan nilai sertifikat" min="0"
+                                    max="100">
+                            </div>
+
+                            <div class="mb-2">
+                                <strong>Dokumentasi</strong>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dokumentasi"
+                                            id="dokumentasi_valid" value="1" required>
+                                        <label class="form-check-label text-success" for="dokumentasi_valid">Valid</label>
+                                    </div> &NonBreakingSpace;&NonBreakingSpace;
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dokumentasi"
+                                            id="dokumentasi_invalid" value="0" required>
+                                        <label class="form-check-label text-danger" for="dokumentasi_invalid">Tidak
+                                            Valid</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <strong>Tes Mikroskill</strong>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tes_mikroskill"
+                                            id="tes_mikroskill_valid" value="1" required>
+                                        <label class="form-check-label text-success"
+                                            for="tes_mikroskill_valid">Valid</label>
+                                    </div> &NonBreakingSpace;&NonBreakingSpace;
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tes_mikroskill"
+                                            id="tes_mikroskill_invalid" value="0" required>
+                                        <label class="form-check-label text-danger" for="tes_mikroskill_invalid">Tidak
+                                            Valid</label>
+                                    </div>
+                                </div>
+                                <input type="number" class="form-control mt-2" name="nilai_mikroskill" value="{{ old('nilai_mikroskill') . $report->nilai_mikroskill }}"
+                                    id="nilai_mikroskill" placeholder="Masukkan nilai tes mikroskill" min="0"
+                                    max="100">
+                            </div>
+
+                            <div class="mb-2">
+                                <strong>Maksimal SKS</strong>
+                                <input type="number" class="form-control mt-2" name="maks_sks" id="maks_sks"
+                                    placeholder="Maksimal SKS yang dapat diambil" min="0" max="24">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Feedback -->
+                    <!-- Feedback / Komentar -->
                     <div class="col-md-12">
-                        <label for="feedback">Feedback</label>
+                        <label for="feedback">Feedback / Komentar</label>
                         <textarea name="feedback" id="feedback" class="form-control" rows="3"
-                            placeholder="Berikan alasan jika laporan ditolak"></textarea>
-                        @error('feedback')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong></span>
-                        @enderror
+                            placeholder="Berikan alasan atau komentar"></textarea>
                     </div>
                 </div>
+
+
 
                 <x-slot name="panelcontentfoot">
                     <x-button type="submit" color="primary" :label="__('Save')" class="ml-auto" />

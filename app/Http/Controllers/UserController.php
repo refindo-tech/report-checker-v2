@@ -26,12 +26,13 @@ class UserController extends Controller
     public function create()
     {
         $kampus = Kampus::all();
+        $kampusRole = Kampus::where('id', auth()->user()->id_kampus)->get();
         $prodi = ProgramStudi::all();
         $fakultas = Fakultas::all();
         $fakultasRole = Fakultas::where('id_kampus', auth()->user()->id_kampus)->with('kampus')->get();
         // dd($fakultasRole);
         // $programStudi = ProgramStudi::where('id_fakultas', $fakultasRole->id)->with('fakultas.kampus')->get();
-        return view('user.create', compact('kampus', 'prodi', 'fakultas', 'fakultasRole'));
+        return view('user.create', compact('kampus', 'prodi', 'fakultas', 'fakultasRole', 'kampusRole'));
     }
 
     public function store(Request $request)
@@ -141,11 +142,12 @@ class UserController extends Controller
     {
         $users = User::with('prodi', 'mahasiswa', 'kampus')->findOrFail($id);
         $kampus = Kampus::all();
+        $kampusRole = Kampus::where('id', auth()->user()->id_kampus)->get();
         $fakultas = Fakultas::where('id_kampus', $users->id_kampus)->get();
         $prodi = ProgramStudi::where('id_fakultas', $users->id_fakultas)->get();
         // dd($users->name);
 
-        return view('user.edit', compact('users', 'kampus', 'fakultas', 'prodi'));
+        return view('user.edit', compact('users', 'kampus', 'fakultas', 'prodi', 'kampusRole'));
     }
 
     public function update(Request $request, $id)

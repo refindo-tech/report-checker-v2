@@ -18,17 +18,28 @@ class MasterController extends Controller
 {
     public function master_profil()
     {
-        $user = User::where('id', Auth::user()->id)->with('prodi', 'mahasiswa')->first();
-        // dd($user);
+        $user = User::where('id', Auth::user()->id)->with('prodi', 'mahasiswa', 'programStudi', 'fakultas')->first();
+        // $fakultas = optional(optional($user->programStudi)->fakultas)->id ?
+        //     Fakultas::find($user->programStudi->fakultas->id) : null;
+
+        // dd($user, $fakultas, $user->programStudi);
         return view('master.master_profil', compact('user'));
     }
     public function master_profil_edit()
     {
-        $users = User::where('id', Auth::user()->id)->with('prodi', 'mahasiswa', 'kampus', 'fakultas')->first();
+        $users = User::where('id', Auth::user()->id)->with('prodi', 'mahasiswa', 'kampus', 'fakultas', 'programStudi')->first();
         // $kampus = Kampus::all();
-        // $fakultas = Fakultas::where('id_kampus', $users->id_kampus)->get();
-        // $programstudi = ProgramStudi::where('id_fakultas', $fakultas->first()->id)->get();
-        return view('master.master_profil_edit', compact('users'));
+        // dd($users->programStudi);
+        $fakultas = optional($users)->id_kampus ?
+            Fakultas::where('id_kampus', $users->id_kampus)->get() : null;
+
+        // Ambil semua id_fakultas dari fakultas yang ditemukan
+        $fakultasIds = $fakultas->pluck('id');
+
+        // Cari semua program studi yang memiliki id_fakultas yang ada dalam fakultasIds
+        $programstudi = ProgramStudi::whereIn('id_fakultas', $fakultasIds)->get();
+
+        return view('master.master_profil_edit', compact('users', 'fakultas', 'programstudi'));
     }
     public function master_profil_update(Request $request)
     {
@@ -66,6 +77,7 @@ class MasterController extends Controller
             // update data product
             User::where('id', $id)->update([
                 'id_kampus' => $user->id_kampus,
+                'id_prodi' => $user->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
                 'image' => $imageName,
@@ -111,6 +123,7 @@ class MasterController extends Controller
             // update data product tanpa menyertakan file gambar
             User::where('id', $id)->update([
                 'id_kampus' => $user->id_kampus,
+                'id_prodi' => $user->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
             ]);
