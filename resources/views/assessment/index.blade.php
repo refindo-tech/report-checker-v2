@@ -1,5 +1,5 @@
 @extends('inc.main')
-@section('title', 'Penliaian MBKM')
+@section('title', 'Penilaian MBKM')
 @section('pages-css')
     <link rel="stylesheet" media="screen, print" href="/admin/css/fa-solid.css">
     <link rel="stylesheet" media="screen, print" href="/admin/css/theme-demo.css">
@@ -30,103 +30,82 @@
 
         <x-panel.show title="Data Penilaian" subtitle="Silakan lakukan penilaian">
             <x-slot name="paneltoolbar">
-                {{-- <x-panel.tool-bar>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
+                <x-panel.tool-bar>
+                    <button id="addRow" class="btn btn-primary mt-2">Tambah Baris</button>
+                    
+                    {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
                         <i class="fa fa-plus"></i> Tambah Data Penilaian
-                    </button>
-                </x-panel.tool-bar> --}}
-
-                {{-- <!-- Modal Tambah Data -->
-            <div class="modal fade" id="uploaddata" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Tambah Hasil Penilaian</h5>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ route('mikroskil.store') }}" method="POST">
-                                @csrf
-                                <div class="form-group">
-                                    <label for="id_mahasiswa">Mahasiswa</label>
-                                    <select class="form-control select2" name="id_mahasiswa" required>
-                                        <option value="" disabled selected>Pilih Mahasiswa</option>
-                                        @foreach ($mahasiswa as $mhs)
-                                            <option value="{{ $mhs->id }}">{{ $mhs->nim }} - {{ $mhs->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="id_cpl">Penilaian (CPL)</label>
-                                    <select class="form-control select2" name="id_cpl" required>
-                                        <option value="" disabled selected>Pilih CPL</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Jumlah SKS</label>
-                                    <input type="number" name="sks" class="form-control" min="1" max="10" required>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
+                    </button> --}}
+                </x-panel.tool-bar>
             </x-slot>
-
-            <!-- Tabel Data -->
             @can('lihat-assessment')
                 <div class="table-responsive">
                     <table id="dt-mahasiswa" class="table table-bordered">
                         <thead class="bg-primary text-white">
                             <tr>
-                                <th>NIM</th>
-                                <th>Nama</th>
-                                <th>Hasil Capaian</th>
-                                <th>Jumlah SKS</th>
+                                <th>Nama Mata Kuliah</th>
+                                <th>SKS</th>
+                                <th>Nilai</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($reports as $report)
+                            @php
+                                $dummyReports = [
+                                    ['id' => 1, 'nilai' => 3, 'selected_mk' => 1],
+                                    ['id' => 2, 'nilai' => 4, 'selected_mk' => 2],
+                                    ['id' => 3, 'nilai' => 2, 'selected_mk' => 3],
+                                ];
+                    
+                                $dummyMikroskill = [
+                                    ['id' => 1, 'name' => 'Pemrograman Web', 'sks' => 2],
+                                    ['id' => 2, 'name' => 'Basis Data', 'sks' => 3],
+                                    ['id' => 3, 'name' => 'Sistem Digital', 'sks' => 3],
+                                ];
+                            @endphp
+                    
+                            @foreach ($dummyReports as $report)
                                 <tr>
-                                    <td>{{ $report->mahasiswa->nim ?? 'Data tidak tersedia' }}</td>
-                                    <td>{{ $report->user->name }}</td>
+                                    <!-- Pilihan Mata Kuliah -->
                                     <td>
-                                        <select name="mikroskills[{{ $report->id }}][]"
-                                            class="select2-placeholder-multiple form-control select-product editable"
-                                            multiple="multiple">
-                                            @foreach ($mikroskill as $component)
-                                                <option value="{{ $component->id }}" data-sks="{{ $component->sks }}"
-                                                    data-id="{{ $component->id }}" data-column="mikroskills"
-                                                    @if (in_array($component->name, $reportMikroskill[$report->id] ?? [])) selected @endif>
-                                                    {{ $component->name }} ({{ $component->sks }} SKS)
+                                        <select name="mikroskills[{{ $report['id'] }}]" 
+                                                class="form-control select-mata-kuliah"
+                                                data-id="{{ $report['id'] }}">
+                                            <option value="" data-sks="0">Pilih Mata Kuliah</option>
+                                            @foreach ($dummyMikroskill as $component)
+                                                <option value="{{ $component['id'] }}" 
+                                                        data-sks="{{ $component['sks'] }}"
+                                                        @if($component['id'] == $report['selected_mk']) selected @endif>
+                                                    {{ $component['name'] }} ({{ $component['sks'] }} SKS)
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('mikroskills')
-                                            <small class="text-danger help-block">{{ $message }}</small>
-                                        @enderror
-
                                     </td>
-                                    <td><input type="number" class="form-control editable total-sks" min="1"
-                                            max="10" data-id="{{ $report->id }}" value="{{ $report->nilai }}"
-                                            data-column="sks" readonly>
+                    
+                                    <!-- Jumlah SKS (Readonly) -->
+                                    <td>
+                                        <input type="number" class="form-control total-sks" 
+                                               min="1" max="10" 
+                                               data-id="{{ $report['id'] }}" 
+                                               value="{{ collect($dummyMikroskill)->firstWhere('id', $report['selected_mk'])['sks'] ?? 0 }}" 
+                                               readonly>
+                                    </td>
+                    
+                                    <!-- Input Nilai -->
+                                    <td>
+                                        <input type="number" class="form-control editable" 
+                                               data-id="{{ $report['id'] }}" 
+                                               data-column="nilai" 
+                                               value="0" 
+                                               min="0" max="100">
                                     </td>
                                     <td>
-                                        <button class="btn btn-primary submit-assessment" data-id="{{ $report->id }}">Simpan
-                                            Penilaian</button>
+                                        <button class="btn btn-danger btn-sm delete-row">Hapus</button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
+                    </table>           
                 </div>
             @endcan
         </x-panel.show>
@@ -135,39 +114,94 @@
 
 @section('pages-script')
     <script src="/admin/js/datagrid/datatables/datatables.bundle.js"></script>
-
     <script>
         $(document).ready(function() {
             // Inisialisasi DataTable
             $('#dt-mahasiswa').DataTable({
                 responsive: true,
             });
+    
+            // Inisialisasi Select2
+            $('.select-mata-kuliah').select2({
+                placeholder: "Pilih Matakuliah",
+                allowClear: true
+            });
+    
+            // Update SKS saat mata kuliah dipilih
+            $(document).on('change', '.select-mata-kuliah', function() {
+                let selectedOption = $(this).find(':selected');
+                let sksValue = selectedOption.data('sks');
+                let row = $(this).closest('tr');
+                row.find('.total-sks').val(sksValue);
+            });
+    
+            // Fungsi untuk menambahkan baris baru
+            $('#addRow').on('click', function () {
+                let tableBody = $('#dt-mahasiswa tbody');
+                let rowCount = tableBody.find('tr').length + 1;
+    
+                let newRow = `
+                    <tr>
+                        <td>
+                            <select name="mikroskills[${rowCount}]" class="form-control select-mata-kuliah" data-id="${rowCount}">
+                                <option value="" data-sks="0">Pilih Mata Kuliah</option>
+                                @foreach ($dummyMikroskill as $component)
+                                    <option value="{{ $component['id'] }}" data-sks="{{ $component['sks'] }}">
+                                        {{ $component['name'] }} ({{ $component['sks'] }} SKS)
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control total-sks" min="1" max="10" data-id="${rowCount}" value="0" readonly>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control editable" data-id="${rowCount}" data-column="nilai" value="0" min="0" max="100">
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm deleteRow">Hapus</button>
+                        </td>
+
+                    </tr>
+                `;
+    
+                tableBody.append(newRow);
+    
+                // Reinitialize Select2 untuk elemen baru
+                $('.select-mata-kuliah').select2({
+                    placeholder: "Pilih Matakuliah",
+                    allowClear: true
+                });
+            });
+    
+            // Fungsi untuk menghapus baris tertentu
+            $(document).on('click', '.deleteRow', function () {
+                let row = $(this).closest('tr');
+                row.remove();
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <!-- Tambahkan SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 
     <script>
         $(document).ready(function() {
-            $('.select-multiple').select2({
-                placeholder: "Pilih Capaian",
-                allowClear: true
-            });
-            // Inisialisasi Select2
-            // $(".select2-placeholder-multiple").select2({
-            //     placeholder: "Pilih Capaian",
+            // $('.select-multiple').select2({
+            //     placeholder: "Pilih Matakuliah",
             //     allowClear: true
             // });
+            
 
-            function initSelect2() {
-                $(".select2-placeholder-multiple").select2({
-                    placeholder: "Pilih Capaian",
-                    allowClear: true
-                });
-            }
+            // function initSelect2() {
+            //     $(".select2-placeholder-multiple").select2({
+            //         placeholder: "Pilih Capaian",
+            //         allowClear: true
+            //     });
+            // }
 
-            initSelect2(); // Jalankan saat halaman pertama dimuat
+            // initSelect2(); // Jalankan saat halaman pertama dimuat
 
             // Jika tabel di-refresh secara AJAX, re-inisialisasi Select2 setelah perubahan
             $(document).on('DOMNodeInserted', function(e) {

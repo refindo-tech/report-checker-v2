@@ -26,6 +26,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/index', [AssessmentController::class, 'index'])->name('assessment.index');
     });
     });
+
+    Route::middleware('role:Prodi|SuperAdmin')->prefix('assessment')->group(function () {
+        Route::get('/indexDosen', [AssessmentController::class, 'indexDosen'])->name('assessment.indexDosen');
+    });
     
     // Rute untuk menambah data penilaian
     Route::middleware('permission:tambah-assessment')->prefix('assessment')->group(function () {
