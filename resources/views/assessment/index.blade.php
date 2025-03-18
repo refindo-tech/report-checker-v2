@@ -107,8 +107,13 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-end mt-3">
-                        <button id="simpan-data" class="btn btn-primary">Simpan Data</button>
-                    </div>
+                        <a class="btn btn-success">
+                            <i class="fa fa-download"></i>
+                        </a>
+                        <a>
+                            <button id="simpan-data" class="btn btn-primary">Simpan Data</button>
+                        </a> 
+                        </div>
                                
                 </div>
             @endcan

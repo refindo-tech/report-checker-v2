@@ -54,6 +54,7 @@
                                 style="font-size: 8rem;"></i>
                         </div>
                     </div>
+                    
                     <div class="col-sm-6 col-xl-3">
                         <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
                             <div class="">
