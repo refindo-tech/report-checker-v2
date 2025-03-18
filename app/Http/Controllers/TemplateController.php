@@ -16,24 +16,37 @@ class TemplateController extends Controller
     // intel
     public function index()
     {
-        $jumlahAdmin = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Admin');
-        })->where('id_kampus', Auth::user()->id_kampus)->count();
+        // ADMIN DASBOR
+        $valid = finalReport::where('status', 4)->count();
+        $waitingValidasi = finalReport::where('status', 1)->count();
+        $notValid = finalReport::where('status', 3)->count();
+        $kampusId = Auth::user()->id_kampus; // Ambil prodi_id user yang login
+        // Ambil semua user yang memiliki prodi_id yang sama
+        $userIds = User::where('id_kampus', $kampusId)->pluck('id')->toArray();
+        // Ambil finalReport berdasarkan user_id yang memiliki prodi_id tersebut
+        $adminFirst = optional(FinalReport::whereIn('user_id', $userIds)->with('user')->latest()->first());
+        $adminGet = FinalReport::whereIn('user_id', $userIds)->whereIn('status', [1, 4, 3])->with('user')->get() ?? collect();
+        // dd($valid, $waitingValidasi, $notValid, $adminFirst, $adminGet);
 
-        $jumlahDosen = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Dosen');
-        })->where('id_kampus', Auth::user()->id_kampus)->count();
+        // MAHASISWA DASBOR
+        $mahasiswaViewFirst = optional(finalReport::where('user_id', Auth::user()->id)->with('user')->latest()->first());
+        $mahasiswaViewGet = finalReport::where('user_id', Auth::user()->id)->with('user')->latest()->get() ?? collect(); // Jika null, ubah menjadi Collection kosong
 
-        $jumlahMahasiswa = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Mahasiswa');
-        })->where('id_kampus', Auth::user()->id_kampus)->count();
+        // PRODI DASBOR
+        $prodiId = Auth::user()->id_prodi; // Ambil prodi_id user yang login
+        // Ambil semua user yang memiliki prodi_id yang sama
+        $userIds = User::where('id_prodi', $prodiId)->pluck('id')->toArray();
+        // Ambil finalReport berdasarkan user_id yang memiliki prodi_id tersebut
+        $prodiFirst = optional(FinalReport::whereIn('user_id', $userIds)->with('user')->latest()->first());
+        $prodiGet = FinalReport::whereIn('user_id', $userIds)->whereIn('status', [2, 4])->with('user')->get() ?? collect();
+        $prodiDinilai = FinalReport::whereIn('user_id', $userIds)->where('status', 2)->with('user')->count();
+        $waitingAssesment = FinalReport::whereIn('user_id', $userIds)->where('status', 4)->with('user')->count();
 
-        $jumlahReport = finalReport::whereHas('user', function ($query) {
-            $query->where('id_kampus', Auth::user()->id_kampus);
-        })->count();
-        
+        // dd($mahasiswaViewFirst, $mahasiswaViewGet);
 
-        return view('dashboard', compact('jumlahAdmin', 'jumlahDosen', 'jumlahMahasiswa', 'jumlahReport'));
+
+
+        return view('dashboard', compact('mahasiswaViewFirst', 'mahasiswaViewGet', 'prodiFirst', 'prodiGet', 'prodiDinilai', 'waitingAssesment', 'valid', 'waitingValidasi', 'notValid', 'adminFirst', 'adminGet'));
     }
     public function about()
     {

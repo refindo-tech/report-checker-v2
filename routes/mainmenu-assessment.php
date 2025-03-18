@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:tambah-assessment')->prefix('assessment')->group(function () {
         Route::post('/updateInline', [AssessmentController::class, 'updateInline'])->name('assessment.updateInline');
         // Route::post('/create', [AssessmentController::class, 'store'])->name('assessment.store');
-        Route::post('/simpan-nilai', [PenilaianController::class, 'store'])->name('assessment.store');
+        Route::post('/simpan-nilai', [AssessmentController::class, 'store'])->name('assessment.store');
         // Route::post('/review{id}', [CplMikroskilController::class, 'reviewstore'])->name('mikroskil.reviewstore');
     });
 

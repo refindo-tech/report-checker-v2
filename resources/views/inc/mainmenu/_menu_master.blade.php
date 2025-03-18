@@ -1,4 +1,4 @@
-@if (Auth::user()->getRoleNames()->first() == 'AdminPT')
+@if (Auth::user()->getRoleNames()->first() == 'AdminPT' || Auth::user()->getRoleNames()->first() == 'SuperAdmin')
     <li class="nav-title">Unggah Berkas</li>
     {{-- @can('lihat-produk') --}}
     <li class="{{ Request::is('report/*') ? 'active' : '' }}">
@@ -28,15 +28,8 @@
         </li>
     @endcan
 @endif
-@can('lihat-mikroskill')
-    <li class="nav-title">Komponen Mikroskill</li>
-    <li class="{{ Request::is('mikroskil/*') ? 'active' : '' }}">
-        <a href="{{ route('mikroskil.index') }}" title="cpl" data-filter-tags="admin profil">
-            <i class="fa-solid fa-check-to-slot"></i>
-            <span class="nav-link-text" data-i18n="nav.admin_profil">Komponen Mikroskill</span>
-        </a>
-    </li>
-@endcan
+{{-- <li class="nav-title">Komponen Mikroskill</li> --}}
+
 @can('lihat-kampus')
     <li class="nav-title">Master Data</li>
     <li class="{{ Request::is('kampus/*') ? 'active' : '' }}">
@@ -59,6 +52,14 @@
         <a href="{{ route('programstudi.index') }}" title="Profil Admin" data-filter-tags="admin profil">
             <i class="fa-solid fa-graduation-cap"></i>
             <span class="nav-link-text" data-i18n="nav.admin_profil">Program Studi</span>
+        </a>
+    </li>
+@endcan
+@can('lihat-mikroskill')
+    <li class="{{ Request::is('matakuliah/*') ? 'active' : '' }}">
+        <a href="{{ route('matakuliah.index') }}" title="cpl" data-filter-tags="admin profil">
+            <i class="fa-solid fa-book-open"></i>
+            <span class="nav-link-text" data-i18n="nav.admin_profil">Mata Kuliah</span>
         </a>
     </li>
 @endcan

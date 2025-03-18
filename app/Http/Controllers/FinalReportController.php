@@ -25,7 +25,7 @@ class FinalReportController extends Controller
         // dd($report);
         $reportUser = finalReport::where('user_id', Auth::user()->id)->with('user')->get();
         $reports = finalReport::where('user_id', Auth::user()->id)->with('user')->latest()->first();
-        // dd($reports);
+        // dd($report);
         return view('final_report.index', compact('report', 'reports', 'reportUser'));
     }
 

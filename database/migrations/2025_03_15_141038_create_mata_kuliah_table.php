@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('mata_kuliah', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('id_kampus')->nullable(); 
             $table->bigInteger('id_prodi')->nullable(); 
             $table->string('name');
             $table->integer('sks');
