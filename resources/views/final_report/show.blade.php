@@ -47,7 +47,7 @@
                     </div>
                     <div class="flex items-center">
                         <p class="text-sm text-gray-600 mr-4">
-                            <strong>Tanggapan: <br/></strong>
+                            <strong>Tanggapan: <br /></strong>
                             @if ($finalReport->feedback != null)
                                 {!! nl2br(e($finalReport->feedback)) !!}
                             @else
@@ -75,15 +75,61 @@
             <div class="card">
                 <div class="card-body">
                     <p><strong>Nama Mahasiswa:</strong> {{ $finalReport->user->name }}</p>
-                    <p><strong>Berkas: </strong>
-                        @if ($finalReport->berkas)
-                            <a href="{{ asset('storage/report/' . $finalReport->berkas) }}" target="_blank">
-                                <i class="fas fa-file-pdf"></i>
+                    <p><strong>Berkas Laporan: </strong>
+                        @if ($finalReport->laprak)
+                            <a href="{{ asset('storage/report/' . $finalReport->laprak) }}" target="_blank">
+                                <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                             </a>
+                            @if ($finalReport->laprak_status == true)
+                                <i class="fa-solid fa-square-check text-success"></i>
+                            @else
+                                <i class="fa-solid fa-square-xmark text-danger"></i>
+                            @endif
                         @else
                             <span class="text-danger">Belum diisi</span>
                         @endif
                     </p>
+                    <p><strong>Berkas Sertifikat: </strong>
+                        @if ($finalReport->sertifikat)
+                            <a href="{{ asset('storage/sertifikat/' . $finalReport->sertifikat) }}" target="_blank">
+                                <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
+                            </a>
+                            @if ($finalReport->sertifikat_status == true)
+                                <i class="fa-solid fa-square-check text-success"></i>
+                            @else
+                                <i class="fa-solid fa-square-xmark text-danger"></i>
+                            @endif
+                        @else
+                            <span class="text-danger">Belum diisi</span>
+                        @endif
+                    </p>
+                    <p><strong>Berkas Dokumentasi: </strong>
+                        @if ($finalReport->dokumentasi)
+                            <a href="{{ asset('storage/dokumentasi/' . $finalReport->dokumentasi) }}" target="_blank">
+                                <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
+                            </a>
+                            @if ($finalReport->dokumentasi_status == true)
+                                <i class="fa-solid fa-square-check text-success"></i>
+                            @else
+                                <i class="fa-solid fa-square-xmark text-danger"></i>
+                            @endif
+                        @else
+                            <span class="text-danger">Belum diisi</span>
+                        @endif
+                    </p>
+                    <p><strong>Nilai Tes Mikroskill: </strong>
+                        @if ($finalReport->nilai_mikroskill)
+                            {{ $finalReport->nilai_mikroskill }}
+                            @if ($finalReport->mikroskill_status == true)
+                                <i class="fa-solid fa-square-check text-success"></i>
+                            @else
+                                <i class="fa-solid fa-square-xmark text-danger"></i>
+                            @endif
+                        @else
+                            <span class="text-danger">Belum diisi</span>
+                        @endif
+                    </p>
+
                     <p><strong>Total Konversi:</strong>
                         @if ($finalReport->nilai != null)
                             {{ $finalReport->nilai }}
@@ -112,13 +158,13 @@
                     </p>
                     <p><strong>status:</strong>
                         @if ($finalReport->status == 1)
-                            <span class="badge badge-primary">Waiting</span>
+                            <span class="badge badge-primary">Menunggu Validasi</span>
                         @elseif ($finalReport->status == 2)
-                            <span class="badge badge-warning">Review</span>
+                            <span class="badge badge-warning">Menunggu Penilaian</span>
                         @elseif ($finalReport->status == 3)
-                            <span class="badge badge-danger">Rejected</span>
-                        @else
-                            <span class="badge badge-success">Accepted</span>
+                            <span class="badge badge-danger">Tidak Valid</span>
+                        @elseif ($finalReport->status == 4)
+                            <span class="badge badge-success">Berhasil Dinilai</span>
                         @endif
                     </p>
                     @canany(['edit-laporan-akhir', 'hapus-laporan-akhir'])
@@ -133,7 +179,14 @@
                             </form>
                         @endcan
                     @endcanany
-                    <a href="{{ route('report.index') }}" class="btn btn-secondary">Back</a>
+                    @if (Auth::user()->getRoleNames()->first() == 'AdminPT' ||
+                            Auth::user()->getRoleNames()->first() == 'SuperAdmin' ||
+                            (Auth::user()->getRoleNames()->first() == 'Prodi' && $finalReport->status == 4))
+                        <a href="{{ route('report.indexMahasiswa', $finalReport->user_id) }}"
+                            class="btn btn-secondary">Back</a>
+                    @else
+                        <a href="{{ route('report.index') }}" class="btn btn-secondary">Back</a>
+                    @endif
                 </div>
             </div>
         </x-panel.show>

@@ -31,4 +31,8 @@ class Kampus extends Model
     {
         return $this->hasMany(Fakultas::class);
     }
+
+    public function matakuliah(){
+        return $this->hasMany(MataKuliah::class);
+    }
 }

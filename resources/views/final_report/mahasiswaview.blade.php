@@ -133,15 +133,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @php
-                        $reports = [
-                            ['id' => 1, 'nim' => '123456789', 'name' => 'Ahmad', 'status' => 1, 'berkas' => 'laporan1.pdf'],
-                            ['id' => 2, 'nim' => '987654321', 'name' => 'Budi', 'status' => 2, 'berkas' => 'laporan2.pdf'],
-                            ['id' => 3, 'nim' => '456123789', 'name' => 'Citra', 'status' => 3, 'berkas' => null],
-                            ['id' => 4, 'nim' => '321654987', 'name' => 'Dewi', 'status' => 4, 'berkas' => 'laporan4.pdf'],
-                            ['id' => 5, 'nim' => '741852963', 'name' => 'Eko', 'status' => 5, 'berkas' => 'laporan5.pdf'],
-                        ];
-                    @endphp --}}
                     @foreach ($report as $report)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
@@ -163,6 +154,11 @@
                                     <a href="{{ asset('storage/report/' . $report->laprak) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
+                                    @if ($report->laprak_status == true)
+                                        <i class="fa-solid fa-square-check text-success"></i>
+                                    @else
+                                        <i class="fa-solid fa-square-xmark text-danger"></i>
+                                    @endif
                                 @else
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
@@ -172,6 +168,11 @@
                                     <a href="{{ asset('storage/sertifikat/' . $report->sertifikat) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
+                                    @if ($report->sertifikat_status == true)
+                                        <i class="fa-solid fa-square-check text-success"></i>
+                                    @else
+                                        <i class="fa-solid fa-square-xmark text-danger"></i>
+                                    @endif
                                 @else
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
@@ -181,12 +182,17 @@
                                     <a href="{{ asset('storage/dokumentasi/' . $report->dokumentasi) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
+                                    @if ($report->dokumentasi_status == true)
+                                        <i class="fa-solid fa-square-check text-success"></i>
+                                    @else
+                                        <i class="fa-solid fa-square-xmark text-danger"></i>
+                                    @endif
                                 @else
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
                             </td>
                             <td>
-                                <a href="#" class="btn btn-info">
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">
                                     <i class="fa fa-eye"></i>
                                 </a>
 

@@ -4,6 +4,8 @@
     <link rel="stylesheet" media="screen, print" href="/admin/css/fa-solid.css">
     <link rel="stylesheet" media="screen, print" href="/admin/css/theme-demo.css">
     <link rel="stylesheet" media="screen, print" href="/admin/css/notifications/toastr/toastr.css">
+    <link rel="stylesheet" media="screen, print" href="/admin/css/datagrid/datatables/datatables.bundle.css">
+
 @endsection
 @section('pages-content')
     <main id="js-page-content" role="main" class="page-content">
@@ -15,165 +17,258 @@
             ])
             @endcomponent
         </div>
-        <div class="card mb-g p-2">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
-                            <div class="">
-                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                    {{ $jumlahAdmin }}
-                                    <small class="m-0 l-h-n">Admin</small>
-                                </h3>
-                            </div>
-                            <i class="fal fa-user-shield position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
-                                style="font-size:6rem"></i>
+        @if (Auth::user()->getRoleNames()->first() == 'Mahasiswa')
+            <div class="row">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <div
+                        class="p-3 
+                    @if ($mahasiswaViewFirst->status == 1) bg-primary 
+                    @elseif($mahasiswaViewFirst->status == 2) bg-warning 
+                    @elseif($mahasiswaViewFirst->status == 3) bg-danger 
+                    @elseif($mahasiswaViewFirst->status == 4) bg-success 
+                    @else bg-secondary @endif 
+                    rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="progress-status">
+                                    @if ($mahasiswaViewFirst->status == 1)
+                                        Menunggu Validasi
+                                    @elseif ($mahasiswaViewFirst->status == 2)
+                                        Menunggu Penilaian
+                                    @elseif ($mahasiswaViewFirst->status == 3)
+                                        Tidak Valid
+                                    @elseif ($mahasiswaViewFirst->status == 4)
+                                        Berhasil Dinilai
+                                    @else
+                                        Tidak Ada Progres
+                                    @endif
+                                </span>
+                                <small class="m-0 l-h-n">Status Progres Anda</small>
+                            </h3>
                         </div>
+                        <i class="fal fa-tasks position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
                     </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
-                            <div class="">
-                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                    {{ $jumlahDosen }}
-                                    <small class="m-0 l-h-n">Dosen</small>
-                                </h3>
-                            </div>
-                            <i class="fa-solid fa-chalkboard-teacher position-absolute pos-right pos-bottom opacity-50  mb-n1 mr-n4"
-                                style="font-size: 6rem;"></i>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
-                            <div class="">
-                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                    {{ $jumlahMahasiswa }}
-                                    <small class="m-0 l-h-n">Mahasiswa</small>
-                                </h3>
-                            </div>
-                            <i class="fa fa-user-graduate position-absolute pos-right pos-bottom opacity-50 mb-n5 mr-n6"
-                                style="font-size: 8rem;"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
-                            <div class="">
-                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                    {{ $jumlahReport }}
-                                    <small class="m-0 l-h-n">Laporan Akhir</small>
-                                </h3>
-                            </div>
-                            <i class="fal fa-file-alt position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n4"
-                                style="font-size: 6rem;"></i>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <p class="panel-tag fw-500">
-                    Sedang Dalam Perkembangan
-                    {{-- To see all list of Core plugins for a barebone version please visit the <a href="/plugin_faq"
-                        class="fw-500"> Plugin FAQ</a> page. --}}
-                </p>
-
-                <div id="js-display" class="d-none">
-                    <h5 class="fw-700">
-                        <span class="js-plugin-name"></span>
-                    </h5>
-                    <p>
-                        <span class="js-plugin-description"></span>
-                    </p>
-                    <p>
-                        <strong>Documentation:</strong>
-                        <br>
-                        <a href="" class="js-plugin-url" target="_blank"></a>
-                    </p>
-                    <p>
-                        <strong>License:</strong>
-                        <br>
-                        <span class="js-plugin-license"></span>
-                    </p>
                 </div>
             </div>
-        </div>
-        {{-- <div class="fs-lg fw-300 p-5 bg-white border-faded rounded mb-g shadow-5">
-
-            <x-col :size1="6" :size2="8">
-                <x-slot name='content1'>
-                    <div id="panel-6" class="panel">
-                        <div class="panel-hdr">
-                            <h2>Secession Scale </h2>
-                        </div>
-                        <div class="panel-container show">
-                            <div class="panel-content p-0 mb-g">
-                                <div class="alert alert-success alert-dismissible fade show border-faded border-left-0 border-right-0 border-top-0 rounded-0 m-0"
-                                    role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                                    </button>
-                                    <strong>Last update was on <span class="js-get-date"></span></strong> - Your logs are
-                                    all
-                                    up to date.
-                                </div>
-                            </div>
-                            <div class="panel-content">
-                                <div class="row  mb-g">
-                                    <div class="col-md-6 d-flex align-items-center">
-                                        <div id="flotPie" class="w-100" style="height:250px"></div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-5 mr-lg-auto">
-                                        <div class="d-flex mt-2 mb-1 fs-xs text-primary">
-                                            Current Usage
-                                        </div>
-                                        <div class="progress progress-xs mb-3">
-                                            <div class="progress-bar" role="progressbar" style="width: 70%;"
-                                                aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="d-flex mt-2 mb-1 fs-xs text-info">
-                                            Net Usage
-                                        </div>
-                                        <div class="progress progress-xs mb-3">
-                                            <div class="progress-bar bg-info-500" role="progressbar" style="width: 30%;"
-                                                aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="d-flex mt-2 mb-1 fs-xs text-warning">
-                                            Users blocked
-                                        </div>
-                                        <div class="progress progress-xs mb-3">
-                                            <div class="progress-bar bg-warning-500" role="progressbar" style="width: 40%;"
-                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="d-flex mt-2 mb-1 fs-xs text-danger">
-                                            Custom cases
-                                        </div>
-                                        <div class="progress progress-xs mb-3">
-                                            <div class="progress-bar bg-danger-500" role="progressbar"
-                                                style="width: 15%;" aria-valuenow="15" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="d-flex mt-2 mb-1 fs-xs text-success">
-                                            Test logs
-                                        </div>
-                                        <div class="progress progress-xs mb-3">
-                                            <div class="progress-bar bg-success-500" role="progressbar"
-                                                style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="d-flex mt-2 mb-1 fs-xs text-dark">
-                                            Uptime records
-                                        </div>
-                                        <div class="progress progress-xs mb-3">
-                                            <div class="progress-bar bg-fusion-500" role="progressbar"
-                                                style="width: 10%;" aria-valuenow="10" aria-valuemin="0"
-                                                aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="card mb-g p-2">
+                <div class="card-body">
+                    <h3 class="fw-500">Riwayat Revisi Unggahan</h3>
+                    <div class="mt-2 mb-3">
+                        <p class="m-0 fw-bold fs-3">Nama: {{ $mahasiswaViewFirst->user->name }}</p>
+                        <p class="m-0 fw-bold fs-3">NIM: {{ $mahasiswaViewFirst->mahasiswa->nim }}</p>
+                        <p class="m-0 fw-bold fs-3">Fakultas: {{ $mahasiswaViewFirst->user->programStudi->fakultas->name }}
+                        </p>
+                        <p class="m-0 fw-bold fs-3">Program Studi: {{ $mahasiswaViewFirst->user->programStudi->name }}</p>
                     </div>
-                </x-slot>
-            </x-col>
-        </div> --}}
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal Unggah</th>
+                                <th>Status</th>
+                                <th>Feedback</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($mahasiswaViewGet->isNotEmpty())
+                                @foreach ($mahasiswaViewGet as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('j F Y H:i') }}
+                                        </td>
+                                        <td>
+                                            @if ($item->status == 1)
+                                                <span class="badge badge-primary">Menunggu Validasi</span>
+                                            @elseif ($item->status == 2)
+                                                <span class="badge badge-warning">Menunggu Penilaian</span>
+                                            @elseif ($item->status == 3)
+                                                <span class="badge badge-danger">Tidak Valid</span>
+                                            @elseif ($item->status == 4)
+                                                <span class="badge badge-success">Berhasil Dinilai</span>
+                                            @endif
+                                        </td>
+                                        <td>Dokumen sedang diperiksa.</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4" class="text-center text-danger">Tidak ada data</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @elseif(Auth::user()->getRoleNames()->first() == 'Prodi')
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-success-300 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="valid-count">{{ $prodiDinilai ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Sudah Dinilai</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-check-circle position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="pending-count">{{ $waitingAssesment ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Menunggu Penilaian</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-hourglass-half position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-g p-2">
+                <div class="card-body">
+                    <h3 class="fw-500">Data Status Penilaian Mahasiswa</h3>
+                    {{-- <div class="mb-3 d-flex gap-2">
+                        <select id="filter-status" class="form-control w-auto">
+                            <option value="all">Semua Status</option>
+                            <option value="Sudah Dinilai">Sudah Dinilai</option>
+                            <option value="Menunggu Penilaian">Menunggu Penilaian</option>
+                        </select>
+                    </div> --}}
+                    <div class="table-responsive">
+                        <table id="data-table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>NIM</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($prodiGet as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->mahasiswa->nim }}</td>
+                                        <td>{{ $item->user->name }}</td>
+                                        <td>
+                                            @if ($item->status == 1)
+                                                <span class="badge badge-primary">Menunggu Validasi</span>
+                                            @elseif ($item->status == 2)
+                                                <span class="badge badge-warning">Menunggu Penilaian</span>
+                                            @elseif ($item->status == 3)
+                                                <span class="badge badge-danger">Tidak Valid</span>
+                                            @elseif ($item->status == 4)
+                                                <span class="badge badge-success">Berhasil Dinilai</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-success-300 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="valid-count">{{ $valid ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Tervalidasi</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-check-circle position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="pending-count">{{ $waitingValidasi ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Menunggu Validasi</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-hourglass-half position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-danger-400 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="invalid-count">{{ $notValid ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Tidak Valid</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-times-circle position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-g p-2">
+                <div class="card-body">
+                    <h3 class="fw-500">Data Status Validasi Mahasiswa</h3>
+                    {{-- <div class="mb-3 d-flex gap-2">
+                        <select id="filter-prodi" class="form-control w-auto">
+                            <option value="all">Semua Prodi</option>
+                            <option value="Teknik Elektro">Teknik Elektro</option>
+                            <option value="Manajemen">Manajemen</option>
+                            <option value="Ilmu Hukum">Ilmu Hukum</option>
+                        </select>
+                        <select id="filter-status" class="form-control w-auto">
+                            <option value="all">Semua Status</option>
+                            <option value="Tervalidasi">Tervalidasi</option>
+                            <option value="Menunggu Validasi">Menunggu Validasi</option>
+                            <option value="Tidak Valid">Tidak Valid</option>
+                        </select>
+                    </div> --}}
+                    <div class="table-responsive">
+                        <table id="data-table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Fakultas</th>
+                                    <th>Program Studi</th>
+                                    <th>NIM</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($adminGet as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->user->programStudi->fakultas->name }}</td>
+                                        <td>{{ $item->user->programStudi->name }}</td>
+                                        <td>{{ $item->user->mahasiswa->nim }}</td>
+                                        <td>{{ $item->user->name }}</td>
+                                        <td>
+                                            @if ($item->status == 1)
+                                                <span class="badge badge-primary">Menunggu Validasi</span>
+                                            @elseif ($item->status == 2)
+                                                <span class="badge badge-warning">Menunggu Penilaian</span>
+                                            @elseif ($item->status == 3)
+                                                <span class="badge badge-danger">Tidak Valid</span>
+                                            @elseif ($item->status == 4)
+                                                <span class="badge badge-success">Berhasil Dinilai</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+        @endif
+
     </main>
 @endsection
 @section('pages-script')
@@ -782,4 +877,173 @@
             calendar.render();
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('#dt-basic-example').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+
 @endsection
+
+
+
+
+
+{{-- <div class="card mb-g p-2">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
+                            <div class="">
+                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                    {{ $jumlahAdmin }}
+                                    <small class="m-0 l-h-n">Admin</small>
+                                </h3>
+                            </div>
+                            <i class="fal fa-user-shield position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                                style="font-size:6rem"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g">
+                            <div class="">
+                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                    {{ $jumlahDosen }}
+                                    <small class="m-0 l-h-n">Dosen</small>
+                                </h3>
+                            </div>
+                            <i class="fa-solid fa-chalkboard-teacher position-absolute pos-right pos-bottom opacity-50  mb-n1 mr-n4"
+                                style="font-size: 6rem;"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="p-3 bg-success-200 rounded overflow-hidden position-relative text-white mb-g">
+                            <div class="">
+                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                    {{ $jumlahMahasiswa }}
+                                    <small class="m-0 l-h-n">Mahasiswa</small>
+                                </h3>
+                            </div>
+                            <i class="fa fa-user-graduate position-absolute pos-right pos-bottom opacity-50 mb-n5 mr-n6"
+                                style="font-size: 8rem;"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
+                            <div class="">
+                                <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                    {{ $jumlahReport }}
+                                    <small class="m-0 l-h-n">Laporan Akhir</small>
+                                </h3>
+                            </div>
+                            <i class="fal fa-file-alt position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n4"
+                                style="font-size: 6rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <p class="panel-tag fw-500">
+                    Sedang Dalam Perkembangan
+                </p>
+
+                <div id="js-display" class="d-none">
+                    <h5 class="fw-700">
+                        <span class="js-plugin-name"></span>
+                    </h5>
+                    <p>
+                        <span class="js-plugin-description"></span>
+                    </p>
+                    <p>
+                        <strong>Documentation:</strong>
+                        <br>
+                        <a href="" class="js-plugin-url" target="_blank"></a>
+                    </p>
+                    <p>
+                        <strong>License:</strong>
+                        <br>
+                        <span class="js-plugin-license"></span>
+                    </p>
+                </div>
+            </div>
+        </div> --}}
+{{-- <div class="fs-lg fw-300 p-5 bg-white border-faded rounded mb-g shadow-5">
+
+            <x-col :size1="6" :size2="8">
+                <x-slot name='content1'>
+                    <div id="panel-6" class="panel">
+                        <div class="panel-hdr">
+                            <h2>Secession Scale </h2>
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content p-0 mb-g">
+                                <div class="alert alert-success alert-dismissible fade show border-faded border-left-0 border-right-0 border-top-0 rounded-0 m-0"
+                                    role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                    </button>
+                                    <strong>Last update was on <span class="js-get-date"></span></strong> - Your logs are
+                                    all
+                                    up to date.
+                                </div>
+                            </div>
+                            <div class="panel-content">
+                                <div class="row  mb-g">
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <div id="flotPie" class="w-100" style="height:250px"></div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-5 mr-lg-auto">
+                                        <div class="d-flex mt-2 mb-1 fs-xs text-primary">
+                                            Current Usage
+                                        </div>
+                                        <div class="progress progress-xs mb-3">
+                                            <div class="progress-bar" role="progressbar" style="width: 70%;"
+                                                aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="d-flex mt-2 mb-1 fs-xs text-info">
+                                            Net Usage
+                                        </div>
+                                        <div class="progress progress-xs mb-3">
+                                            <div class="progress-bar bg-info-500" role="progressbar" style="width: 30%;"
+                                                aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="d-flex mt-2 mb-1 fs-xs text-warning">
+                                            Users blocked
+                                        </div>
+                                        <div class="progress progress-xs mb-3">
+                                            <div class="progress-bar bg-warning-500" role="progressbar" style="width: 40%;"
+                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="d-flex mt-2 mb-1 fs-xs text-danger">
+                                            Custom cases
+                                        </div>
+                                        <div class="progress progress-xs mb-3">
+                                            <div class="progress-bar bg-danger-500" role="progressbar"
+                                                style="width: 15%;" aria-valuenow="15" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="d-flex mt-2 mb-1 fs-xs text-success">
+                                            Test logs
+                                        </div>
+                                        <div class="progress progress-xs mb-3">
+                                            <div class="progress-bar bg-success-500" role="progressbar"
+                                                style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="d-flex mt-2 mb-1 fs-xs text-dark">
+                                            Uptime records
+                                        </div>
+                                        <div class="progress progress-xs mb-3">
+                                            <div class="progress-bar bg-fusion-500" role="progressbar"
+                                                style="width: 10%;" aria-valuenow="10" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </x-slot>
+            </x-col>
+        </div> --}}

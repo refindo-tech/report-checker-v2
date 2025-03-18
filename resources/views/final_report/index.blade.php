@@ -5,9 +5,6 @@
     <link rel="stylesheet" media="screen, print" href="/admin/css/theme-demo.css">
     <link rel="stylesheet" media="screen, print" href="/admin/css/notifications/toastr/toastr.css">
     <link rel="stylesheet" media="screen, print" href="/admin/css/datagrid/datatables/datatables.bundle.css">
-    <!-- Dropify & Animasi Upload -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropify/0.2.2/css/dropify.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropify/0.2.2/js/dropify.min.js"></script>
 @endsection
 @section('pages-content')
     <main id="js-page-content" role="main" class="page-content">
@@ -190,7 +187,7 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="#" class="btn btn-info">
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">
                                     <i class="fa fa-eye"></i>
                                 </a>
 

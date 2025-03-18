@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/test-mikroskill/{id}', [FinalReportController::class, 'tesMikroskillStore'])->name('report.tesMikroskillStore');
     });
 
-    Route::middleware('role:AdminPT|Prodi')->prefix('report')->group(function () {
+    Route::middleware('role:AdminPT|Prodi|SuperAdmin')->prefix('report')->group(function () {
         Route::get('/indexProdi', [FinalReportController::class, 'indexDosen'])->name('report.indexDosen');
         Route::get('/indexAdmin', [FinalReportController::class, 'indexAdmin'])->name('report.indexAdmin');
         Route::get('/indexAdmin/{id}', [FinalReportController::class, 'indexProdi'])->name('report.indexProdi');
