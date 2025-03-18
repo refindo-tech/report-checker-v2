@@ -105,7 +105,11 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>           
+                    </table>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button id="simpan-data" class="btn btn-primary">Simpan Data</button>
+                    </div>
+                               
                 </div>
             @endcan
         </x-panel.show>
@@ -135,7 +139,8 @@
                 row.find('.total-sks').val(sksValue);
             });
     
-            // Fungsi untuk menambahkan baris baru
+                // #MASIH STATIS
+            // Fungsi untuk menambahkan baris baru, 
             $('#addRow').on('click', function () {
                 let tableBody = $('#dt-mahasiswa tbody');
                 let rowCount = tableBody.find('tr').length + 1;
@@ -179,7 +184,54 @@
                 let row = $(this).closest('tr');
                 row.remove();
             });
-        });
+
+
+            //  #MAU NYOBA TAKUT MERUBAH BAKCEND
+             // Event untuk MENYIMPAN DATA KE DATABASE saat tombol ditekan
+                $('#simpan-data').on('click', function() {
+                    let data = [];
+
+                    // Loop setiap baris tabel untuk mengambil data
+                    $('#dt-mahasiswa tbody tr').each(function() {
+                        let row = $(this);
+                        let id = row.find('.select-mata-kuliah').val();
+                        let sks = row.find('.total-sks').val();
+                        let nilai = row.find('.editable').val();
+
+                        // Pastikan data tidak kosong sebelum dikirim
+                        if (id && sks && nilai) {
+                            data.push({
+                                mata_kuliah_id: id,
+                                sks: sks,
+                                nilai: nilai
+                            });
+                        }
+                    });
+
+                    // Jika tidak ada data yang valid, tampilkan alert
+                    if (data.length === 0) {
+                        alert('Tidak ada data yang bisa disimpan!');
+                        return;
+                    }
+
+                    // Kirim data ke server dengan AJAX
+                    $.ajax({
+                        url: '/simpan-nilai', // Sesuaikan dengan route Laravel
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            data: data
+                        },
+                        success: function(response) {
+                            alert('Data berhasil disimpan!');
+                        },
+                        error: function(error) {
+                            console.error('Gagal menyimpan data', error);
+                            alert('Terjadi kesalahan saat menyimpan data!');
+                        }
+                    });
+                });
+            });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <!-- Tambahkan SweetAlert -->

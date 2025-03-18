@@ -250,6 +250,9 @@
                     <td>
                         <input type="number" name="sks[]" class="form-control" required min="1" max="10">
                     </td>
+                    <td>
+                        <input type="number" name="sks[]" class="form-control" required min="1" max="10">
+                    </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-danger remove-field"><i class="fa fa-trash"></i></button>
                     </td>
