@@ -88,11 +88,11 @@
             background-color: #d3d3d3;
         }
 
-        /* .penilaian-table tr:last-child {
+        .penilaian-table tr:last-child {
             font-weight: bold;
             background-color: #f0f0f0;
             /* Warna abu-abu muda agar tampak lebih jelas */
-        /* } */
+        }
     </style>
 </head>
 
@@ -172,8 +172,9 @@
             <thead>
                 <tr>
                     <th>NO</th>
-                    <th>Komponen Mikroskill</th>
-                    <th>Nilai</th>
+                    <th>Nama Mata Kuliah</th>
+                     <th>Nilai</th>
+                     <th>SKS</th>
                 </tr>
             </thead>
             <tbody>
@@ -182,19 +183,24 @@
                     @php $totalSks += $data->Mikroskill->sks; @endphp --}}
                     <tr>
                         <td> 1 </td>
-                        <td>Nilai Sertifikat</td>
+                        <td>Sistem Digital</td>
                         <td> 85 </td>
+                        <td> 3 </td>
                         {{-- <td>{{ $loop->iteration }}</td>
                         <td>{{ $data->Mikroskill->name ?? '-' }}</td>
                         <td>{{ $data->Mikroskill->sks }}</td> --}}
                     </tr>
                     <tr>
                         <td> 2 </td>
-                        <td>Nilai Tes Mikroskill</td>
+                        <td>Jaringan Komputer</td>
                         <td> 90 </td>
+                        <td> 3 </td>
                     </tr>
                 {{-- @endforeach --}}
-                
+                <tr>
+                    <td colspan="3" style="font-weight: bold; text-align: center;">Jumlah SKS Terkonversi</td>
+                    <td style="text-align: center; font-weight: bold;">{{ 6 }}</td>
+                </tr>
             </tbody>
         </table>
     </div>

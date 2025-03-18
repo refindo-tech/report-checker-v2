@@ -195,7 +195,7 @@
                                 </a>
 
                                 @if ($report->status == 4)
-                                    <a href="#" class="btn btn-info">
+                                    <a href="{{ route('report.print', $report->id) }}" class="btn btn-info">
                                         <i class="fa fa-download"></i>
                                     </a>
                                 @endif

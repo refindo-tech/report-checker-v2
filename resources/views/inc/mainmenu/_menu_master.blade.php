@@ -64,7 +64,7 @@
 @endcan
 @can('lihat-assessment')
     <li class="{{ Request::is('assessment/*') ? 'active' : '' }}">
-        <a href="{{ route('assessment.index') }}" title="penilaian" data-filter-tags="admin profil">
+        <a href="{{ route('assessment.indexDosen') }}" title="penilaian" data-filter-tags="admin profil">
             <i class="fa-solid fa-clipboard-check"></i>
             <span class="nav-link-text" data-i18n="nav.admin_profil">Penilaian</span>
         </a>

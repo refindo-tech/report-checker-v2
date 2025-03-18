@@ -19,7 +19,7 @@ class AssessmentController extends Controller
      */
     public function index()
     {
-        $mikroskill = CplMikroskil::where('id_kampus', Auth::user()->id_kampus)->get();
+        // $mikroskill = CplMikroskil::where('id_kampus', Auth::user()->id_kampus)->get();
         $kampus = Kampus::all();
 
         // Ambil laporan dengan relasi ke mikroskill melalui pivot table
@@ -37,10 +37,24 @@ class AssessmentController extends Controller
             $reportMikroskill[$report->id] = $report->mikroskill->pluck('name')->toArray();
             // dd($reportMikroskill);
         }
-
-        return view('assessment.index', compact('mikroskill', 'kampus', 'reports', 'reportMikroskill'));
+        return view('assessment.index');
+        // return view('assessment.index', compact('mikroskill', 'kampus', 'reports', 'reportMikroskill'));
     }
 
+    // viewDosen   
+    public function indexDosen()
+    {
+        // $report = finalReport::selectRaw('final_reports.user_id, COUNT(*) as total')
+        //     ->join('users', 'users.id', '=', 'final_reports.user_id') // Join dengan tabel users
+        //     ->where('users.id_kampus', Auth::user()->id_kampus) // Filter berdasarkan id_kampus di tabel users
+        //     ->groupBy('final_reports.user_id')
+        //     ->with('user.mahasiswa') // Ambil relasi mahasiswa
+        //     ->get();
+
+
+        // dd($reports);
+        return view('assessment.dosenview');
+    }
 
     /**
      * Mengambil data CPL Mikroskil dalam format JSON.
@@ -56,23 +70,33 @@ class AssessmentController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'id_mahasiswa' => 'required|exists:mahasiswa,id',
-            'id_cpl' => 'required|exists:cpl_mikroskil,id',
-            'sks' => 'required|integer|min:1|max:10',
-        ]);
+        $data = $request->data;
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+        foreach ($data as $item) {
+            Nilai::updateOrCreate(
+                ['mata_kuliah_id' => $item['mata_kuliah_id']], // Update jika sudah ada
+                ['sks' => $item['sks'], 'nilai' => $item['nilai']]
+            );
         }
 
-        CplMikroskil::create([
-            'id_mahasiswa' => $request->id_mahasiswa,
-            'id_cpl' => $request->id_cpl,
-            'sks' => $request->sks,
-        ]);
+        return response()->json(['message' => 'Data berhasil disimpan']);
+        // $validator = Validator::make($request->all(), [
+        //     'id_mahasiswa' => 'required|exists:mahasiswa,id',
+        //     'id_cpl' => 'required|exists:cpl_mikroskil,id',
+        //     'sks' => 'required|integer|min:1|max:10',
+        // ]);
 
-        return redirect()->route('mikroskil.index')->with('success', 'Penilaian berhasil disimpan.');
+        // if ($validator->fails()) {
+        //     return redirect()->back()->withErrors($validator)->withInput();
+        // }
+
+        // CplMikroskil::create([
+        //     'id_mahasiswa' => $request->id_mahasiswa,
+        //     'id_cpl' => $request->id_cpl,
+        //     'sks' => $request->sks,
+        // ]);
+
+        // return redirect()->route('mikroskil.index')->with('success', 'Penilaian berhasil disimpan.');
     }
 
     /**
