@@ -41,6 +41,16 @@ class AssessmentController extends Controller
         // return view('assessment.index', compact('mikroskill', 'kampus', 'reports', 'reportMikroskill'));
     }
 
+    public function print()
+    {
+        return view('final_report.print');
+    }
+
+    public function printScore()
+    {
+        return view('assessment.printscore');
+    }
+
     // viewDosen   
     public function indexDosen()
     {
@@ -153,8 +163,6 @@ class AssessmentController extends Controller
     }
 
 
-
-
     /**
      * Menghapus data berdasarkan ID.
      */
@@ -165,4 +173,6 @@ class AssessmentController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Data berhasil dihapus!']);
     }
+
+    
 }

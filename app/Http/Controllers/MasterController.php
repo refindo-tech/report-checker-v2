@@ -44,7 +44,7 @@ class MasterController extends Controller
     public function master_profil_update(Request $request)
     {
         $user = Auth::user();
-        // dd($user);
+        // dd($request->all());
         $id = $user->id;
         // dd($id);
         if ($request->hasFile('image')) {

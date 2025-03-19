@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('dokumentasi')->nullable();
             $table->string('feedback')->nullable();
             $table->boolean('laprak_status')->nullable();
-            $table->boolean('laprak_sertifikat')->nullable();
-            $table->boolean('laprak_dokumentasi')->nullable();
-            $table->boolean('laprak_mikroskill')->nullable();
+            $table->boolean('sertifikat_status')->nullable();
+            $table->boolean('dokumentasi_status')->nullable();
+            $table->boolean('mikroskill_status')->nullable();
             $table->integer('nilai_sertifikat')->nullable();
             $table->integer('nilai_mikroskill')->nullable();
             $table->integer('maks_sks')->nullable();

@@ -197,10 +197,11 @@
                                 </a>
 
                                 @if ($report->status == 4)
-                                    <a href="#" class="btn btn-info">
-                                        <i class="fa fa-download"></i>
+                                    <a href="{{ route('assessment.printscore') }}" class="btn btn-info">
+                                        <i class="fa fa-download"></i> Nilai Akhir
                                     </a>
                                 @endif
+                                
                                 <a href="{{ route('report.review', $report->id) }}" class="btn btn-primary">
                                     <i class="fa fa-check-circle" aria-hidden="true"></i>
                                 </a>
