@@ -55,11 +55,11 @@
                 <div class="card-body">
                     <h3 class="fw-500">Riwayat Revisi Unggahan</h3>
                     <div class="mt-2 mb-3">
-                        <p class="m-0 fw-bold fs-3">Nama: {{ $mahasiswaViewFirst->user->name }}</p>
-                        <p class="m-0 fw-bold fs-3">NIM: {{ $mahasiswaViewFirst->mahasiswa->nim }}</p>
-                        <p class="m-0 fw-bold fs-3">Fakultas: {{ $mahasiswaViewFirst->user->programStudi->fakultas->name }}
+                        <p class="m-0 fw-bold fs-3">Nama: {{ $mahasiswaViewFirst->user->name ?? '-' }}</p>
+                        <p class="m-0 fw-bold fs-3">NIM: {{ $mahasiswaViewFirst->mahasiswa->nim ?? '-' }}</p>
+                        <p class="m-0 fw-bold fs-3">Fakultas: {{ $mahasiswaViewFirst->user->programStudi->fakultas->name ?? '-'  }}
                         </p>
-                        <p class="m-0 fw-bold fs-3">Program Studi: {{ $mahasiswaViewFirst->user->programStudi->name }}</p>
+                        <p class="m-0 fw-bold fs-3">Program Studi: {{ $mahasiswaViewFirst->user->programStudi->name ?? '-'  }}</p>
                     </div>
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                         <thead>
@@ -245,10 +245,10 @@
                                 @foreach ($adminGet as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->user->programStudi->fakultas->name }}</td>
-                                        <td>{{ $item->user->programStudi->name }}</td>
-                                        <td>{{ $item->user->mahasiswa->nim }}</td>
-                                        <td>{{ $item->user->name }}</td>
+                                        <td>{{ $item->user->programStudi->fakultas->name ?? '-' }}</td>
+                                        <td>{{ $item->user->programStudi->name ?? '-' }}</td>
+                                        <td>{{ $item->user->mahasiswa->nim ?? '-' }}</td>
+                                        <td>{{ $item->user->name ?? '-' }}</td>
                                         <td>
                                             @if ($item->status == 1)
                                                 <span class="badge badge-primary">Menunggu Validasi</span>

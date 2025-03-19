@@ -116,7 +116,7 @@
     </table>
     </div>
     <div class="content">
-        <h2>PENILAIAN MIKROSKILL KEGIATAN MBKM</h2>
+        <h2>NILAI AKHIR KEGIATAN MBKM</h2>
 
         <table class="biodata-table">
             <tr>

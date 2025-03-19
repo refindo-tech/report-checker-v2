@@ -272,9 +272,14 @@ class FinalReportController extends Controller
         return redirect()->route('report.index')->with('success', "Tes Mikroskil berhasil disimpan. Total score: $totalScore");
     }
 
+    
 
-    public function cetak_pdf()
+    public function printScore()
     {
+        {
+            
+            return view('assessment.printscore');
+        }
         // $report = finalReport::with('user', 'reviewer', 'mahasiswa', 'dosen')->find($id);
         // $kampus = Kampus::where('id', $report->user->id_kampus)->first();
         // dd($report, $kampus);    
@@ -298,15 +303,15 @@ class FinalReportController extends Controller
         // $path_img = asset('admin/img/logountirta.png');
 
         // Pastikan data dikirim sebagai array
-        $pdf = PDF::loadView('final_report.print', [
-            // 'report' => $report,
-            // 'kampus' => $kampus,
-            // 'pivotData' => $pivotData,
-            // 'path_img' => $img_path,
-            // 'img_kampus' => $img_kampus,
-        ]);
+        // $pdf = PDF::loadView('final_report.print', [
+        //     'report' => $report,
+        //     'kampus' => $kampus,
+        //     'pivotData' => $pivotData,
+        //     'path_img' => $img_path,
+        //     'img_kampus' => $img_kampus,
+        // ]);
 
         // Download file PDF
-        return $pdf->stream();
+        // return $pdf->stream();
     }
 }

@@ -192,8 +192,8 @@
                                 </a>
 
                                 @if ($report->status == 4)
-                                    <a href="{{ route('report.print', $report->id) }}" class="btn btn-info">
-                                        <i class="fa fa-download"></i>
+                                    <a href="{{ route('assessment.printscore') }}" class="btn btn-info">
+                                        <i class="fa fa-download"></i> Nilai Akhir
                                     </a>
                                 @endif
 

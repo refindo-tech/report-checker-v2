@@ -105,11 +105,18 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
-                    <div class="d-flex justify-content-end mt-3">
+                    </table>  
+                </div>
+                <div class="d-flex justify-content-end mt-3 ">
+                    <a href="{{ route('report.print') }}" class="btn btn-success mr-1">
+                        <i class="fa fa-download"></i> Nilai Rekomendasi
+                    </a>
+                    <a href="{{ route('assessment.printscore') }}" class="btn btn-success mr-1">
+                        <i class="fa fa-download"></i> Nilai Akhir
+                    </a>
+                    <a>
                         <button id="simpan-data" class="btn btn-primary">Simpan Data</button>
-                    </div>
-                               
+                    </a>
                 </div>
             @endcan
         </x-panel.show>
