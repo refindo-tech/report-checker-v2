@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\CplMikroskil;
 use App\Models\finalReport;
 use App\Models\Kampus;
+use App\Models\laprak_has_assesment;
 use App\Models\laprak_has_mikroskill;
 use App\Models\Mahasiswa;
+use App\Models\MataKuliah;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,33 +20,79 @@ class AssessmentController extends Controller
     /**
      * Menampilkan daftar penilaian.
      */
-    public function index()
+    public function index($id)
     {
         // $mikroskill = CplMikroskil::where('id_kampus', Auth::user()->id_kampus)->get();
-        $kampus = Kampus::all();
+        $matkul = MataKuliah::where('id_kampus', Auth::user()->id_kampus)->get();
 
         // Ambil laporan dengan relasi ke mikroskill melalui pivot table
-        $reports = finalReport::with(['user', 'mahasiswa', 'mikroskill'])
-            ->where('status', '0')
-            ->where('reviewer_id', auth()->user()->id)
+        $report = finalReport::with(['user', 'mahasiswa', 'assesment'])
+            ->where('status', '2')
+            ->where('user_id', $id)
+            ->latest()
+            ->firstOrFail(); // Pastikan data ada, kalau tidak akan menampilkan error 404
+
+        // dd($report, $matkul);
+        // Inisialisasi array untuk menyimpan permission role
+        $reports = finalReport::with(['user', 'mahasiswa', 'assesment'])
+            ->where('status', '2')
+            ->where('user_id', $id)
             ->orderBy('created_at', 'desc')
             ->get();
-        // dd($reports);
+        // dd($reports, $report);
         // Inisialisasi array untuk menyimpan permission role
-        $reportMikroskill = [];
+        $reportAssesment = [];
 
-        foreach ($reports as $report) {
-            // Mengambil nama mikroskill yang terhubung melalui tabel pivot
-            $reportMikroskill[$report->id] = $report->mikroskill->pluck('name')->toArray();
-            // dd($reportMikroskill);
+        foreach ($reports as $item) {
+            $reportAssesment[$item->id] = $item->assesment->map(function ($assesment) {
+                return [
+                    'name' => $assesment->name,
+                    'nilai' => $assesment->pivot->nilai ?? 0, // Ambil nilai dari pivot
+                ];
+            })->toArray();
         }
-        return view('assessment.index');
+
+
+        // dd($reportAssesment);
+        return view('assessment.index', compact('matkul', 'reports', 'reportAssesment'));
         // return view('assessment.index', compact('mikroskill', 'kampus', 'reports', 'reportMikroskill'));
     }
 
-    public function print()
+    public function print($id)
     {
-        return view('final_report.print');
+        $report = finalReport::with('user', 'reviewer', 'mahasiswa')->find($id);
+        $kampus = Kampus::where('id', $report->user->id_kampus)->first();
+        // dd($report, $kampus);    
+        $pivotData = laprak_has_assesment::with('assesment', 'report')->where('id_laprak', $report->id)->get();
+        // dd($pivotData);
+
+        $opciones_ssl = array(
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        $img_path = public_path('admin/img/logountirta.png');
+        $img_kampus = public_path('storage/kampus/' . $kampus->image);
+        // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
+        // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
+        // $img_base_64 = base64_encode($data);
+        // $path_img = 'data:image/' . $extencion . ';base64,' . $img_base_64;
+
+        // $path_img = asset('admin/img/logountirta.png');
+
+        // Pastikan data dikirim sebagai array
+        $pdf = PDF::loadView('final_report.print', [
+            'report' => $report,
+            'kampus' => $kampus,
+            'pivotData' => $pivotData,
+            'path_img' => $img_path,
+            'img_kampus' => $img_kampus,
+        ]);
+
+        // Download file PDF
+        return $pdf->stream();
     }
 
     public function printScore()
@@ -54,16 +103,9 @@ class AssessmentController extends Controller
     // viewDosen   
     public function indexDosen()
     {
-        // $report = finalReport::selectRaw('final_reports.user_id, COUNT(*) as total')
-        //     ->join('users', 'users.id', '=', 'final_reports.user_id') // Join dengan tabel users
-        //     ->where('users.id_kampus', Auth::user()->id_kampus) // Filter berdasarkan id_kampus di tabel users
-        //     ->groupBy('final_reports.user_id')
-        //     ->with('user.mahasiswa') // Ambil relasi mahasiswa
-        //     ->get();
-
-
-        // dd($reports);
-        return view('assessment.dosenview');
+        $finalReport = finalReport::with('user')->where('status', '2')->get();
+        // dd($finalReport);
+        return view('assessment.dosenview', compact('finalReport'));
     }
 
     /**
@@ -80,13 +122,14 @@ class AssessmentController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $data = $request->data;
 
         foreach ($data as $item) {
-            Nilai::updateOrCreate(
-                ['mata_kuliah_id' => $item['mata_kuliah_id']], // Update jika sudah ada
-                ['sks' => $item['sks'], 'nilai' => $item['nilai']]
-            );
+            // Nilai::updateOrCreate(
+            //     ['mata_kuliah_id' => $item['mata_kuliah_id']], // Update jika sudah ada
+            //     ['sks' => $item['sks'], 'nilai' => $item['nilai']]
+            // );
         }
 
         return response()->json(['message' => 'Data berhasil disimpan']);
@@ -117,36 +160,43 @@ class AssessmentController extends Controller
         DB::beginTransaction();
         try {
             $idLaprak = $request->id_laprak;
-            $mikroskills = $request->mikroskills; // Data baru dari request (array)
+            $matakuliah = $request->matakuliah ?? []; // Pastikan selalu array
             $totalSKS = $request->total_sks;
+            $nilai = $request->nilai;
 
             // Ambil data lama dari database
-            $existingMikroskills = laprak_has_mikroskill::where('id_laprak', $idLaprak)
-                ->pluck('id_mikroskill')
+            $existingMatkul = laprak_has_assesment::where('id_laprak', $idLaprak)
+                ->pluck('id_matkul')
                 ->toArray();
 
             // Cari data yang perlu ditambahkan
-            $newMikroskills = array_diff($mikroskills, $existingMikroskills);
+            $newMatkul = array_diff($matakuliah, $existingMatkul);
 
             // Cari data yang perlu dihapus
-            $deletedMikroskills = array_diff($existingMikroskills, $mikroskills);
+            $deletedMatkul = array_diff($existingMatkul, $matakuliah);
 
-            // Tambahkan data baru ke database
-            foreach ($newMikroskills as $idMikroskill) {
-                laprak_has_mikroskill::create([
+            // Tambahkan data baru
+            foreach ($newMatkul as $idMatkul) {
+                laprak_has_assesment::updateOrCreate([
                     'id_laprak' => $idLaprak,
-                    'id_mikroskill' => $idMikroskill,
+                    'id_matkul' => $idMatkul,
+                    'nilai' => $nilai,
                 ]);
             }
 
+            // **Update nilai jika sudah ada**
+            laprak_has_assesment::where('id_laprak', $idLaprak)
+                ->whereIn('id_matkul', $matakuliah)
+                ->update(['nilai' => $nilai]);
+
             // Hapus data yang tidak ada di request
-            laprak_has_mikroskill::where('id_laprak', $idLaprak)
-                ->whereIn('id_mikroskill', $deletedMikroskills)
+            laprak_has_assesment::where('id_laprak', $idLaprak)
+                ->whereIn('id_matkul', $deletedMatkul)
                 ->delete();
 
             // Update total SKS di tabel final_report
             $finalReport = FinalReport::findOrFail($idLaprak);
-            $finalReport->nilai = $totalSKS;
+            $finalReport->total_sks = $totalSKS;
             $finalReport->save();
 
             DB::commit();
@@ -163,6 +213,8 @@ class AssessmentController extends Controller
     }
 
 
+
+
     /**
      * Menghapus data berdasarkan ID.
      */
@@ -173,6 +225,4 @@ class AssessmentController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Data berhasil dihapus!']);
     }
-
-    
 }

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('nilai_sertifikat')->nullable();
             $table->integer('nilai_mikroskill')->nullable();
             $table->integer('maks_sks')->nullable();
+            $table->string('total_sks')->nullable();
             $table->string('mitra')->nullable();
             $table->string('addressMitra')->nullable();
             $table->date('start_date')->nullable();

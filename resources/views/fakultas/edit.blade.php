@@ -67,7 +67,7 @@
 
                 <div class="form-group">
                     <label for="name">Nama Fakultas</label>
-                    <input type="text" name="name" id="name" class="form-control"
+                    <input type="text" name="name" id="name" class="form-control text-capitalize"
                         value="{{ old('name', $fakultas->name) }}">
                     @error('name')
                         <span class="text-danger help-block">{{ $message }}</span>

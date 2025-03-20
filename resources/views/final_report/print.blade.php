@@ -88,11 +88,11 @@
             background-color: #d3d3d3;
         }
 
-        /* .penilaian-table tr:last-child {
+        .penilaian-table tr:last-child {
             font-weight: bold;
             background-color: #f0f0f0;
             /* Warna abu-abu muda agar tampak lebih jelas */
-        /* } */
+        /* }
     </style>
 </head>
 
@@ -100,7 +100,7 @@
     <table class="header-table">
         <tr>
             <td class="left">
-                {{-- <img src="{{ $img_kampus }}" alt="Logo Kampus"> --}}
+                <img src="{{ $img_kampus }}" alt="Logo Kampus">
             </td>
             <td class="center">
                 <h1>KEMENTERIAN PENDIDIKAN DAN KEBUDAYAAN</h1>
@@ -119,52 +119,52 @@
         <h2>NILAI REKOMENDASI KEGIATAN MBKM</h2>
 
         <table class="biodata-table">
-            <tr>
+            {{-- <tr>
                 <td>Nama Reviewer</td>
-                {{-- <td>: {{ $report->reviewer->name ?? '-' }}</td> --}}
+                <td>: {{ $report->reviewer->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td>NIP</td>
-                {{-- <td>: {{ $report->dosen->nip ?? '-' }}</td> --}}
-            </tr>
+                <td>: {{ $report->dosen->nip ?? '-' }}</td>
+            </tr> --}}
             <tr>
                 <td>Nama Mahasiswa</td>
-                {{-- <td>: {{ $report->user->name ?? '-' }}</td> --}}
+                <td>: {{ $report->user->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td>NIM</td>
-                {{-- <td>: {{ $report->Mahasiswa->nim ?? '-' }}</td> --}}
+                <td>: {{ $report->Mahasiswa->nim ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Fakultas</td>
-                {{-- <td>: {{ $report->Mahasiswa->fakultas ?? '-' }}</td> --}}
+                <td>: {{ $report->user->programStudi->fakultas->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Program Studi</td>
-                {{-- <td>: {{ $report->Mahasiswa->prodi ?? '-' }}</td> --}}
+                <td>: {{ $report->user->programStudi->name ?? ('-' ?? '-') }}</td>
             </tr>
             <tr>
                 <td>Nama Mitra MBKM</td>
-                {{-- <td>: {{ $report->mitra ?? '-' }}</td> --}}
+                <td>: {{ $report->mitra ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Alamat Mitra MBKM</td>
-                {{-- <td>: {{ $report->addressMitra ?? '-' }}</td> --}}
+                <td>: {{ $report->addressMitra ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Waktu Kegiatan</td>
                 <td>:
-                    {{-- @if ($report->start_date && $report->end_date)
+                    @if ($report->start_date && $report->end_date)
                         {{ \Carbon\Carbon::parse($report->start_date)->translatedFormat('j F Y') }} -
                         {{ \Carbon\Carbon::parse($report->end_date)->translatedFormat('j F Y') }}
                     @else
                         -
-                    @endif --}}
+                    @endif
                 </td>
             </tr>
             <tr>
                 <td>Jenis Kegiatan</td>
-                {{-- <td>: {{ $report->JenisKegiatan ?? '-' }}</td> --}}
+                <td>: {{ $report->JenisKegiatan ?? '-' }}</td>
             </tr>
         </table>
 
@@ -177,28 +177,23 @@
                 </tr>
             </thead>
             <tbody>
-                @php $totalSks = 0; @endphp
-                {{-- @foreach ($pivotData as $data)
-                    @php $totalSks += $data->Mikroskill->sks; @endphp --}}
-                    <tr>
-                        <td> 1 </td>
-                        <td>Nilai Sertifikat</td>
-                        <td> 85 </td>
-                        {{-- <td>{{ $loop->iteration }}</td>
-                        <td>{{ $data->Mikroskill->name ?? '-' }}</td>
-                        <td>{{ $data->Mikroskill->sks }}</td> --}}
-                    </tr>
-                    <tr>
-                        <td> 2 </td>
-                        <td>Nilai Tes Mikroskill</td>
-                        <td> 90 </td>
-                    </tr>
-                {{-- @endforeach --}}
-                
+                <tr>
+                    <td> 1 </td>
+                    <td>Nilai Sertifikat</td>
+                    <td> {{ $report->nilai_sertifikat ?? '-' }} </td>
+                </tr>
+                <tr>
+                    <td> 2 </td>
+                    <td>Nilai Tes Mikroskill</td>
+                    <td> {{ $report->nilai_mikroskill ?? '-' }} </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Maksimal SKS yang Dapat Diambil</strong></td>
+                    <td>{{ $report->maks_sks ?? '-' }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
 </body>
 
 </html>
-

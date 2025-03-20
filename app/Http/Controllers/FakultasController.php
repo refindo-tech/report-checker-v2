@@ -45,7 +45,7 @@ class FakultasController extends Controller
         }
 
         $fakultas = Fakultas::create([
-            'name' => $request->name,
+            'name' => ucwords($request->name),
             'id_kampus' => $request->kampus,
         ]);
 
@@ -66,7 +66,8 @@ class FakultasController extends Controller
      */
     public function edit(Fakultas $fakultas, $id)
     {
-        $fakultas = Fakultas::find($id)->with('kampus')->first();
+        $fakultas = Fakultas::with('kampus')->findorFail($id);
+        // dd($fakultas, $id);
         $kampus = Kampus::all();
         return view('fakultas.edit', compact('fakultas', 'kampus'));
     }
@@ -89,7 +90,7 @@ class FakultasController extends Controller
         $fakultas = Fakultas::find($id);
 
         $fakultas->update([
-            'name' => $request->name,
+            'name' => ucwords($request->name),
             'id_kampus' => $request->kampus,
         ]);
 

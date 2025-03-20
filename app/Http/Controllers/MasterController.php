@@ -77,7 +77,7 @@ class MasterController extends Controller
             // update data product
             User::where('id', $id)->update([
                 'id_kampus' => $user->id_kampus,
-                'id_prodi' => $user->id_prodi,
+                'id_prodi' => $request->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
                 'image' => $imageName,
@@ -123,7 +123,7 @@ class MasterController extends Controller
             // update data product tanpa menyertakan file gambar
             User::where('id', $id)->update([
                 'id_kampus' => $user->id_kampus,
-                'id_prodi' => $user->id_prodi,
+                'id_prodi' => $request->id_prodi,
                 'name' => $request->name,
                 'email' => $request->email,
             ]);

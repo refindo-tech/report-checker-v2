@@ -134,28 +134,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @php
-                        $reports = [
-                            ['id' => 1, 'nim' => '123456789', 'name' => 'Ahmad', 'status' => 1, 'berkas' => 'laporan1.pdf'],
-                            ['id' => 2, 'nim' => '987654321', 'name' => 'Budi', 'status' => 2, 'berkas' => 'laporan2.pdf'],
-                            ['id' => 3, 'nim' => '456123789', 'name' => 'Citra', 'status' => 3, 'berkas' => null],
-                            ['id' => 4, 'nim' => '321654987', 'name' => 'Dewi', 'status' => 4, 'berkas' => 'laporan4.pdf'],
-                            ['id' => 5, 'nim' => '741852963', 'name' => 'Eko', 'status' => 5, 'berkas' => 'laporan5.pdf'],
-                        ];
-                    @endphp --}}
                     @foreach ($report as $report)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $report->user->name }}</td>
                             <td>
-                                @if ($report->status == 1)
-                                    <span class="badge badge-primary">Menunggu Validasi</span>
-                                @elseif ($report->status == 2)
-                                    <span class="badge badge-warning">Menunggu Penilaian</span>
-                                @elseif ($report->status == 3)
-                                    <span class="badge badge-danger">Tidak Valid</span>
-                                @elseif ($report->status == 4)
-                                    <span class="badge badge-success">Berhasil Dinilai</span>
+                                @if ($report->nilai_mikroskill != null)
+                                    @if ($report->status == 1)
+                                        <span class="badge badge-primary">Menunggu Validasi</span>
+                                    @elseif ($report->status == 2)
+                                        <span class="badge badge-warning">Menunggu Penilaian</span>
+                                    @elseif ($report->status == 3)
+                                        <span class="badge badge-danger">Tidak Valid</span>
+                                    @elseif ($report->status == 4)
+                                        <span class="badge badge-success">Berhasil Dinilai</span>
+                                    @endif
+                                @else
+                                    <span class="text-danger">Silahkan tes terlebih dahulu</span>
                                 @endif
                             </td>
                             <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
@@ -197,7 +192,7 @@
                                     </a>
                                 @endif
 
-                                @if ($report->status == 1)
+                                @if ($report->status == 1 || $report->nilai_mikroskill == null)
                                     <a href="{{ route('report.testMikroskill', $report->id) }}" class="btn btn-success">
                                         <i class="fa fa-clipboard"></i>
                                     </a>

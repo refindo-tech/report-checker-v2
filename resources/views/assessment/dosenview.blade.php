@@ -31,15 +31,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($report as $item) --}}
-                        {{-- <tr onclick="window.location='{{ route('assessment.index', $item->user_id) }}';" style="cursor: pointer;"> --}}
-                        <tr onclick="window.location='{{ route('assessment.index') }}';" style="cursor: pointer;">
-                            {{-- <td>{{ $item->user->mahasiswa->nim ?? '-' }}</td> <!-- NIM -->
-                            <td>{{ $item->user->name ?? '-' }}</td> <!-- Nama Mahasiswa --> --}}
-                            <td>123123123</td> <!-- NIM -->
-                            <td>Majid</td> <!-- Nama Mahasiswa -->
+                    @foreach ($finalReport as $item)
+                        <tr onclick="window.location='{{ route('assessment.index', $item->user_id) }}';"
+                            style="cursor: pointer;">
+                            <td>{{ $item->user->mahasiswa->nim ?? '-' }}</td> <!-- NIM -->
+                            <td>{{ $item->user->name ?? '-' }}</td> <!-- Nama Mahasiswa -->
                         </tr>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </tbody>
             </table>
         </x-panel.show>

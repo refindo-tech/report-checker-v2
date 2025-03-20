@@ -39,8 +39,8 @@ class TemplateController extends Controller
         // Ambil finalReport berdasarkan user_id yang memiliki prodi_id tersebut
         $prodiFirst = optional(FinalReport::whereIn('user_id', $userIds)->with('user')->latest()->first());
         $prodiGet = FinalReport::whereIn('user_id', $userIds)->whereIn('status', [2, 4])->with('user')->get() ?? collect();
-        $prodiDinilai = FinalReport::whereIn('user_id', $userIds)->where('status', 2)->with('user')->count();
-        $waitingAssesment = FinalReport::whereIn('user_id', $userIds)->where('status', 4)->with('user')->count();
+        $prodiDinilai = FinalReport::whereIn('user_id', $userIds)->where('status', 4)->with('user')->count();
+        $waitingAssesment = FinalReport::whereIn('user_id', $userIds)->where('status', 2)->with('user')->count();
 
         // dd($mahasiswaViewFirst, $mahasiswaViewGet);
 

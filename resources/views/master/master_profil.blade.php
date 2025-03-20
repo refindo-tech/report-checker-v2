@@ -90,7 +90,7 @@
                                                 <strong>No HP:</strong> {{ $user->Mahasiswa->phone ?? '-' }}
                                             </li>
                                             <li class="list-group-item">
-                                                <strong>Fakultas:</strong> {{ $fakultas->name ?? '-' }}
+                                                <strong>Fakultas:</strong> {{ $user->programStudi->fakultas->name ?? '-' }}
                                             </li>
                                             <li class="list-group-item">
                                                 <strong>Program Studi:</strong> {{ $user->programStudi->name ?? '-' }}
