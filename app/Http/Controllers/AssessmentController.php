@@ -48,7 +48,7 @@ class AssessmentController extends Controller
 
     public function printScore()
     {
-        return view('assessment.printscore');
+        return view('final_report.printscore');
     }
 
     // viewDosen   

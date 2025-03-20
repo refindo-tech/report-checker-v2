@@ -111,7 +111,7 @@
                     <a href="{{ route('report.print') }}" class="btn btn-success mr-1">
                         <i class="fa fa-download"></i> Nilai Rekomendasi
                     </a>
-                    <a href="{{ route('assessment.printscore') }}" class="btn btn-success mr-1">
+                    <a href="{{ route('report.printscore') }}" class="btn btn-success mr-1">
                         <i class="fa fa-download"></i> Nilai Akhir
                     </a>
                     <a>

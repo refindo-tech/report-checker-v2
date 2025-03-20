@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
         Route::get('/index', [AssessmentController::class, 'index'])->name('assessment.index');
         Route::get('/cetak-rekomendasi', [AssessmentController::class, 'print'])->name('report.print');
-        Route::get('/cetak-nilai', [AssessmentController::class, 'printScore'])->name('assessment.printscore');
+        Route::get('/cetak-nilai', [AssessmentController::class, 'printScore'])->name('report.printscore');
     });
     });
     Route::middleware('role:Prodi|SuperAdmin')->prefix('assessment')->group(function () {

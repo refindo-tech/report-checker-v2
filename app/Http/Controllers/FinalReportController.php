@@ -29,6 +29,17 @@ class FinalReportController extends Controller
         return view('final_report.index', compact('report', 'reports', 'reportUser'));
     }
 
+    public function print()
+    {
+        return view('final_report.print');
+    }
+
+    public function printScore()
+    {
+        return view('final_report.printscore');
+    }
+
+
     // ini buat mahasiswa dari program studi kesini
     public function indexMahasiswa($id)
     {
@@ -274,44 +285,44 @@ class FinalReportController extends Controller
 
     
 
-    public function printScore()
-    {
-        {
+    // public function print()
+    // {
+    //     {
             
-            return view('assessment.printscore');
-        }
-        // $report = finalReport::with('user', 'reviewer', 'mahasiswa', 'dosen')->find($id);
-        // $kampus = Kampus::where('id', $report->user->id_kampus)->first();
-        // dd($report, $kampus);    
-        // $pivotData = laprak_has_mikroskill::with('mikroskill', 'report')->where('id_laprak', $report->id)->get();
-        // dd($pivotData);
+    //         return view('final_report.printscore');
+    //     }
+    //     $report = finalReport::with('user', 'reviewer', 'mahasiswa', 'dosen')->find($id);
+    //     $kampus = Kampus::where('id', $report->user->id_kampus)->first();
+    //     dd($report, $kampus);    
+    //     $pivotData = laprak_has_mikroskill::with('mikroskill', 'report')->where('id_laprak', $report->id)->get();
+    //     dd($pivotData);
 
-        // $opciones_ssl = array(
-        //     "ssl" => array(
-        //         "verify_peer" => false,
-        //         "verify_peer_name" => false,
-        //     ),
-        // );
+    //     $opciones_ssl = array(
+    //         "ssl" => array(
+    //             "verify_peer" => false,
+    //             "verify_peer_name" => false,
+    //         ),
+    //     );
 
-        // $img_path = public_path('admin/img/logountirta.png');
-        // $img_kampus = public_path('storage/kampus/' . $kampus->image);
-        // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
-        // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
-        // $img_base_64 = base64_encode($data);
-        // $path_img = 'data:image/' . $extencion . ';base64,' . $img_base_64;
+    //     $img_path = public_path('admin/img/logountirta.png');
+    //     $img_kampus = public_path('storage/kampus/' . $kampus->image);
+    //     $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
+    //     $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
+    //     $img_base_64 = base64_encode($data);
+    //     $path_img = 'data:image/' . $extencion . ';base64,' . $img_base_64;
 
-        // $path_img = asset('admin/img/logountirta.png');
+    //     $path_img = asset('admin/img/logountirta.png');
 
-        // Pastikan data dikirim sebagai array
-        // $pdf = PDF::loadView('final_report.print', [
-        //     'report' => $report,
-        //     'kampus' => $kampus,
-        //     'pivotData' => $pivotData,
-        //     'path_img' => $img_path,
-        //     'img_kampus' => $img_kampus,
-        // ]);
+    //     Pastikan data dikirim sebagai array
+    //     $pdf = PDF::loadView('final_report.print', [
+    //         'report' => $report,
+    //         'kampus' => $kampus,
+    //         'pivotData' => $pivotData,
+    //         'path_img' => $img_path,
+    //         'img_kampus' => $img_kampus,
+    //     ]);
 
-        // Download file PDF
-        // return $pdf->stream();
-    }
+    //     Download file PDF
+    //     return $pdf->stream();
+    // }
 }
