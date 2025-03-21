@@ -57,44 +57,85 @@ The main purpose of this application is to simplify the reporting and assessment
 
 The following is the development plan, the points of which will continue to be updated.
 
-### User Management
+# Project Task Overview
 
--   **Login to Account** – All users
--   **Logout from Account** – All users
--   **Add New Account** – Admin
--   **Account Settings** – Admin
--   **View Profile** – All users
--   **Edit Profile** – All users
+## Table of Contents
 
-### Final Report Management
+-   [User Management](#user-management)
+-   [MBKM File Submission](#mbkm-file-submission)
+-   [Microskill Components](#microskill-components)
+-   [Course Management](#course-management)
+-   [MBKM File Assessment](#mbkm-file-assessment)
+-   [Grade Conversion](#grade-conversion)
+-   [Dashboard](#dashboard)
+-   [Study Program Management](#study-program-management)
+-   [Faculty Management](#faculty-management)
 
--   **Upload Final Report** – Student
--   **View Report Status** – All users
-    -   Waiting
-    -   Review
-    -   Rejected
-    -   Approved
--   **Revise Report** – Student
+## User Management
 
-### CPL Mikroskill Management
+-   **Login Account** (All Users) - ✅ Finished (Low Priority)
+-   **Logout Account** (All Users) - ✅ Finished (Low Priority)
+-   **Add Account** (Admin & Super Admin) - ✅ Finished (Medium Priority)
+-   **Account Settings** (Admin & Super Admin) - ✅ Finished (Medium Priority)
+-   **View Profile** (All Users) - ✅ Finished (Medium Priority)
+-   **Edit Profile** (All Users) - ✅ Finished (Medium Priority)
 
--   **Add CPL Mikroskill Rubric** – Admin & Reviewer
--   **Edit CPL Mikroskill Rubric** – Admin & Reviewer
--   **Delete CPL Mikroskill Rubric** – Admin & Reviewer
+## MBKM File Submission
 
-### Final Report Assessment
+-   **Upload Final Report, Certificate, Documentation** (Student) - ✅ Finished (Medium Priority) (5 Days)
+-   **View Report Status** (All Users) - ✅ Finished (Medium Priority)
+    -   Waiting for Validation (Status 1, 2, 3, 4)
+    -   Waiting for Assessment
+    -   Successfully Assessed
+    -   Not Valid
+-   **File Revision** (Student) - ✅ Finished (High Priority) _(Only needs display implementation)_
 
--   **Assess Report Based on CPL Mikroskill** – Reviewer
--   **Update Report Status** – Admin & Reviewer
-    -   Waiting
-    -   Review
-    -   Rejected
-    -   Approved
--   **Provide Feedback or Comments** – Admin & Reviewer
+## Microskill Components
 
-### Assessment Conversion
+-   **File Validation** (Admin) - ✅ Finished (High Priority) _(Only needs display implementation)_
+-   **Microskill Test** (Student) - ✅ Finished (High Priority)
 
--   **View SKS Credit Conversion Results** – All users
+## Course Management
+
+-   **Add Course** (Super Admin & Study Program) - ✅ Finished (Medium Priority) (4 Days)
+-   **Edit Course** (Super Admin & Study Program) - ✅ Finished (Medium Priority)
+-   **Delete Course** (Super Admin & Study Program) - ✅ Finished (Medium Priority)
+
+## MBKM File Assessment
+
+-   **Provide Assessment Based on Admin Recommendation** (Study Program) - ✅ Finished (High Priority) (3 Days)
+-   **Change Report Status** (Admin & Study Program) - ✅ Finished (Medium Priority)
+    -   Waiting for Validation
+    -   Waiting for Assessment
+    -   Successfully Assessed
+    -   Valid
+    -   Not Valid
+-   **Write Feedback or Comments** (Admin) - ✅ Finished (Medium Priority) _(Only needs display implementation)_
+
+## Grade Conversion
+
+-   **View Recommendation Letter from PT Admin** (All Users) - ✅ Finished (High Priority) (3 Days)
+-   **View Final Grade Conversion Letter** (All Users) - ✅ Finished (High Priority)
+
+## Dashboard
+
+-   **Display Files with Validation Status** (Admin) - ✅ Finished (Medium Priority) (3 Days)
+-   **Display Assessed or Unassessed Files** (Study Program) - ✅ Finished (Medium Priority)
+-   **Display Files with All Statuses** (Students) - ✅ Finished (Medium Priority)
+
+## Study Program Management
+
+-   **Add Study Program** (Admin & Super Admin) - ✅ Finished (Medium Priority) (3 Days)
+-   **Edit Study Program** (Admin & Super Admin) - ✅ Finished (Medium Priority)
+-   **Delete Study Program** (Admin & Super Admin) - ✅ Finished (Medium Priority)
+
+## Faculty Management
+
+-   **Add Faculty** (Admin & Super Admin) - ✅ Finished (Medium Priority) (3 Days)
+-   **Edit Faculty** (Admin & Super Admin) - ✅ Finished (Medium Priority)
+-   **Delete Faculty** (Admin & Super Admin) - ✅ Finished (Medium Priority)
+
+### Total Estimated Completion Time: **27 Days**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -103,11 +144,11 @@ The following is the development plan, the points of which will continue to be u
 ## Installation
 
 ```console
-git clone https://github.com/refindo-tech/report-checker.git
+git clone https://github.com/refindo-tech/report-checker-v2.git
 ```
 
 ```console
-cd report-checker
+cd report-checker-v2
 ```
 
 ```console
@@ -147,8 +188,9 @@ php artisan db:seed
 
 Role : <br>
 
--   Admin : admin1@example.com/password <br>
--   Dosen : dosen@example.com/password <br>
+-   Super Admin : admin@example.com <br>
+-   AdminPT : admin1@example.com/password <br>
+-   Prodi : dosen@example.com/password <br>
 -   Mahasiswa : mahasiswa@example.com/password <br>
 
 ## License
