@@ -94,6 +94,7 @@ class UserSeeder extends Seeder
         
         $dosen = User::create([
             'id_kampus' => 1,
+            'id_prodi' => 1,
             'name' => 'Henny Setiani',
             'email' => 'dosen@example.com',
             'email_verified_at' => now(),
@@ -105,7 +106,8 @@ class UserSeeder extends Seeder
 
         $mahasiswa = User::create([
             'id_kampus' => 1,
-            'name' => 'Majid',
+            'id_prodi' => 1,
+            'name' => 'Eko Prasetyo',
             'email' => 'mahasiswa@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
