@@ -202,9 +202,11 @@
                                     </a>
                                 @endif
                                 
+                                @if ($report->status == 1)
                                 <a href="{{ route('report.review', $report->id) }}" class="btn btn-primary">
                                     <i class="fa fa-check-circle" aria-hidden="true"></i>
                                 </a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

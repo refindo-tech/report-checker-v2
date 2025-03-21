@@ -23,9 +23,9 @@ Route::middleware('auth')->group(function () {
 
     // Rute untuk melihat barang masuk (Admin, Gudang, Purchasing)
     Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
-        Route::get('/index', [AssessmentController::class, 'index'])->name('assessment.index');
-        Route::get('/cetak-rekomendasi', [AssessmentController::class, 'print'])->name('report.print');
-        Route::get('/cetak-nilai', [AssessmentController::class, 'printScore'])->name('report.printscore');
+        Route::get('/index/{id}', [AssessmentController::class, 'index'])->name('assessment.index');
+        Route::get('/cetak-rekomendasi/{id}', [AssessmentController::class, 'print'])->name('rekomendasi.print');
+        Route::get('/cetak-nilai', [AssessmentController::class, 'printScore'])->name('assessment.printscore');
     });
     });
     Route::middleware('role:Prodi|SuperAdmin')->prefix('assessment')->group(function () {

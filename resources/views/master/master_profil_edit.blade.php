@@ -91,12 +91,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="prodi">Program Studi</label>
-                                        <select name="prodi" id="prodi" class="form-control">
+                                        <label for="id_prodi">Program Studi</label>
+                                        <select name="id_prodi" id="id_prodi" class="form-control">
                                             <option value="">-- Pilih Program Studi --</option>
                                             @foreach ($programstudi as $prodi)
                                                 <option value="{{ $prodi->id }}"
-                                                    {{ old('prodi', optional($users->programStudi)->id) == $prodi->id ? 'selected' : '' }}>
+                                                    {{ old('id_prodi', optional($users->programStudi)->id) == $prodi->id ? 'selected' : '' }}>
                                                     {{ $prodi->name }}
                                                 </option>
                                             @endforeach
@@ -155,12 +155,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="prodi">Program Studi</label>
-                                        <select name="prodi" id="prodi" class="form-control">
+                                        <label for="id_prodi">Program Studi</label>
+                                        <select name="id_prodi" id="id_prodi" class="form-control">
                                             <option value="">-- Pilih Program Studi --</option>
                                             @foreach ($programstudi as $prodi)
                                                 <option value="{{ $prodi->id }}"
-                                                    {{ old('prodi', optional($users->programStudi)->id) == $prodi->id ? 'selected' : '' }}>
+                                                    {{ old('id_prodi', optional($users->programStudi)->id) == $prodi->id ? 'selected' : '' }}>
                                                     {{ $prodi->name }}
                                                 </option>
                                             @endforeach

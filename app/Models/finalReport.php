@@ -52,13 +52,13 @@ class finalReport extends Model
     }
 
 
-    public function mikroskill()
+    public function assesment()
     {
         return $this->belongsToMany(
-            CplMikroskil::class,  // Model terkait
-            'laprak_has_mikroskill', // Nama tabel pivot
+            MataKuliah::class,  // Model terkait
+            'laprak_has_assesment', // Nama tabel pivot
             'id_laprak', // Foreign key di tabel pivot untuk model ini
-            'id_mikroskill' // Foreign key di tabel pivot untuk model terkait
-        )->withPivot(['created_at', 'updated_at']);
+            'id_matkul' // Foreign key di tabel pivot untuk model terkait
+        )->withPivot(['nilai', 'created_at', 'updated_at']);
     }
 }

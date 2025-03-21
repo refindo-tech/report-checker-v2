@@ -31,16 +31,20 @@
                         <div class="">
                             <h3 class="display-4 d-block l-h-n m-0 fw-500">
                                 <span id="progress-status">
-                                    @if ($mahasiswaViewFirst->status == 1)
-                                        Menunggu Validasi
-                                    @elseif ($mahasiswaViewFirst->status == 2)
-                                        Menunggu Penilaian
-                                    @elseif ($mahasiswaViewFirst->status == 3)
-                                        Tidak Valid
-                                    @elseif ($mahasiswaViewFirst->status == 4)
-                                        Berhasil Dinilai
+                                    @if ($mahasiswaViewFirst->nilai_mikroskill != null)
+                                        @if ($mahasiswaViewFirst->status == 1)
+                                            Menunggu Validasi
+                                        @elseif ($mahasiswaViewFirst->status == 2)
+                                            Menunggu Penilaian
+                                        @elseif ($mahasiswaViewFirst->status == 3)
+                                            Tidak Valid
+                                        @elseif ($mahasiswaViewFirst->status == 4)
+                                            Berhasil Dinilai
+                                        @else
+                                            Tidak Ada Progres
+                                        @endif
                                     @else
-                                        Tidak Ada Progres
+                                        Belum Mengisi Mikroskill
                                     @endif
                                 </span>
                                 <small class="m-0 l-h-n">Status Progres Anda</small>
@@ -57,9 +61,11 @@
                     <div class="mt-2 mb-3">
                         <p class="m-0 fw-bold fs-3">Nama: {{ $mahasiswaViewFirst->user->name ?? '-' }}</p>
                         <p class="m-0 fw-bold fs-3">NIM: {{ $mahasiswaViewFirst->mahasiswa->nim ?? '-' }}</p>
-                        <p class="m-0 fw-bold fs-3">Fakultas: {{ $mahasiswaViewFirst->user->programStudi->fakultas->name ?? '-'  }}
+                        <p class="m-0 fw-bold fs-3">Fakultas:
+                            {{ $mahasiswaViewFirst->user->programStudi->fakultas->name ?? '-' }}
                         </p>
-                        <p class="m-0 fw-bold fs-3">Program Studi: {{ $mahasiswaViewFirst->user->programStudi->name ?? '-'  }}</p>
+                        <p class="m-0 fw-bold fs-3">Program Studi:
+                            {{ $mahasiswaViewFirst->user->programStudi->name ?? '-' }}</p>
                     </div>
                     <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                         <thead>
@@ -131,13 +137,6 @@
             <div class="card mb-g p-2">
                 <div class="card-body">
                     <h3 class="fw-500">Data Status Penilaian Mahasiswa</h3>
-                    {{-- <div class="mb-3 d-flex gap-2">
-                        <select id="filter-status" class="form-control w-auto">
-                            <option value="all">Semua Status</option>
-                            <option value="Sudah Dinilai">Sudah Dinilai</option>
-                            <option value="Menunggu Penilaian">Menunggu Penilaian</option>
-                        </select>
-                    </div> --}}
                     <div class="table-responsive">
                         <table id="data-table" class="table table-bordered table-striped">
                             <thead>
@@ -155,14 +154,18 @@
                                         <td>{{ $item->mahasiswa->nim }}</td>
                                         <td>{{ $item->user->name }}</td>
                                         <td>
-                                            @if ($item->status == 1)
-                                                <span class="badge badge-primary">Menunggu Validasi</span>
-                                            @elseif ($item->status == 2)
-                                                <span class="badge badge-warning">Menunggu Penilaian</span>
-                                            @elseif ($item->status == 3)
-                                                <span class="badge badge-danger">Tidak Valid</span>
-                                            @elseif ($item->status == 4)
-                                                <span class="badge badge-success">Berhasil Dinilai</span>
+                                            @if ($item->nilai_mikroskill != null)
+                                                @if ($item->status == 1)
+                                                    <span class="badge badge-primary">Menunggu Validasi</span>
+                                                @elseif ($item->status == 2)
+                                                    <span class="badge badge-warning">Menunggu Penilaian</span>
+                                                @elseif ($item->status == 3)
+                                                    <span class="badge badge-danger">Tidak Valid</span>
+                                                @elseif ($item->status == 4)
+                                                    <span class="badge badge-success">Berhasil Dinilai</span>
+                                                @endif
+                                            @else
+                                                <span class="text-danger">Belum Isi Tes Mikroskill</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -215,20 +218,6 @@
             <div class="card mb-g p-2">
                 <div class="card-body">
                     <h3 class="fw-500">Data Status Validasi Mahasiswa</h3>
-                    {{-- <div class="mb-3 d-flex gap-2">
-                        <select id="filter-prodi" class="form-control w-auto">
-                            <option value="all">Semua Prodi</option>
-                            <option value="Teknik Elektro">Teknik Elektro</option>
-                            <option value="Manajemen">Manajemen</option>
-                            <option value="Ilmu Hukum">Ilmu Hukum</option>
-                        </select>
-                        <select id="filter-status" class="form-control w-auto">
-                            <option value="all">Semua Status</option>
-                            <option value="Tervalidasi">Tervalidasi</option>
-                            <option value="Menunggu Validasi">Menunggu Validasi</option>
-                            <option value="Tidak Valid">Tidak Valid</option>
-                        </select>
-                    </div> --}}
                     <div class="table-responsive">
                         <table id="data-table" class="table table-bordered table-striped">
                             <thead>
@@ -250,14 +239,18 @@
                                         <td>{{ $item->user->mahasiswa->nim ?? '-' }}</td>
                                         <td>{{ $item->user->name ?? '-' }}</td>
                                         <td>
-                                            @if ($item->status == 1)
-                                                <span class="badge badge-primary">Menunggu Validasi</span>
-                                            @elseif ($item->status == 2)
-                                                <span class="badge badge-warning">Menunggu Penilaian</span>
-                                            @elseif ($item->status == 3)
-                                                <span class="badge badge-danger">Tidak Valid</span>
-                                            @elseif ($item->status == 4)
-                                                <span class="badge badge-success">Berhasil Dinilai</span>
+                                            @if ($item->nilai_mikroskill != null)
+                                                @if ($item->status == 1)
+                                                    <span class="badge badge-primary">Menunggu Validasi</span>
+                                                @elseif ($item->status == 2)
+                                                    <span class="badge badge-warning">Menunggu Penilaian</span>
+                                                @elseif ($item->status == 3)
+                                                    <span class="badge badge-danger">Tidak Valid</span>
+                                                @elseif ($item->status == 4)
+                                                    <span class="badge badge-success">Berhasil Dinilai</span>
+                                                @endif
+                                            @else
+                                                <span class="text-danger">Belum Isi Tes Mikroskill</span>
                                             @endif
                                         </td>
                                     </tr>
