@@ -100,7 +100,7 @@
     <table class="header-table">
         <tr>
             <td class="left">
-                {{-- <img src="{{ $img_kampus }}" alt="Logo Kampus"> --}}
+                <img src="{{ $img_kampus }}" alt="Logo Kampus">
             </td>
             <td class="center">
                 <h1>KEMENTERIAN PENDIDIKAN DAN KEBUDAYAAN</h1>
@@ -119,52 +119,52 @@
         <h2>NILAI AKHIR KEGIATAN MBKM</h2>
 
         <table class="biodata-table">
-            <tr>
+            {{-- <tr>
                 <td>Nama Reviewer</td>
-                {{-- <td>: {{ $report->reviewer->name ?? '-' }}</td> --}}
+                <td>: {{ $report->reviewer->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td>NIP</td>
-                {{-- <td>: {{ $report->dosen->nip ?? '-' }}</td> --}}
-            </tr>
+                <td>: {{ $report->dosen->nip ?? '-' }}</td>
+            </tr> --}}
             <tr>
                 <td>Nama Mahasiswa</td>
-                {{-- <td>: {{ $report->user->name ?? '-' }}</td> --}}
+                <td>: {{ $report->user->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td>NIM</td>
-                {{-- <td>: {{ $report->Mahasiswa->nim ?? '-' }}</td> --}}
+                <td>: {{ $report->Mahasiswa->nim ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Fakultas</td>
-                {{-- <td>: {{ $report->Mahasiswa->fakultas ?? '-' }}</td> --}}
+                <td>: {{ $report->user->programStudi->fakultas->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Program Studi</td>
-                {{-- <td>: {{ $report->Mahasiswa->prodi ?? '-' }}</td> --}}
+                <td>: {{ $report->user->programStudi->name ?? ('-' ?? '-') }}</td>
             </tr>
             <tr>
                 <td>Nama Mitra MBKM</td>
-                {{-- <td>: {{ $report->mitra ?? '-' }}</td> --}}
+                <td>: {{ $report->mitra ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Alamat Mitra MBKM</td>
-                {{-- <td>: {{ $report->addressMitra ?? '-' }}</td> --}}
+                <td>: {{ $report->addressMitra ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Waktu Kegiatan</td>
                 <td>:
-                    {{-- @if ($report->start_date && $report->end_date)
+                    @if ($report->start_date && $report->end_date)
                         {{ \Carbon\Carbon::parse($report->start_date)->translatedFormat('j F Y') }} -
                         {{ \Carbon\Carbon::parse($report->end_date)->translatedFormat('j F Y') }}
                     @else
                         -
-                    @endif --}}
+                    @endif
                 </td>
             </tr>
             <tr>
                 <td>Jenis Kegiatan</td>
-                {{-- <td>: {{ $report->JenisKegiatan ?? '-' }}</td> --}}
+                <td>: {{ $report->JenisKegiatan ?? '-' }}</td>
             </tr>
         </table>
 
@@ -173,33 +173,22 @@
                 <tr>
                     <th>NO</th>
                     <th>Nama Mata Kuliah</th>
-                     <th>Nilai</th>
-                     <th>SKS</th>
+                    <th>Nilai</th>
+                    <th>SKS</th>
                 </tr>
             </thead>
             <tbody>
-                @php $totalSks = 0; @endphp
-                {{-- @foreach ($pivotData as $data)
-                    @php $totalSks += $data->Mikroskill->sks; @endphp --}}
+                @foreach ($pivotData as $data)
                     <tr>
-                        <td> 1 </td>
-                        <td>Sistem Digital</td>
-                        <td> 85 </td>
-                        <td> 3 </td>
-                        {{-- <td>{{ $loop->iteration }}</td>
-                        <td>{{ $data->Mikroskill->name ?? '-' }}</td>
-                        <td>{{ $data->Mikroskill->sks }}</td> --}}
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $data->matkul->name ?? '-' }}</td>
+                        <td>{{ $data->nilai ?? '-' }}</td>
+                        <td>{{ $data->matkul->sks ?? '-' }}</td>
                     </tr>
-                    <tr>
-                        <td> 2 </td>
-                        <td>Jaringan Komputer</td>
-                        <td> 90 </td>
-                        <td> 3 </td>
-                    </tr>
-                {{-- @endforeach --}}
+                @endforeach
                 <tr>
                     <td colspan="3" style="font-weight: bold; text-align: center;">Jumlah SKS Terkonversi</td>
-                    <td style="text-align: center; font-weight: bold;">{{ 6 }}</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $totalSks ?? '-' }}</td>
                 </tr>
             </tbody>
         </table>
@@ -207,4 +196,3 @@
 </body>
 
 </html>
-

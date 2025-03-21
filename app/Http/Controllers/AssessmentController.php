@@ -26,7 +26,7 @@ class AssessmentController extends Controller
         $matkul = MataKuliah::where('id_kampus', Auth::user()->id_kampus)->get();
 
         // Ambil laporan dengan relasi ke mikroskill melalui pivot table
-        $report = finalReport::with(['user', 'mahasiswa', 'assesment'])
+        $reportFirst = finalReport::with(['user', 'mahasiswa', 'assesment'])
             ->where('status', '2')
             ->where('user_id', $id)
             ->latest()
@@ -46,6 +46,7 @@ class AssessmentController extends Controller
         foreach ($reports as $item) {
             $reportAssesment[$item->id] = $item->assesment->map(function ($assesment) {
                 return [
+                    'id'    => $assesment->pivot->id ?? null, // Pastikan pivot memiliki field id
                     'name' => $assesment->name,
                     'nilai' => $assesment->pivot->nilai ?? 0, // Ambil nilai dari pivot
                 ];
@@ -54,8 +55,27 @@ class AssessmentController extends Controller
 
 
         // dd($reportAssesment);
-        return view('assessment.index', compact('matkul', 'reports', 'reportAssesment'));
+        return view('assessment.index', compact('matkul', 'reports', 'reportAssesment', 'reportFirst'));
         // return view('assessment.index', compact('mikroskill', 'kampus', 'reports', 'reportMikroskill'));
+    }
+
+    public function publish($id)
+    {
+        $report = finalReport::find($id);
+        $report->status = 4;
+        $report->save();
+        // dd($report);
+
+        return redirect()->back()->with('success', 'Laporan berhasil dipublikasikan.');
+    }
+    public function unpublish($id)
+    {
+        $report = finalReport::find($id);
+        $report->status = 2;
+        $report->save();
+        // dd($report);
+
+        return redirect()->back()->with('success', 'Laporan berhasil di Turunkan.');
     }
 
     public function print($id)
@@ -95,9 +115,45 @@ class AssessmentController extends Controller
         return $pdf->stream();
     }
 
-    public function printScore()
+    public function printScore($id)
     {
-        return view('final_report.printscore');
+        $report = finalReport::with('user', 'reviewer', 'mahasiswa')->find($id);
+        $kampus = Kampus::where('id', $report->user->id_kampus)->first();
+        // dd($report, $kampus);    
+        $pivotData = laprak_has_assesment::with('assesment', 'report')->where('id_laprak', $report->id)->get();
+        $totalSks = $pivotData->sum(function ($data) {
+            return $data->matkul->sks ?? 0;
+        });
+        // dd($pivotData);
+
+        $opciones_ssl = array(
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        $img_path = public_path('admin/img/logountirta.png');
+        $img_kampus = public_path('storage/kampus/' . $kampus->image);
+        // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
+        // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
+        // $img_base_64 = base64_encode($data);
+        // $path_img = 'data:image/' . $extencion . ';base64,' . $img_base_64;
+
+        // $path_img = asset('admin/img/logountirta.png');
+
+        // Pastikan data dikirim sebagai array
+        $pdf = PDF::loadView('final_report.printscore', [
+            'report' => $report,
+            'kampus' => $kampus,
+            'totalSks' => $totalSks,
+            'pivotData' => $pivotData,
+            'path_img' => $img_path,
+            'img_kampus' => $img_kampus,
+        ]);
+
+        // Download file PDF
+        return $pdf->stream();
     }
 
     // viewDosen   
@@ -114,7 +170,7 @@ class AssessmentController extends Controller
     public function create()
     {
         $matkul = MataKuliah::all(); // Ambil semua mata kuliah dari database
-        return view('assessment.index', compact('matkul')); 
+        return view('assessment.index', compact('matkul'));
     }
 
     /**
@@ -123,16 +179,30 @@ class AssessmentController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        $data = $request->data;
+        $matakuliah = $request->input('matakuliah'); // array id mata kuliah
+        $nilai = $request->input('nilai');           // array nilai
+        $sks = $request->input('sks');               // array sks (jika diperlukan)
+        $idlaprak = $request->input('id_laprak');
 
-        foreach ($data as $item) {
-            // Nilai::updateOrCreate(
-            //     ['mata_kuliah_id' => $item['mata_kuliah_id']], // Update jika sudah ada
-            //     ['sks' => $item['sks'], 'nilai' => $item['nilai']]
-            // );
+        if (is_array($matakuliah)) {
+            foreach ($matakuliah as $index => $idMatkul) {
+                laprak_has_assesment::updateOrCreate(
+                    [
+                        'id_laprak' => $idlaprak,
+                        'id_matkul' => $idMatkul,
+                    ],
+                    [
+                        'nilai' => $nilai[$index],
+                        // Jika diperlukan, Anda juga bisa menyimpan SKS:
+                        // 'sks' => $sks[$index],
+                    ]
+                );
+            }
+            return redirect()->back()->with('success', 'Penilaian berhasil disimpan.');
+        } else {
+            return redirect()->back()->with('error', 'Data penilaian tidak valid.');
         }
 
-        return response()->json(['message' => 'Data berhasil disimpan']);
         // $validator = Validator::make($request->all(), [
         //     'id_mahasiswa' => 'required|exists:mahasiswa,id',
         //     'id_cpl' => 'required|exists:cpl_mikroskil,id',
@@ -157,62 +227,23 @@ class AssessmentController extends Controller
      */
     public function updateInline(Request $request)
     {
-        DB::beginTransaction();
-        try {
-            $idLaprak = $request->id_laprak;
-            $matakuliah = $request->matakuliah ?? []; // Pastikan selalu array
-            $totalSKS = $request->total_sks;
-            $nilai = $request->nilai;
+        // Cari record assessment berdasarkan assessment_id yang dikirim
+        $assessment = laprak_has_assesment::find($request->assessment_id);
 
-            // Ambil data lama dari database
-            $existingMatkul = laprak_has_assesment::where('id_laprak', $idLaprak)
-                ->pluck('id_matkul')
-                ->toArray();
+        if ($assessment) {
+            // Pastikan hanya kolom yang diperbolehkan yang diupdate (misalnya: id_matkul atau nilai)
+            if (in_array($request->column, ['id_matkul', 'nilai'])) {
+                $assessment->{$request->column} = $request->value;
+                $assessment->save();
 
-            // Cari data yang perlu ditambahkan
-            $newMatkul = array_diff($matakuliah, $existingMatkul);
-
-            // Cari data yang perlu dihapus
-            $deletedMatkul = array_diff($existingMatkul, $matakuliah);
-
-            // Tambahkan data baru
-            foreach ($newMatkul as $idMatkul) {
-                laprak_has_assesment::updateOrCreate([
-                    'id_laprak' => $idLaprak,
-                    'id_matkul' => $idMatkul,
-                    'nilai' => $nilai,
-                ]);
+                return response()->json(['message' => 'Data assessment berhasil diupdate.']);
+            } else {
+                return response()->json(['message' => 'Kolom tidak valid.'], 400);
             }
-
-            // **Update nilai jika sudah ada**
-            laprak_has_assesment::where('id_laprak', $idLaprak)
-                ->whereIn('id_matkul', $matakuliah)
-                ->update(['nilai' => $nilai]);
-
-            // Hapus data yang tidak ada di request
-            laprak_has_assesment::where('id_laprak', $idLaprak)
-                ->whereIn('id_matkul', $deletedMatkul)
-                ->delete();
-
-            // Update total SKS di tabel final_report
-            $finalReport = FinalReport::findOrFail($idLaprak);
-            $finalReport->total_sks = $totalSKS;
-            $finalReport->save();
-
-            DB::commit();
-
-            return response()->json([
-                'message' => 'Data berhasil diperbarui!'
-            ], 200);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
         }
+
+        return response()->json(['message' => 'Data tidak ditemukan.'], 400);
     }
-
-
 
 
     /**
@@ -220,9 +251,15 @@ class AssessmentController extends Controller
      */
     public function destroy($id)
     {
-        $cplMikroskil = CplMikroskil::findOrFail($id);
-        $cplMikroskil->delete();
+        // Cari record assessment berdasarkan id (pastikan $id adalah id dari record laprak_has_assesment)
+        $assessment = laprak_has_assesment::findOrFail($id);
 
-        return response()->json(['success' => true, 'message' => 'Data berhasil dihapus!']);
+        // Hapus record
+        $assessment->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data assessment berhasil dihapus!'
+        ]);
     }
 }
