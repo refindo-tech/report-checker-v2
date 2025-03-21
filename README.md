@@ -147,6 +147,7 @@ php artisan db:seed
 
 Role : <br>
 
+-   SuperAdmin : admin@example.com/password <br>
 -   Admin : admin1@example.com/password <br>
 -   Dosen : dosen@example.com/password <br>
 -   Mahasiswa : mahasiswa@example.com/password <br>
