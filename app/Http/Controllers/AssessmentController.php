@@ -97,7 +97,7 @@ class AssessmentController extends Controller
 
     public function printScore()
     {
-        return view('assessment.printscore');
+        return view('final_report.printscore');
     }
 
     // viewDosen   
@@ -113,8 +113,8 @@ class AssessmentController extends Controller
      */
     public function create()
     {
-        $mikroskill = CplMikroskil::all();
-        return response()->json($mikroskill);
+        $matkul = MataKuliah::all(); // Ambil semua mata kuliah dari database
+        return view('assessment.index', compact('matkul')); 
     }
 
     /**
