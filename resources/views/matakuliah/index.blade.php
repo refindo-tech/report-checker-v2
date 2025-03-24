@@ -94,7 +94,7 @@
             @endcan
 
             {{-- TABEL --}}
-            @can(abilities: 'lihat-mikroskill')
+            @can('lihat-mikroskill')
                 <h3>Daftar Mata Kuliah</h3>
                 <table id="dt-basic-example" class="table table-bordered">
                     <thead>

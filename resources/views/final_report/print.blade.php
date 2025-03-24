@@ -92,7 +92,7 @@
             font-weight: bold;
             background-color: #f0f0f0;
             /* Warna abu-abu muda agar tampak lebih jelas */
-        /* }
+        }
     </style>
 </head>
 

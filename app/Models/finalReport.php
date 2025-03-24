@@ -59,6 +59,6 @@ class finalReport extends Model
             'laprak_has_assesment', // Nama tabel pivot
             'id_laprak', // Foreign key di tabel pivot untuk model ini
             'id_matkul' // Foreign key di tabel pivot untuk model terkait
-        )->withPivot(['nilai', 'created_at', 'updated_at']);
+        )->withPivot(['id','nilai', 'created_at', 'updated_at']);
     }
 }

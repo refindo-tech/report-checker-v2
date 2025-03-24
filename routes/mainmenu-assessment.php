@@ -25,7 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
         Route::get('/index/{id}', [AssessmentController::class, 'index'])->name('assessment.index');
         Route::get('/cetak-rekomendasi/{id}', [AssessmentController::class, 'print'])->name('rekomendasi.print');
-        Route::get('/cetak-nilai', [AssessmentController::class, 'printScore'])->name('assessment.printscore');
+        Route::get('/cetak-nilai/{id}', [AssessmentController::class, 'printScore'])->name('assessment.printscore');
+        Route::get('/publish/{id}', [AssessmentController::class, 'publish'])->name('assessment.publish');
+        Route::get('/unpublish/{id}', [AssessmentController::class, 'unpublish'])->name('assessment.unpublish');
     });
     });
     Route::middleware('role:Prodi|SuperAdmin')->prefix('assessment')->group(function () {
@@ -35,8 +37,7 @@ Route::middleware('auth')->group(function () {
     // Rute untuk menambah data penilaian
     Route::middleware('permission:tambah-assessment')->prefix('assessment')->group(function () {
         Route::post('/updateInline', [AssessmentController::class, 'updateInline'])->name('assessment.updateInline');
-        // Route::post('/create', [AssessmentController::class, 'store'])->name('assessment.store');
-        Route::post('/simpan-nilai', [AssessmentController::class, 'store'])->name('assessment.store');
+        Route::post('/create', [AssessmentController::class, 'store'])->name('assessment.store');
         // Route::post('/review{id}', [CplMikroskilController::class, 'reviewstore'])->name('mikroskil.reviewstore');
     });
 

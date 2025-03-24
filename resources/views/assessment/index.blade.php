@@ -28,122 +28,170 @@
         {{-- NOTED : TAMBAHKAN FILTERING BY KAMPUS atau nama cpl atau sks --}}
         {{-- TINGGAL ngasih nilai ke student dengan cpl ini abis itu testing --}}
 
-       <x-panel.show title="Data Penilaian" subtitle="Silakan lakukan penilaian">
-            <x-slot name="paneltoolbar">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
-                        <i class="fa fa-plus"></i> Tambah Penilaian
-                    </button>
-                </div>
+        <x-panel.show title="Data Penilaian" subtitle="Silakan lakukan penilaian">
+            @can('tambah-mikroskill')
+                <x-slot name="paneltoolbar">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <!-- Button Upload -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
+                            <i class="fa fa-plus"></i> Tambah Mata Kuliah
+                        </button>
+                    </div>
+                    <!-- Modal Large -->
+                    <div class="modal fade @if ($errors->any()) show @endif" id="uploaddata" tabindex="-1"
+                        role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Tambah Mata Kuliah Konversi</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('assessment.store') }}" method="POST" enctype="multipart/form-data"
+                                        id="form-input">
+                                        @csrf
+                                        <!-- Table -->
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Mata Kuliah</th>
+                                                    <th>SKS</th>
+                                                    <th>Nilai</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="input-container">
+                                                <tr>
+                                                    <td>
+                                                        <select name="matakuliah[]" class="form-control select-mata-kuliah">
+                                                            <option value="" data-sks="0">Pilih Mata Kuliah</option>
+                                                            @foreach ($matkul as $component)
+                                                                <option value="{{ $component->id }}"
+                                                                    data-sks="{{ $component->sks }}">
+                                                                    {{ $component->name }} ({{ $component->sks }} SKS)
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <input type="hidden" name="id_laprak" value="{{ $reportFirst->id }}">
+                                                    <td>
+                                                        <input type="number" name="sks[]" class="form-control total-sks"
+                                                            readonly>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="nilai[]" min="0"
+                                                            max="100" required>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button type="button" class="btn btn-danger remove-field"><i
+                                                                class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
 
-                <div class="modal fade" id="uploaddata" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Tambah Penilaian</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                @csrf
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama Mata Kuliah</th>
-                                            <th>SKS</th>
-                                            <th>Nilai</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="input-container">
-                                        <tr>
-                                            <td>
-                                                <select name="matakuliah[]" class="form-control select-mata-kuliah" required>
-                                                    <option value="1" data-sks="3">Matematika (3 SKS)</option>
-                                                    <option value="2" data-sks="2">Fisika (2 SKS)</option>
-                                                    <option value="3" data-sks="4">Pemrograman (4 SKS)</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="number" name="sks[]" class="form-control sks-input" value="3" required readonly>
-                                            </td>
-                                            <td>
-                                                <input type="number" name="nilai[]" class="form-control" required min="0" max="100">
-                                            </td>
-                                            <td class="text-center">
-                                                <button type="button" class="btn btn-danger remove-field">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                        <!-- Tombol Tambah Data & Reset -->
+                                        <button type="button" class="btn btn-success" id="add-field">Tambah Data</button>
+                                        <button type="button" class="btn btn-danger" id="reset-field">Reset</button>
 
-                                <button type="button" class="btn btn-success" id="add-field">Tambah Data</button>
-                                <button type="button" class="btn btn-danger" id="reset-field">Reset</button>
-
-                                <div class="modal-footer mt-3">
-                                    <button type="button" class="btn btn-primary" id="save-data">Simpan</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <div class="modal-footer mt-3">
+                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </x-slot>
+            @endcan
+            @can('lihat-assessment')
+                <div class="table-responsive">
+                    <table id="dt-mahasiswa" class="table table-bordered">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th>Nama Mata Kuliah</th>
+                                <th>SKS</th>
+                                <th>Nilai</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table-body">
+                            @foreach ($reports as $report)
+                                @php
+                                    // $firstAssessment = $report->assesment->first();
+                                    // $pivotData = $firstAssessment ? $firstAssessment->pivot : null;
+
+                                    $assesments = $report->assesment->isNotEmpty() ? $report->assesment : [null]; // Jika kosong, buat array dengan satu elemen null
+                                @endphp
+
+                                @foreach ($assesments as $assesment)
+                                    <tr>
+                                        <td style="display:none;">
+                                            <input type="hidden" class="assessment-id"
+                                                value="{{ $assesment->pivot->id ?? '' }}">
+                                        </td>
+                                        <!-- Pilihan Mata Kuliah -->
+                                        {{-- @dd($assesment->pivot, $report, $firstAssessment, $pivotData); --}}
+                                        <td>
+                                            <select name="matakuliah[{{ $report->id }}][]"
+                                                class="form-control select-mata-kuliah editable" data-id="{{ $report->id }}"
+                                                data-column="matakuliah">
+                                                <option value="" data-sks="0">Pilih Mata Kuliah</option>
+                                                @foreach ($matkul as $component)
+                                                    <option value="{{ $component->id }}" data-sks="{{ $component->sks }}"
+                                                        data-id="{{ $component->id }}" data-column="matakuliah"
+                                                        @if ($assesment && $component->id == $assesment->id) selected @endif>
+                                                        {{ $component->name }} ({{ $component->sks }} SKS)
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+
+                                        <!-- Jumlah SKS (Readonly) -->
+                                        <td>
+                                            <input type="number" class="form-control total-sks" min="1"
+                                                max="10" data-id="{{ $report->id }}"
+                                                data-maks-sks="{{ $report->maks_sks }}" value="{{ $assesment->sks ?? 0 }}"
+                                                readonly>
+                                        </td>
+
+                                        <!-- Input Nilai -->
+                                        <td>
+                                            <input type="number" class="form-control editable-nilai"
+                                                data-id="{{ $report->id }}" data-column="nilai"
+                                                value="{{ $assesment->pivot->nilai ?? '' }}" min="0" max="100">
+                                        </td>
+
+                                        <td>
+                                            <button class="btn btn-danger btn-sm delete">Hapus</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-            </x-slot>
-
-            <div class="table-responsive">
-                <table id="dt-mahasiswa" class="table table-bordered">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th>Nama Mata Kuliah</th>
-                            <th>SKS</th>
-                            <th>Nilai</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="data-table-body">
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" value="Matematika" readonly>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" value="3" readonly>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" value="85" min="0" max="100">
-                            </td>
-                            <td>
-                                <button class="btn btn-danger btn-sm delete-row">Hapus</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" value="Fisika" readonly>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" value="2" readonly>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" value="78" min="0" max="100">
-                            </td>
-                            <td>
-                                <button class="btn btn-danger btn-sm delete-row">Hapus</button>
-                            </td>
-                        </tr>
-                    </tbody>                        
-                </table>
-            </div>
-
-            <div class="d-flex justify-content-end mt-3">
-                <a href="{{ route('rekomendasi.print', $report->id ?? '') }}" class="btn btn-success mr-1">
-                    <i class="fa fa-download"></i> Nilai Rekomendasi
-                </a>
-                <a href="{{ route('report.printscore') }}" class="btn btn-success mr-1">
-                    <i class="fa fa-download"></i> Nilai Akhir
-                </a>
-            </div>
+                <div class="d-flex justify-content-end mt-3 ">
+                    <a href="{{ route('rekomendasi.print', $report->id) }}" class="btn btn-success mr-1">
+                        <i class="fa fa-download"></i> Nilai Rekomendasi
+                    </a>
+                    <a href="{{ route('assessment.printscore', $report->id) }}" class="btn btn-success mr-1">
+                        <i class="fa fa-download"></i> Nilai Akhir
+                    </a>
+                    @if ($report->status == 4)
+                        <a href="{{ route('assessment.unpublish', $report->id) }}" class="btn btn-warning mr-1">
+                            <i class="fa-solid fa-upload"></i> Tidak Terbitkan
+                        </a>
+                    @else
+                        <a href="{{ route('assessment.publish', $report->id) }}" class="btn btn-warning mr-1">
+                            <i class="fa-solid fa-upload"></i> Terbitkan
+                        </a>
+                    @endif
+                </div>
+            @endcan
         </x-panel.show>
     </main>
 @endsection
@@ -155,389 +203,257 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        let maksSKS = {{ $reportFirst->maks_sks ?? 24 }}; // Data dari database
+        let sksTerpakai = {{ $sks_terpakai ?? 0 }}; // Jika belum ada, default 0
+        $(document).ready(function() {
+            // Inisialisasi Select2
+            // $('.select-mata-kuliah').select2({
+            //     placeholder: "Pilih Mata Kuliah",
+            //     allowClear: true
+            // });
+            // $("#form-input").off("submit").on("submit", function(e) {
+            //     // Tangani pengiriman form dengan AJAX
+            //     $.ajax({
+            //         url: $("#form-input").attr('action'),
+            //         type: $("#form-input").attr('method'),
+            //         data: new FormData($("#form-input")[0]),
+            //         contentType: false,
+            //         processData: false,
+            //         success: function(response) {
+            //             Swal.fire({
+            //                 icon: 'success',
+            //                 title: 'Berhasil!',
+            //                 text: 'Data penilaian berhasil dikirim.'
+            //             });
+            //             $("#form-input")[0].reset();
+            //             $('.select-mata-kuliah').val(null).trigger('change');
+            //         },
+            //         error: function(xhr, status, error) {
+            //             console.error("Error: ", error, xhr.responseText);
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Error',
+            //                 text: 'Gagal mengirim data. Silahkan coba lagi.'
+            //             });
+            //         }
+            //     });
+            // });
 
-        // Tambah baris baru di modal
-        document.getElementById('add-field').addEventListener('click', function() {
-            let newRow = `
-                <tr>
-                    <td>
-                        <select name="matakuliah[]" class="form-control select-mata-kuliah" required>
-                            <option value="1" data-sks="3">Matematika (3 SKS)</option>
-                            <option value="2" data-sks="2">Fisika (2 SKS)</option>
-                            <option value="3" data-sks="4">Pemrograman (4 SKS)</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="sks[]" class="form-control sks-input" required readonly>
-                    </td>
-                    <td>
-                        <input type="number" name="nilai[]" class="form-control" required min="0" max="100">
-                    </td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-danger remove-field">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-            document.getElementById('input-container').insertAdjacentHTML('beforeend', newRow);
+
         });
-
-        // Hapus baris di modal dan tabel utama
-        document.addEventListener('click', function(event) {
-            if (event.target.closest('.remove-field')) {
-                event.target.closest('tr').remove();
-            }
-            if (event.target.closest('.delete-row')) {
-                event.target.closest('tr').remove();
-            }
-        });
-
-        // Reset data di modal
-        document.getElementById('reset-field').addEventListener('click', function() {
-            document.getElementById('input-container').innerHTML = '';
-        });
-
-        // Simpan data dari modal ke tabel utama
-        document.querySelector('.modal-footer .btn-primary').addEventListener('click', function() {
-            let rows = document.querySelectorAll('#input-container tr');
-            let targetTable = document.getElementById('data-table-body');
-
-            rows.forEach(function(row) {
-                let matkul = row.querySelector('select option:checked').textContent;
-                let sks = row.querySelector('.sks-input').value;
-                let nilai = row.querySelector('input[name="nilai[]"]').value;
-
-                let newRow = `
-                    <tr>
-                        <td><input type="text" class="form-control" value="${matkul}" readonly></td>
-                        <td><input type="number" class="form-control" value="${sks}" readonly></td>
-                        <td><input type="number" class="form-control" value="${nilai}" min="0" max="100"></td>
-                        <td><button class="btn btn-danger btn-sm delete-row">Hapus</button></td>
-                    </tr>
-                `;
-
-                targetTable.insertAdjacentHTML('beforeend', newRow);
-            });
-
-            // Bersihkan input di modal setelah disimpan
-            document.getElementById('input-container').innerHTML = '';
-
-            // Tutup modal
-            $('#uploaddata').modal('hide');
-        });
-    });
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById("input-container");
+            const addButton = document.getElementById("add-field");
+            const resetButton = document.getElementById("reset-field");
 
-
-    {{-- <script>
-       $(document).ready(function() {
-        
-            // Inisialisasi Select2
-            function initSelect2() {
-                $('.select-mata-kuliah').select2({
-                    placeholder: "Pilih Mata Kuliah",
-                    allowClear: true
-                });
-            }
-            initSelect2();
-
-            // Fungsi untuk mengupdate SKS saat mata kuliah dipilih
-            $(document).on('change', '.select-mata-kuliah', function() {
-                let selectedOption = $(this).find(':selected'); // Ambil opsi yang dipilih
-                let sksValue = selectedOption.data('sks'); // Ambil nilai SKS dari atribut data-sks
-                
-                // Jika SKS tidak terbaca, gunakan parseInt untuk memastikan
-                sksValue = sksValue ? parseInt(sksValue) : 0;
-
-                // Masukkan nilai SKS ke input sks pada baris yang sama
-                $(this).closest('tr').find('.sks-input').val(sksValue);
-
-                // Update total SKS
-                updateTotalSKS();
-            });
-
-            
-
-            // Fungsi untuk memperbarui total SKS
-            function updateTotalSKS() {
-                let totalSKS = 0;
-                $('.sks-input').each(function() {
-                    totalSKS += parseInt($(this).val()) || 0;
-                });
-
-                let maxSKS = {{ $report->maks_sks ?? 24 }}; // Ambil batas SKS dari backend
-                if (totalSKS > maxSKS) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Batas SKS Terlampaui!',
-                        text: 'Total SKS tidak boleh lebih dari ' + maxSKS,
-                        confirmButtonText: 'OK'
-                    });
-                }
-            }
-
-            // Fungsi untuk menghasilkan opsi mata kuliah
-            function generateMatkulOptions() {
-                let options = '';
-                @foreach ($matkul as $m)
-                    options += `<option value="{{ $m->id }}" data-sks="{{ $m->sks }}">{{ $m->name }} ({{ $m->sks }} SKS)</option>`;
-                @endforeach
-                return options;
-            }
-
-            // Tambah baris baru dengan delegasi event
-        $('#add-field').click(function() {
-            let newRow = `
-                <tr>
-                    <td>
-                        <select name="matakuliah[]" class="form-control select-mata-kuliah" required>
-                            <option value="">Pilih Mata Kuliah</option>
-                            ${generateMatkulOptions()}
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="sks[]" class="form-control sks-input" required readonly>
-                    </td>
-                    <td>
-                        <input type="number" name="nilai[]" class="form-control nilai-input" required min="0" max="100">
-                    </td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-danger remove-field">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-            $('#input-container').append(newRow);
-            initSelect2(); // Reinit Select2 untuk elemen baru
-        });
-
-        // Hapus baris secara dinamis
-        $(document).on('click', '.remove-field', function() {
-            $(this).closest('tr').remove();
-            updateTotalSKS();
-        });
-
-            // Reset form dalam modal
-            $('#reset-field').click(function() {
-                $('#input-container').html(`
-                    <tr>
-                        <td>
-                            <select name="matakuliah[]" class="form-control select-mata-kuliah" required>
-                                <option value="">Pilih Mata Kuliah</option>
-                                ${generateMatkulOptions()}
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" name="sks[]" class="form-control sks-input" required readonly>
-                        </td>
-                        <td>
-                            <input type="number" name="nilai[]" class="form-control nilai-input" required min="0" max="100">
-                        </td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-danger remove-field">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `);
-                initSelect2();
-            });
-        });
-
-
-            // Mendapatkan nilai maksimal SKS
-            let maxSKS = {{ $report->maks_sks ?? 24 }}; // Batas maksimal SKS
-            let totalSKS = 0; // Total SKS yang diambil
-
-            // Fungsi untuk update SKS berdasarkan mata kuliah yang dipilih
-            function updateTotalSKS() {
-                totalSKS = 0;
-                $('.total-sks').each(function() {
-                    totalSKS += parseInt($(this).val()) || 0;
-                });
-
-                if (totalSKS > maxSKS) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Batas SKS Terlampaui!',
-                        text: 'Total SKS tidak boleh lebih dari ' + maxSKS + '!' +
-                            ' Total SKS yang diambil: ' + totalSKS,
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        // Hapus baris terakhir jika total SKS melebihi batas
-                        $("tbody tr:last").remove();
-                        updateTotalSKS(); // Panggil ulang untuk memperbarui total SKS setelah penghapusan
-                        disableSelectedOptions();
-                    });
-                }
-            }
-
-            Event saat memilih mata kuliah VERSI OLD
-            Fungsi untuk menonaktifkan opsi yang sudah dipilih di select lain
+            // Fungsi untuk memperbarui opsi yang dinonaktifkan agar mata kuliah yang sudah dipilih tidak muncul
             function disableSelectedOptions() {
-                let selectedValues = $(".select-mata-kuliah").map(function() {
-                    return $(this).val();
-                }).get();
-
-                $(".select-mata-kuliah").each(function() {
-                    let $select = $(this);
-
-                    $select.find("option").each(function() {
-                        let value = $(this).val();
-                        $(this).prop("disabled", value !== "" && selectedValues.includes(value) &&
-                            $select.val() !== value);
+                let selectedValues = new Set();
+                document.querySelectorAll(".select-mata-kuliah").forEach(select => {
+                    if (select.value) {
+                        selectedValues.add(select.value);
+                    }
+                });
+                document.querySelectorAll(".select-mata-kuliah").forEach(select => {
+                    Array.from(select.options).forEach(option => {
+                        if (option.value && selectedValues.has(option.value) && option.value !==
+                            select.value) {
+                            option.disabled = true;
+                        } else {
+                            option.disabled = false;
+                        }
                     });
                 });
             }
 
-            Event listener saat memilih mata kuliah
-            $(document).on("change", ".select-mata-kuliah", function() {
-                let row = $(this).closest("tr");
-                let selectedOption = $(this).find("option:selected");
-                let sks = selectedOption.data("sks") || 0;
+            // Fungsi untuk menghitung total SKS dan cek batas maks
+            function updateTotalSKS(triggerRow = null) {
+                let totalSKS = sksTerpakai;
+                document.querySelectorAll(".total-sks").forEach(input => {
+                    totalSKS += parseInt(input.value, 10) || 0;
+                });
 
-                row.find(".total-sks").val(sks);
-                updateTotalSKS();
-                disableSelectedOptions(); // Panggil fungsi ini agar perubahan langsung terlihat
-            });
+                if (totalSKS >= maksSKS) {
+                    // Sembunyikan modal terlebih dahulu
+                    $('#uploaddata').modal('hide').one('hidden.bs.modal', function() {
+                        // Setelah modal tertutup, tampilkan SweetAlert
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Batas SKS Terlampaui!',
+                            text: 'Total SKS tidak boleh lebih dari ' + maksSKS + '! ',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            // Jika triggerRow tersedia, hapus baris tersebut; jika tidak, hapus baris terakhir
+                            if (triggerRow) {
+                                triggerRow.remove();
+                            } else {
+                                container.querySelector("tr:last-child").remove();
+                            }
+                            updateTotalSKS();
+                            disableSelectedOptions();
+                        });
+                    });
+                    return false;
+                }
+                return true;
+            }
 
-            Event listener untuk menambahkan baris baru
-            $(document).on("click", "#add-row", function() {
-                let newRow = `
-        <tr>
+            // Fungsi untuk menghasilkan opsi mata kuliah (menggunakan Blade)
+            function matkulOptions() {
+                return @json($matkul).map(matkul =>
+                    `<option value="${matkul.id}" data-sks="${matkul.sks}">${matkul.name} (${matkul.sks} SKS)</option>`
+                ).join('');
+            }
+
+            // Menambah baris baru
+            addButton.addEventListener("click", function() {
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
             <td>
                 <select name="matakuliah[]" class="form-control select-mata-kuliah">
                     <option value="" data-sks="0">Pilih Mata Kuliah</option>
-                    ${generateMatkulOptions()}
+                    ${matkulOptions()}
                 </select>
             </td>
-            <td><input type="number" class="form-control total-sks" readonly value="0"></td>
-            <td><input type="number" class="form-control editable" min="0" max="100"></td>
-            <td><button class="btn btn-danger btn-sm delete-row">Hapus</button></td>
-        </tr>
-    `;
-
-                $("tbody").append(newRow);
-                disableSelectedOptions
-                    (); // Panggil ini agar baris baru langsung mendapatkan aturan validasi
-                initSelect2(); // Inisialisasi Select2 untuk elemen baru
+            <td>
+                <input type="number" name="sks[]" class="form-control total-sks" min="1" max="10" readonly>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="nilai[]" min="0" max="100" required>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger remove-field"><i class="fa fa-trash"></i></button>
+            </td>
+        `;
+                container.appendChild(newRow);
+                disableSelectedOptions();
             });
 
-            // Fungsi untuk generate ulang options yang sudah difilter
-            function generateMatkulOptions() {
-                let selectedValues = $(".select-mata-kuliah").map(function() {
-                    return $(this).val();
-                }).get();
-
-                let options = '';
-                $(".select-mata-kuliah:first option").each(function() {
-                    let value = $(this).val();
-                    let sks = $(this).data("sks");
-                    let text = $(this).text();
-                    let isDisabled = selectedValues.includes(value) && value !== "" ? 'disabled' : '';
-
-                    options += `<option value="${value}" data-sks="${sks}" ${isDisabled}>${text}</option>`;
-
-                    // if (value === "" || !selectedValues.includes(value)) {
-                    //     options += `<option value="${value}" data-sks="${sks}">${text}</option>`;
-                    // }
-                });
-
-                return options;
-            }
-
-            // Event listener untuk menghapus baris
-            $(document).on("click", ".delete-row", function() {
-                $(this).closest("tr").remove();
-                disableSelectedOptions(); // Panggil ulang agar pilihan kembali tersedia di dropdown lain
+            // Reset semua baris
+            resetButton.addEventListener("click", function() {
+                container.innerHTML = `
+            <tr>
+                <td>
+                    <select name="matakuliah[]" class="form-control select-mata-kuliah">
+                        <option value="" data-sks="0">Pilih Mata Kuliah</option>
+                        ${matkulOptions()}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="sks[]" class="form-control total-sks" readonly>
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="nilai[]" min="0" max="100" required>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger remove-field"><i class="fa fa-trash"></i></button>
+                </td>
+            </tr>
+        `;
+                disableSelectedOptions();
                 updateTotalSKS();
             });
 
-            Event untuk menyimpan data ke database
-            $('#simpan-data').on('click', function() {
-                let data = [];
+            // Event listener untuk pemilihan mata kuliah
+            container.addEventListener("change", function(event) {
+                if (event.target.classList.contains("select-mata-kuliah")) {
+                    const selectedOption = event.target.selectedOptions[0];
+                    const sksInput = event.target.closest("tr").querySelector(".total-sks");
+                    const sksValue = parseInt(selectedOption.getAttribute("data-sks"), 10);
+                    sksInput.value = sksValue || 0;
 
-                $('#dt-mahasiswa tbody tr').each(function() {
-                    let row = $(this);
-                    let id = row.find('.select-mata-kuliah').val();
-                    let sks = row.find('.total-sks').val();
-                    let nilai = row.find('.editable').val();
-
-                    if (id && sks && nilai) {
-                        data.push({
-                            mata_kuliah_id: id,
-                            sks: sks,
-                            nilai: nilai
-                        });
-                    }
-                });
-
-                if (data.length === 0) {
-                    Swal.fire("Oops!", "Tidak ada data yang bisa disimpan!", "error");
-                    return;
+                    // Cek total SKS, jika melebihi maka hapus baris tersebut
+                    updateTotalSKS(event.target.closest("tr"));
+                    disableSelectedOptions();
                 }
-
-                $.ajax({
-                    url: '/simpan-nilai',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        data: data
-                    },
-                    success: function(response) {
-                        Swal.fire("Sukses!", "Data berhasil disimpan!", "success");
-                    },
-                    error: function(error) {
-                        Swal.fire("Gagal!", "Terjadi kesalahan saat menyimpan data!", "error");
-                    }
-                });
             });
+
+            // Event listener untuk menghapus baris dengan tombol hapus
+            container.addEventListener("click", function(event) {
+                if (event.target.classList.contains("remove-field") || event.target.closest(
+                        ".remove-field")) {
+                    event.target.closest("tr").remove();
+                    updateTotalSKS();
+                    disableSelectedOptions();
+                }
+            });
+        });
     </script>
     <script>
-        $(document).on("change", ".editable", function() {
-            let row = $(this).closest("tr"); // Cari baris tempat tombol diklik
-            let idLaprak = $(this).data("id"); // Ambil ID dari atribut data-id pada tombol
+        $(document).ready(function() {
 
-            // Ambil nilai dari ketiga input
-            let selectedMatakuliah = row.find(".select-mata-kuliah").val();
-            // Jika tidak ada nilai (null atau kosong), pastikan menjadi array kosong
-            selectedMatakuliah = selectedMatakuliah ? [selectedMatakuliah] : [];
+            // Event update inline untuk perubahan pada select atau input nilai
+            $(document).on("change", ".select-mata-kuliah, .editable-nilai", function() {
+                let row = $(this).closest("tr");
 
-            let totalSKS = row.find(".total-sks").val();
-            let nilai = row.find(".editable").val();
+                // Dapatkan ID record assessment dari field tersembunyi (jika ada)
+                let assessmentId = row.find(".assessment-id").val();
 
-            // Kirim data ke controller menggunakan AJAX
-            $.ajax({
-                url: "{{ route('assessment.updateInline') }}", // Ganti dengan route yang sesuai
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    id_laprak: idLaprak,
-                    matakuliah: selectedMatakuliah,
-                    total_sks: totalSKS,
-                    nilai: nilai
-                },
-                success: function(response) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: response.message
-                    });
-                    // Jika diperlukan, refresh halaman atau update data tabel
-                    location.reload();
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Terjadi kesalahan: " + xhr.responseText
+                // Ambil id_laprak dari salah satu elemen (di sini menggunakan data-id dari select)
+                let idLaprak = row.find(".select-mata-kuliah").data("id");
+                console.log("Assessment ID:", assessmentId);
+
+                // Tentukan kolom dan value berdasarkan elemen yang diubah
+                let column = "";
+                let value = "";
+
+                if ($(this).hasClass("select-mata-kuliah")) {
+                    column = "id_matkul";
+                    value = $(this).val(); // Nilai select adalah id_matkul baru
+                } else if ($(this).hasClass("editable-nilai")) {
+                    column = "nilai";
+                    value = $(this).val();
+                }
+
+                // Kirim data ke controller menggunakan AJAX
+                $.ajax({
+                    url: "{{ route('assessment.updateInline') }}", // Pastikan route ini sudah didefinisikan
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        assessment_id: assessmentId,
+                        id_laprak: idLaprak,
+                        column: column,
+                        value: value
+                    },
+                    success: function(response) {
+                        toastr.options.timeOut = 2000;
+                        toastr.success(response.message);
+                        // Jika diperlukan, update UI atau lakukan reload
+                    },
+                    error: function(xhr) {
+                        toastr.error('Terjadi kesalahan: ' + xhr.responseText);
+                    }
+                });
+            });
+
+            // Event untuk delete data (jika diperlukan)
+            $('.delete').on('click', function() {
+                let row = $(this).closest('tr'); // Ambil baris terdekat jika tombol ada di dalam tabel
+                let assessmentId = row.find(".assessment-id").val(); // Ambil ID dari input dalam row
+                console.log("Assessment ID:", assessmentId);
+
+                if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                    $.ajax({
+                        url: '/assessment/delete/' + assessmentId,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            alert(response.message);
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            alert("Gagal menghapus data!");
+                        }
                     });
                 }
             });
+
         });
     </script> --}}
     {{-- <script>

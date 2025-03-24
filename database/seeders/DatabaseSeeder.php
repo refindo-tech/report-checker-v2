@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             KampusSeeder::class,
+            FakultasSeeder::class,
+            ProgramStudiSeeder::class,
+            MataKuliahSeeder::class,
             RolePermissionSeeder::class,
             UserSeeder::class,
             AppProfileSeeder::class,
