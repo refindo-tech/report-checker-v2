@@ -134,7 +134,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($report as $report)
+                    @foreach ($reportUser as $report)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $report->user->name }}</td>
