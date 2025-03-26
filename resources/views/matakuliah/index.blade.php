@@ -31,10 +31,12 @@
             @can('tambah-mikroskill')
                 <x-slot name="paneltoolbar">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <!-- Button Upload -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
-                            <i class="fa fa-plus"></i> Tambah Mata Kuliah
-                        </button>
+                        @if (Auth::user()?->id_prodi != null || Auth::user()->getRoleNames()->first() == 'SuperAdmin')
+                            <!-- Button Upload -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
+                                <i class="fa fa-plus"></i> Tambah Mata Kuliah
+                            </button>
+                        @endif
                     </div>
                     <!-- Modal Large -->
                     <div class="modal fade @if ($errors->any()) show @endif" id="uploaddata" tabindex="-1"

@@ -17,8 +17,8 @@
         <div class="subheader">
             @component('inc._page_heading', [
                 'icon' => 'graduation-cap',
-                'heading1' => 'Tes Mikroskil',
-                'heading2' => 'Pengujian Keterampilan Mikro',
+                'heading1' => 'INSTRUMEN MIKROSKILL',
+                'heading2' => 'PROGRAM KAMPUS MENGAJAR',
             ])
             @endcomponent
         </div>
@@ -28,42 +28,55 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4>Tes Mikroskil</h4>
-                        <p>Pilih angka dari 1 hingga 5 sesuai dengan tingkat kesetujuan Anda:</p>
+                        <h4>Petunjuk Pengisian:</h4>
+                        <p>Silakan pilih pada salah satu pilihan jawaban sesuai dengan pendapat Anda terhadap pernyataan
+                            berikut.</p>
+                        <h4>Skala Pengukuran:</h4>
+                        <p>
+                            1 = Sangat Rendah </br>
+                            2 = Rendah </br>
+                            3 = Tinggi </br>
+                            4 = Sangat Tinggi
+                        </p>
                     </div>
                     <div class="card-body">
                         @php
                             // Data soal dikelompokkan berdasarkan kategori
                             $groups = [
-                                'Kelompok 1: Problem Solving & Analytical Thinking' => [
-                                    'Saya dapat mengidentifikasi masalah dengan cepat ketika terjadi kesalahan dalam sistem.',
-                                    'Saya mampu menguraikan masalah kompleks menjadi bagian-bagian yang lebih sederhana.',
-                                    'Saya sering menemukan solusi inovatif untuk masalah yang saya hadapi.',
-                                    'Saya percaya diri dalam mengambil keputusan berdasarkan analisis data.',
+                                'KETERAMPILAN KOMUNIKASI' => [
+                                    'Kemampuan menyampaikan materi dengan jelas dan menarik.',
+                                    'Keterampilan mendengarkan aktif saat berinteraksi dengan orang lain.',
+                                    'Kemampuan menggunakan bahasa yang efektif dalam mengajar.',
+                                    'Kemampuan menyesuaikan gaya komunikasi dengan tingkat pemahaman siswa.',
+                                    'Keterampilan menulis laporan atau catatan pembelajaran dengan baik.',
                                 ],
-                                'Kelompok 2: Communication & Interpersonal Skills' => [
-                                    'Saya merasa nyaman menyampaikan pendapat saya di depan kelompok.',
-                                    'Saya aktif mendengarkan ketika rekan kerja atau teman berbicara.',
-                                    'Saya mampu menyampaikan ide secara jelas melalui tulisan maupun lisan.',
-                                    'Saya menghargai pendapat orang lain meskipun berbeda dengan pandangan saya.',
+                                'KEPEMIMPINAN' => [
+                                    'Kemampuan mengambil inisiatif dalam kegiatan pembelajaran.',
+                                    'Kemampuan membimbing dan menginspirasi.',
+                                    'Keterampilan bekerja sama dan mengoordinasikan tugas dengan guru dan rekan mahasiswa.',
+                                    'Kemampuan memberi motivasi dan membangun semangat belajar siswa.',
+                                    'Keberanian mengambil keputusan dalam situasi pendidikan yang menantang.',
                                 ],
-                                'Kelompok 3: Time Management & Organizational Skills' => [
-                                    'Saya selalu membuat jadwal harian untuk menyelesaikan tugas.',
-                                    'Saya mampu mengatur prioritas pekerjaan dengan baik.',
-                                    'Saya jarang terlambat dalam menyelesaikan tugas yang diberikan.',
-                                    'Saya dapat menyelesaikan pekerjaan dengan efisien meskipun berada di bawah tekanan waktu.',
+                                'MANAJEMEN WAKTU' => [
+                                    'Kemampuan mengatur jadwal antara mengajar dan kegiatan akademik.',
+                                    'Efisiensi dalam menyusun rencana pembelajaran.',
+                                    'Prioritas dalam menyelesaikan tugas dengan tepat waktu.',
+                                    'Fleksibilitas dalam menyesuaikan jadwal sesuai dengan kebutuhan di sekolah.',
+                                    'Kemampuan menyelesaikan pekerjaan tanpa menunda-nunda.',
                                 ],
-                                'Kelompok 4: Adaptability & Continuous Learning' => [
-                                    'Saya mudah beradaptasi dengan perubahan situasi atau lingkungan kerja.',
-                                    'Saya terbuka untuk mempelajari hal-hal baru secara mandiri.',
-                                    'Saya tidak merasa terbebani saat harus mempelajari teknologi atau prosedur baru.',
-                                    'Saya mampu menyesuaikan diri dengan cepat ketika terjadi perubahan mendadak.',
+                                'PROBLEM SOLVING' => [
+                                    'Kemampuan menganalisis permasalahan pembelajaran di kelas.',
+                                    'Kreativitas dalam mencari solusi alternatif untuk meningkatkan pemahaman siswa.',
+                                    'Kemampuan menyelesaikan konflik antar siswa atau antara siswa dan guru.',
+                                    'Daya tahan dalam menghadapi kendala pembelajaran di lingkungan sekolah.',
+                                    'Kemampuan mengevaluasi efektivitas solusi yang ditetapkan.',
                                 ],
-                                'Kelompok 5: Initiative & Creativity' => [
-                                    'Saya sering mengambil inisiatif untuk memulai proyek atau tugas baru.',
-                                    'Saya percaya bahwa kreativitas adalah kunci untuk menyelesaikan masalah.',
-                                    'Saya suka mencari cara-cara baru untuk meningkatkan efisiensi kerja.',
-                                    'Saya merasa termotivasi untuk terus mengembangkan ide-ide kreatif di tempat kerja.',
+                                'ADAPTASI' => [
+                                    'Kemampuan menyesuaikan diri dengan lingkungan sekolah yang beragam.',
+                                    'Kemampuan menghadapi perubahan metode pembelajaran dengan cepat.',
+                                    'Kesiapan bekerja dalam kondisi keterbatasan fasilitas.',
+                                    'Fleksibilitas dalam menyesuaikan strategi mengajar berdasarkan kondisi siswa.',
+                                    'Kemampuan memahami dan menghormati budaya serta kebiasaan di sekolah.',
                                 ],
                             ];
                             $questionIndex = 1;
@@ -74,16 +87,22 @@
                             @foreach ($questions as $question)
                                 <div class="form-group">
                                     <label>{{ $question }}</label>
-                                    @for ($i = 1; $i <= 5; $i++)
+                                    @for ($i = 1; $i <= 4; $i++)
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="question{{ $questionIndex }}" id="question{{ $questionIndex }}-{{ $i }}" value="{{ $i }}" required>
-                                            <label class="form-check-label" for="question{{ $questionIndex }}-{{ $i }}">
+                                            <input class="form-check-input" type="radio"
+                                                name="question{{ $questionIndex }}"
+                                                id="question{{ $questionIndex }}-{{ $i }}"
+                                                value="{{ $i }}" required>
+                                            <label class="form-check-label"
+                                                for="question{{ $questionIndex }}-{{ $i }}">
                                                 @if ($i == 1)
-                                                    1 - Tidak Setuju
+                                                    1 - Sangat Rendah
+                                                @elseif ($i == 2)
+                                                    2 - Rendah
                                                 @elseif ($i == 3)
-                                                    3 - Netral
-                                                @elseif ($i == 5)
-                                                    5 - Sangat Setuju
+                                                    3 - Tinggi
+                                                @elseif ($i == 4)
+                                                    4 - Sangat Tinggi
                                                 @else
                                                     {{ $i }}
                                                 @endif

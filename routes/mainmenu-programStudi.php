@@ -38,30 +38,30 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
 
     // Rute untuk melihat barang keluar (role: Admin, Purchasing, Gudang)
-    Route::middleware('permission:lihat-kampus')->prefix('programstudi')->group(function () {
+    Route::middleware('permission:lihat-programstudi')->prefix('programstudi')->group(function () {
         Route::get('/index', [ProgramStudiController::class, 'index'])->name('programstudi.index');
         Route::get('/cetak/{id}', [ProgramStudiController::class, 'cetak_pdf'])->name('programstudi.print');
     });
 
     // Rute untuk menambah barang keluar (hanya Admin)
-    Route::middleware('permission:tambah-kampus')->prefix('programstudi')->group(function () {
+    Route::middleware('permission:tambah-programstudi')->prefix('programstudi')->group(function () {
         Route::get('/create', [ProgramStudiController::class, 'create'])->name('programstudi.create');
         Route::post('/create', [ProgramStudiController::class, 'store'])->name('programstudi.store');
     });
 
     // Rute untuk mengedit barang keluar (hanya Admin)
-    Route::middleware('permission:edit-kampus')->prefix('programstudi')->group(function () {
+    Route::middleware('permission:edit-programstudi')->prefix('programstudi')->group(function () {
         Route::get('/edit/{id}', [ProgramStudiController::class, 'edit'])->name('programstudi.edit');
         Route::put('/{id}', [ProgramStudiController::class, 'update'])->name('programstudi.update');
     });
 
     // Rute untuk menghapus barang keluar (hanya Admin)
-    Route::middleware('permission:hapus-kampus')->prefix('programstudi')->group(function () {
+    Route::middleware('permission:hapus-programstudi')->prefix('programstudi')->group(function () {
         Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('programstudi.destroy');
     });
 
     // Rute untuk melihat detail barang keluar (hanya Admin)
-    Route::middleware('permission:lihat-kampus')->prefix('programstudi')->group(function () {
+    Route::middleware('permission:lihat-programstudi')->prefix('programstudi')->group(function () {
         Route::get('/show/{id}', [ProgramStudiController::class, 'show'])->name('programstudi.show');
     });
 });
@@ -70,30 +70,30 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
 
     // Rute untuk melihat barang keluar (role: Admin, Purchasing, Gudang)
-    Route::middleware('permission:lihat-kampus')->prefix('fakultas')->group(function () {
+    Route::middleware('permission:lihat-fakultas')->prefix('fakultas')->group(function () {
         Route::get('/index', [FakultasController::class, 'index'])->name('fakultas.index');
         Route::get('/cetak/{id}', [FakultasController::class, 'cetak_pdf'])->name('fakultas.print');
     });
 
     // Rute untuk menambah barang keluar (hanya Admin)
-    Route::middleware('permission:tambah-kampus')->prefix('fakultas')->group(function () {
+    Route::middleware('permission:tambah-fakultas')->prefix('fakultas')->group(function () {
         Route::get('/create', [FakultasController::class, 'create'])->name('fakultas.create');
         Route::post('/create', [FakultasController::class, 'store'])->name('fakultas.store');
     });
 
     // Rute untuk mengedit barang keluar (hanya Admin)
-    Route::middleware('permission:edit-kampus')->prefix('fakultas')->group(function () {
+    Route::middleware('permission:edit-fakultas')->prefix('fakultas')->group(function () {
         Route::get('/edit/{id}', [FakultasController::class, 'edit'])->name('fakultas.edit');
         Route::put('/{id}', [FakultasController::class, 'update'])->name('fakultas.update');
     });
 
     // Rute untuk menghapus barang keluar (hanya Admin)
-    Route::middleware('permission:hapus-kampus')->prefix('fakultas')->group(function () {
+    Route::middleware('permission:hapus-fakultas')->prefix('fakultas')->group(function () {
         Route::delete('/{id}', [FakultasController::class, 'destroy'])->name('fakultas.destroy');
     });
 
     // Rute untuk melihat detail barang keluar (hanya Admin)
-    Route::middleware('permission:lihat-kampus')->prefix('fakultas')->group(function () {
+    Route::middleware('permission:lihat-fakultas')->prefix('fakultas')->group(function () {
         Route::get('/show/{id}', [FakultasController::class, 'show'])->name('fakultas.show');
     });
 });

@@ -93,6 +93,10 @@ class AssessmentController extends Controller
             ),
         );
 
+        if (empty($kampus->image)) {
+            return "Perbarui data kampus";
+        }
+
         $img_path = public_path('admin/img/logountirta.png');
         $img_kampus = public_path('storage/kampus/' . $kampus->image);
         // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);

@@ -23,7 +23,7 @@
             <x-slot name="paneltoolbar">
                 @can('tambah-laporan-akhir')
                     <x-panel.tool-bar>
-                        @if ($reports?->berkas == null || $reports?->status == 3 || $reports?->status == 0)
+                        @if ($reports?->status == 3 || $reports?->status == 4)
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadberkas">
                                 Upload Berkas
                             </button>
@@ -159,6 +159,11 @@
                                     <a href="{{ asset('storage/report/' . $report->laprak) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
+                                    @if ($report->laprak_status == true)
+                                        <i class="fa-solid fa-square-check text-success"></i>
+                                    @else
+                                        <i class="fa-solid fa-square-xmark text-danger"></i>
+                                    @endif
                                 @else
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
@@ -168,6 +173,11 @@
                                     <a href="{{ asset('storage/sertifikat/' . $report->sertifikat) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
+                                    @if ($report->sertifikat_status == true)
+                                        <i class="fa-solid fa-square-check text-success"></i>
+                                    @else
+                                        <i class="fa-solid fa-square-xmark text-danger"></i>
+                                    @endif
                                 @else
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
@@ -177,6 +187,11 @@
                                     <a href="{{ asset('storage/dokumentasi/' . $report->dokumentasi) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
+                                    @if ($report->dokumentasi_status == true)
+                                        <i class="fa-solid fa-square-check text-success"></i>
+                                    @else
+                                        <i class="fa-solid fa-square-xmark text-danger"></i>
+                                    @endif
                                 @else
                                     <span class="text-danger">Belum diisi</span>
                                 @endif

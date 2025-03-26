@@ -46,6 +46,21 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'hapus-kampus']);
         Permission::create(['name' => 'lihat-kampus']);
 
+        Permission::create(['name' => 'tambah-programstudi']);
+        Permission::create(['name' => 'edit-programstudi']);
+        Permission::create(['name' => 'hapus-programstudi']);
+        Permission::create(['name' => 'lihat-programstudi']);
+
+        Permission::create(['name' => 'tambah-fakultas']);
+        Permission::create(['name' => 'edit-fakultas']);
+        Permission::create(['name' => 'hapus-fakultas']);
+        Permission::create(['name' => 'lihat-fakultas']);
+
+        Permission::create(['name' => 'tambah-matakuliah']);
+        Permission::create(['name' => 'edit-matakuliah']);
+        Permission::create(['name' => 'hapus-matakuliah']);
+        Permission::create(['name' => 'lihat-matakuliah']);
+
         Permission::create(['name' => 'tambah-assessment']);
         Permission::create(['name' => 'edit-assessment']);
         Permission::create(['name' => 'hapus-assessment']);
@@ -67,11 +82,11 @@ class RolePermissionSeeder extends Seeder
         // memberikan permission ke role
         $roleAdmin->givePermissionTo('tambah-user');
         $roleAdmin->givePermissionTo('edit-user');
-        $roleAdmin->givePermissionTo('hapus-user');
         $roleAdmin->givePermissionTo('lihat-user');
 
         $roleAdmin->givePermissionTo('hapus-laporan-akhir');
         $roleAdmin->givePermissionTo('lihat-laporan-akhir');
+        $roleAdmin->givePermissionTo('review-laporan-akhir');
 
         $roleAdmin->givePermissionTo('lihat-role');
         $roleAdmin->givePermissionTo('lihat-permission');
@@ -81,9 +96,28 @@ class RolePermissionSeeder extends Seeder
         $roleAdmin->givePermissionTo('hapus-mikroskill');
         $roleAdmin->givePermissionTo('lihat-mikroskill');
 
+        $roleAdmin->givePermissionTo('tambah-matakuliah');
+        $roleAdmin->givePermissionTo('edit-matakuliah');
+        $roleAdmin->givePermissionTo('hapus-matakuliah');
+        $roleAdmin->givePermissionTo('lihat-matakuliah');
+
+        $roleAdmin->givePermissionTo('tambah-programstudi');
+        $roleAdmin->givePermissionTo('edit-programstudi');
+        $roleAdmin->givePermissionTo('hapus-programstudi');
+        $roleAdmin->givePermissionTo('lihat-programstudi');
+
+        $roleAdmin->givePermissionTo('tambah-fakultas');
+        $roleAdmin->givePermissionTo('edit-fakultas');
+        $roleAdmin->givePermissionTo('hapus-fakultas');
+        $roleAdmin->givePermissionTo('lihat-fakultas');
+
         $roleAdmin->givePermissionTo('tambah-kampus');
         $roleAdmin->givePermissionTo('edit-kampus');
         $roleAdmin->givePermissionTo('lihat-kampus');
+        $roleAdmin->givePermissionTo('print-assessment');
+
+
+
 
         $roleProdi->givePermissionTo('review-laporan-akhir');
         $roleProdi->givePermissionTo('lihat-laporan-akhir');
@@ -95,11 +129,19 @@ class RolePermissionSeeder extends Seeder
         $roleProdi->givePermissionTo('tambah-assessment');
         $roleProdi->givePermissionTo('edit-assessment');
         $roleProdi->givePermissionTo('lihat-assessment');
+        $roleProdi->givePermissionTo('print-assessment');
 
         $roleProdi->givePermissionTo('lihat-kampus');
 
+        $roleProdi->givePermissionTo('tambah-matakuliah');
+        $roleProdi->givePermissionTo('edit-matakuliah');
+        $roleProdi->givePermissionTo('hapus-matakuliah');
+        $roleProdi->givePermissionTo('lihat-matakuliah');
+
+
         $roleMahasiswa->givePermissionTo('tambah-laporan-akhir');
         $roleMahasiswa->givePermissionTo('lihat-laporan-akhir');
+        $roleMahasiswa->givePermissionTo('print-assessment');
 
         $roleSuperAdmin->givePermissionTo(Permission::all());
     }

@@ -27,12 +27,15 @@ class UserController extends Controller
     {
         $kampus = Kampus::all();
         $kampusRole = Kampus::where('id', auth()->user()->id_kampus)->get();
-        $prodi = ProgramStudi::all();
         $fakultas = Fakultas::all();
-        $fakultasRole = Fakultas::where('id_kampus', auth()->user()->id_kampus)->with('kampus')->get();
+        $fakultasRole = Fakultas::where('id_kampus', auth()->user()->id_kampus)->get();
+        $prodi = ProgramStudi::all();
+        $prodiRole = ProgramStudi::whereHas('fakultas', function ($query) {
+            $query->where('id_kampus', auth()->user()->id_kampus);
+        })->get();
         // dd($fakultasRole);
         // $programStudi = ProgramStudi::where('id_fakultas', $fakultasRole->id)->with('fakultas.kampus')->get();
-        return view('user.create', compact('kampus', 'prodi', 'fakultas', 'fakultasRole', 'kampusRole'));
+        return view('user.create', compact('kampus', 'prodi', 'fakultas', 'fakultasRole', 'kampusRole', 'prodiRole'));
     }
 
     public function store(Request $request)
@@ -266,15 +269,15 @@ class UserController extends Controller
     }
 
 
-    public function getFakultasByKampus($kampus_id)
-    {
-        $fakultas = Fakultas::where('id_kampus', $kampus_id)->get();
-        return response()->json($fakultas);
-    }
+    // public function getFakultasByKampus($kampus_id)
+    // {
+    //     $fakultas = Fakultas::where('id_kampus', $kampus_id)->get();
+    //     return response()->json($fakultas);
+    // }
 
-    public function getProdiByFakultas($fakultas_id)
-    {
-        $prodi = ProgramStudi::where('id_fakultas', $fakultas_id)->get();
-        return response()->json($prodi);
-    }
+    // public function getProdiByFakultas($fakultas_id)
+    // {
+    //     $prodi = ProgramStudi::where('id_fakultas', $fakultas_id)->get();
+    //     return response()->json($prodi);
+    // }
 }

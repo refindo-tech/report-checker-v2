@@ -39,7 +39,7 @@
         </a>
     </li>
 @endcan
-@can('lihat-kampus')
+@can('lihat-fakultas')
     <li class="{{ Request::is('fakultas/*') ? 'active' : '' }}">
         <a href="{{ route('fakultas.index') }}" title="Profil Admin" data-filter-tags="admin profil">
             <i class="fa-solid fa-building-un"></i>
@@ -47,7 +47,7 @@
         </a>
     </li>
 @endcan
-@can('lihat-kampus')
+@can('lihat-programstudi')
     <li class="{{ Request::is('programstudi/*') ? 'active' : '' }}">
         <a href="{{ route('programstudi.index') }}" title="Profil Admin" data-filter-tags="admin profil">
             <i class="fa-solid fa-graduation-cap"></i>
@@ -55,7 +55,7 @@
         </a>
     </li>
 @endcan
-@can('lihat-mikroskill')
+@can('lihat-matakuliah')
     <li class="{{ Request::is('matakuliah/*') ? 'active' : '' }}">
         <a href="{{ route('matakuliah.index') }}" title="cpl" data-filter-tags="admin profil">
             <i class="fa-solid fa-book-open"></i>
