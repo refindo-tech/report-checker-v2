@@ -39,6 +39,7 @@
                         </div>
                     </x-panel.tool-bar>
                 </x-slot>
+
                 @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
                     <div class="form-group">
                         <label for="id_kampus">Kampus</label>
@@ -115,6 +116,8 @@
                         @enderror
                     </div>
                 @endif
+
+
                 @if ($users->prodi != null)
                     {{-- <div id="dosenFields" style="display: none;"> --}}
                     <div class="form-group">
@@ -142,6 +145,7 @@
                             value="{{ old('alamat', $users->prodi->address) }}" class="form-control">
                     </div>
                     {{-- </div> --}}
+
                 @elseif($users->mahasiswa != null)
                     {{-- <div id="mahasiswaFields" style="display: none;"> --}}
                     <div class="form-group">
@@ -167,11 +171,6 @@
                         <label for="alamat">Alamat</label>
                         <input type="text" name="alamat" id="alamat"
                             value="{{ old('alamat', $users->mahasiswa->address) }}" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="prodi">Prodi</label>
-                        <input type="text" name="prodi" id="prodi"
-                            value="{{ old('prodi', $users->mahasiswa->prodi) }}" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="semester">Semester</label>
