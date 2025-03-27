@@ -29,11 +29,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/publish/{id}', [AssessmentController::class, 'publish'])->name('assessment.publish');
         Route::get('/unpublish/{id}', [AssessmentController::class, 'unpublish'])->name('assessment.unpublish');
     });
+    Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
     });
     Route::middleware('role:Prodi|SuperAdmin')->prefix('assessment')->group(function () {
         Route::get('/indexDosen', [AssessmentController::class, 'indexDosen'])->name('assessment.indexDosen');
     });
-    
+
     // Rute untuk menambah data penilaian
     Route::middleware('permission:tambah-assessment')->prefix('assessment')->group(function () {
         Route::post('/updateInline', [AssessmentController::class, 'updateInline'])->name('assessment.updateInline');
@@ -56,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
         Route::get('/show/{id}', [AssessmentController::class, 'show'])->name('assessment.show');
     });
+});
 
     // Rute untuk mengedit barang masuk (Admin, Gudang)
     // Route::middleware('permission:edit-assessment')->prefix('mikroskil')->group(function () {

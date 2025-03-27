@@ -35,11 +35,11 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-animated dropdown-menu-right">
                             <a class="dropdown-item" href="{{ route('user.index') }}">Kembali</a>
-
                         </div>
                     </x-panel.tool-bar>
                 </x-slot>
 
+                {{-- merubah kampus --}}
                 @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
                     <div class="form-group">
                         <label for="id_kampus">Kampus</label>
@@ -67,6 +67,8 @@
                         </select>
                     </div>
                 @endif
+
+                {{-- dropdown fakultas dan prodi --}}
                 <div class="form-group" id="fakultasFields" style="display: none;">
                     <label for="id_fakultas">Fakultas</label>
                     <select class="form-control select2" id="id_fakultas" name="id_fakultas">
@@ -81,6 +83,7 @@
                     </select>
                 </div>
 
+                {{-- basic form --}}
                 <div class="form-group">
                     <label for="name">Nama</label>
                     <input type="text" name="name" id="name" class="form-control"
@@ -97,6 +100,8 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+
+                {{-- merubah role --}}
                 @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
                     <div class="form-group">
                         <label for="role">Role</label>
@@ -110,6 +115,9 @@
                             <option value="Prodi"
                                 {{ old('role', $users->roles->first()->name ?? '') == 'Prodi' ? 'selected' : '' }}>Prodi
                             </option>
+                            <option value="Mahasiswa" 
+                                {{ old('role', $users->roles->first()->name ?? '') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa
+                            </option>
                         </select>
                         @error('role')
                             <span class="text-danger">{{ $message }}</span>
@@ -117,37 +125,38 @@
                     </div>
                 @endif
 
-
-                @if ($users->prodi != null)
-                    {{-- <div id="dosenFields" style="display: none;"> --}}
+                {{-- merubah data prodi dan mahasiswa --}}
+                {{-- @if ($users->prodi != null) --}}
+                <div id="dosenFields" style="display: none;">
                     <div class="form-group">
                         <label for="nip">NIP</label>
-                        <input type="text" name="nip" value="{{ old('nip', $users->prodi->nip) }}" id="nip"
+                        <input type="text" name="nip" value="{{ old('nip', $users->prodi->nip ?? '') }}" id="nip"
                             class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="gender">Gender</label>
                         <select name="gender" id="gender" class="form-control">
-                            <option value="L" {{ $users->prodi->gender == 'L' ? 'selected' : '' }}>Laki-laki
+                            <option value="L" {{ isset($users->prodi->gender) && $users->prodi->gender == 'L' ? 'selected' : '' }}>Laki-laki
                             </option>
-                            <option value="P" {{ $users->prodi->gender == 'P' ? 'selected' : '' }}>Perempuan
+                            <option value="P" {{ isset($users->prodi->gender) && $users->prodi->gender == 'P' ? 'selected' : '' }}>Perempuan
                             </option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="text" name="phone" id="phone"
-                            value="{{ old('phone', $users->prodi->phone) }}" class="form-control">
+                        <<input type="text" name="phone" 
+                            value="{{ isset($users->mahasiswa) ? $users->mahasiswa->phone : (isset($users->prodi) ? $users->prodi->phone : '') }}" 
+                            class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="alamat">Alamat</label>
-                        <input type="text" name="alamat" id="alamat"
-                            value="{{ old('alamat', $users->prodi->address) }}" class="form-control">
+                        <input type="text" name="address" 
+                            value="{{ isset($users->mahasiswa) ? $users->mahasiswa->address : (isset($users->prodi) ? $users->prodi->address : '') }}" 
+                            class="form-control">
                     </div>
-                    {{-- </div> --}}
-
-                @elseif($users->mahasiswa != null)
-                    {{-- <div id="mahasiswaFields" style="display: none;"> --}}
+                </div>
+                {{-- @elseif($users->mahasiswa != null) --}}
+                <div id="mahasiswaFields" style="display: none;">
                     <div class="form-group">
                         <label for="nim">NIM</label>
                         <input type="text" name="nim" id="nim"
@@ -156,10 +165,8 @@
                     <div class="form-group">
                         <label for="gender">Gender</label>
                         <select name="gender" id="gender" class="form-control">
-                            <option value="L" {{ $users->mahasiswa->gender == 'L' ? 'selected' : '' }}>Laki-laki
-                            </option>
-                            <option value="P" {{ $users->mahasiswa->gender == 'P' ? 'selected' : '' }}>Perempuan
-                            </option>
+                            <option value="L" {{ isset($users->mahasiswa->gender) && $users->mahasiswa->gender == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="P" {{ isset($users->mahasiswa->gender) && $users->mahasiswa->gender == 'P' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -173,12 +180,17 @@
                             value="{{ old('alamat', $users->mahasiswa->address) }}" class="form-control">
                     </div>
                     <div class="form-group">
+                        <label for="prodi">Prodi</label>
+                        <input type="text" name="prodi" id="prodi"
+                            value="{{ old('prodi', $users->mahasiswa->prodi) }}" class="form-control">
+                    </div>
+                    <div class="form-group">
                         <label for="semester">Semester</label>
                         <input type="text" name="semester" id="semester"
                             value="{{ old('semester', $users->mahasiswa->semester) }}" class="form-control">
                     </div>
-                    {{-- </div> --}}
-                @endif
+                </div>
+                {{-- @endif --}}
                 <x-slot name="panelcontentfoot">
                     <x-button type="submit" color="primary" :label="__('Save')" class="ml-auto" />
                 </x-slot>
@@ -187,22 +199,50 @@
     </main>
 @endsection
 @section('pages-script')
+    <script src="/admin/js/formplugins/select2/select2.bundle.js"></script>
+
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Pastikan fungsi dijalankan saat halaman dimuat
+            toggleRoleFields();
+    
+            // Tambahkan event listener ke dropdown role
+            document.getElementById("role").addEventListener("change", toggleRoleFields);
+        });
+    
         function toggleRoleFields() {
             var role = document.getElementById("role").value;
-            document.getElementById("dosenFields").style.display = (role === "Dosen") ? "block" : "none";
-            document.getElementById("mahasiswaFields").style.display = (role === "Mahasiswa") ? "block" : "none";
+            var fakultasFields = document.getElementById("fakultasFields");
+            var prodiFields = document.getElementById("prodiFields");
+            var dosenFields = document.getElementById("dosenFields");
+            var mahasiswaFields = document.getElementById("mahasiswaFields");
+    
+            // Tampilkan fakultas & prodi jika memilih Prodi atau Mahasiswa
+            if (role === "Prodi" || role === "Mahasiswa") {
+                fakultasFields.style.display = "block";
+                prodiFields.style.display = "block";
+            } else {
+                fakultasFields.style.display = "none";
+                prodiFields.style.display = "none";
+            }
+    
+            // Menampilkan dan menyembunyikan dosenFields dan mahasiswaFields
+            if (role === "Prodi") {
+                dosenFields.style.display = "block";
+                mahasiswaFields.style.display = "none";
+            } else if (role === "Mahasiswa") {
+                dosenFields.style.display = "none";
+                mahasiswaFields.style.display = "block";
+            } else {
+                dosenFields.style.display = "none";
+                mahasiswaFields.style.display = "none";
+            }
         }
-
-        // Panggil fungsi saat halaman dimuat agar form yang sesuai tetap muncul saat validasi gagal
-        document.addEventListener("DOMContentLoaded", function() {
-            toggleRoleFields();
-        });
     </script>
-    <script src="/admin/js/formplugins/select2/select2.bundle.js"></script>
+    
     <script>
         $('.select2').select2({
-            placeholder: "Pilih Kampus",
+            placeholder: "Pilih",
         });
     </script>
     <script>

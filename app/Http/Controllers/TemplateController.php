@@ -35,12 +35,13 @@ class TemplateController extends Controller
         // PRODI DASBOR
         $prodiId = Auth::user()->id_prodi; // Ambil prodi_id user yang login
         // Ambil semua user yang memiliki prodi_id yang sama
-        $userIds = User::where('id_prodi', $prodiId)->pluck('id')->toArray();
+        $userIdss = User::where('id_prodi', $prodiId)->pluck('id')->toArray();
+        // dd($userIdss);
         // Ambil finalReport berdasarkan user_id yang memiliki prodi_id tersebut
-        $prodiFirst = optional(FinalReport::whereIn('user_id', $userIds)->with('user')->latest()->first());
-        $prodiGet = FinalReport::whereIn('user_id', $userIds)->whereIn('status', [2, 4])->with('user')->get() ?? collect();
-        $prodiDinilai = FinalReport::whereIn('user_id', $userIds)->where('status', 4)->with('user')->count();
-        $waitingAssesment = FinalReport::whereIn('user_id', $userIds)->where('status', 2)->with('user')->count();
+        $prodiFirst = optional(FinalReport::whereIn('user_id', $userIdss)->with('user')->latest()->first());
+        $prodiGet = FinalReport::whereIn('user_id', $userIdss)->whereIn('status', [2, 4])->with('user')->get() ?? collect();
+        $prodiDinilai = FinalReport::whereIn('user_id', $userIdss)->where('status', 4)->with('user')->count();
+        $waitingAssesment = FinalReport::whereIn('user_id', $userIdss)->where('status', 2)->with('user')->count();
 
         // dd($mahasiswaViewFirst, $mahasiswaViewGet);
 

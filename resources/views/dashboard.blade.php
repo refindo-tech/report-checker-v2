@@ -18,6 +18,13 @@
             @endcomponent
         </div>
         @if (Auth::user()->getRoleNames()->first() == 'Mahasiswa')
+            @if (Auth::user()?->id_prodi == null || Auth::user()?->id_kampus == null)
+                <p class="panel-tag fw-500 bg-danger text-white p-2">
+                    Silahkan ubah data diri pada menu berikut ini
+                    <a href="{{ route('profil_admin') }}" class="fw-500 text-white font-italic"> Setting Ubah Profil</a>
+                    page.
+                </p>
+            @endif
             <div class="row">
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <div
@@ -107,6 +114,14 @@
                 </div>
             </div>
         @elseif(Auth::user()->getRoleNames()->first() == 'Prodi')
+            @if (Auth::user()?->id_prodi == null || Auth::user()?->id_kampus == null)
+                <p class="panel-tag fw-500 bg-danger text-white p-2">
+                    Silahkan ubah data diri pada menu berikut ini
+                    <a href="{{ route('profil_admin') }}" class="fw-500 text-white font-italic"> Setting Ubah Profil</a>
+                    page.
+                </p>
+            @endif
+
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-3">
                     <div class="p-3 bg-success-300 rounded overflow-hidden position-relative text-white mb-g stat-card">
@@ -149,7 +164,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($prodiGet as $item)
-                                    <tr>
+                                    <tr onclick="window.location='{{ route('assessment.index', $item->user->id) }}';"
+                                        style="cursor: pointer;">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->mahasiswa->nim }}</td>
                                         <td>{{ $item->user->name }}</td>
@@ -232,7 +248,9 @@
                             </thead>
                             <tbody>
                                 @foreach ($adminGet as $item)
-                                    <tr>
+                                    <tr tr
+                                        onclick="window.location='{{ route('report.indexMahasiswa', $item->user->id) }}';"
+                                        style="cursor: pointer;">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->user->programStudi->fakultas->name ?? '-' }}</td>
                                         <td>{{ $item->user->programStudi->name ?? '-' }}</td>

@@ -100,7 +100,11 @@
     <table class="header-table">
         <tr>
             <td class="left">
-                <img src="{{ $img_kampus }}" alt="Logo Kampus">
+                @if (empty($kampus->image))
+                    <p class="text-danger">Perbarui data kampus</p>
+                @else
+                    <img src="{{ asset('storage/kampus/' . $kampus->image) }}" alt="Gambar Kampus">
+                @endif
             </td>
             <td class="center">
                 <h1>KEMENTERIAN PENDIDIKAN DAN KEBUDAYAAN</h1>
