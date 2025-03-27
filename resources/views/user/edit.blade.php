@@ -38,51 +38,7 @@
                         </div>
                     </x-panel.tool-bar>
                 </x-slot>
-
-                {{-- merubah kampus --}}
-                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
-                    <div class="form-group">
-                        <label for="id_kampus">Kampus</label>
-                        <select class="form-control select2" id="id_kampus" name="id_kampus" required>
-                            <option value="" disabled selected>Pilih Kampus</option>
-                            @foreach ($kampus as $item)
-                                <option value="{{ $item->id }}"
-                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @else
-                    <div class="form-group">
-                        <label for="id_kampus">Kampus</label>
-                        <select class="form-control select2" id="id_kampus" name="id_kampus" required>
-                            <option value="" disabled selected>Pilih Kampus</option>
-                            @foreach ($kampusRole as $item)
-                                <option value="{{ $item->id }}"
-                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @endif
-
-                {{-- dropdown fakultas dan prodi --}}
-                <div class="form-group" id="fakultasFields" style="display: none;">
-                    <label for="id_fakultas">Fakultas</label>
-                    <select class="form-control select2" id="id_fakultas" name="id_fakultas">
-                        <option value="" disabled selected>Pilih Fakultas</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="prodiFields" style="display: none;">
-                    <label for="id_prodi">Prodi</label>
-                    <select class="form-control select2" id="id_prodi" name="id_prodi">
-                        <option value="" disabled selected>Pilih Prodi</option>
-                    </select>
-                </div>
-
+                
                 {{-- basic form --}}
                 <div class="form-group">
                     <label for="name">Nama</label>
@@ -125,6 +81,61 @@
                     </div>
                 @endif
 
+
+                {{-- merubah kampus --}}
+                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                    <div class="form-group">
+                        <label for="id_kampus">Kampus</label>
+                        <select class="form-control select2" id="id_kampus" name="id_kampus" required>
+                            <option value="" disabled selected>Pilih Kampus</option>
+                            @foreach ($kampus as $item)
+                                <option value="{{ $item->id }}"
+                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    <div class="form-group">
+                        <label for="id_kampus">Kampus</label>
+                        <select class="form-control select2" id="id_kampus" name="id_kampus" required>
+                            <option value="" disabled selected>Pilih Kampus</option>
+                            @foreach ($kampusRole as $item)
+                                <option value="{{ $item->id }}"
+                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+
+                {{-- dropdown fakultas dan prodi --}}
+                <div class="form-group" id="fakultasFields" style="display: none;">
+                    <label for="id_fakultas">Fakultas</label>
+                    <select class="form-control select2" id="id_fakultas" name="id_fakultas">
+                        <option value="" disabled selected>Pilih Fakultas</option>
+                        @foreach ($fakultas as $item)
+                            <option value="{{ $item->id }}" {{ old('id_fakultas', $users->id_fakultas ?? '') == $item->id ? 'selected' : '' }}>
+                                {{ $item->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group" id="prodiFields" style="display: none;">
+                    <label for="id_prodi">Prodi</label>
+                        <select class="form-control select2" id="id_prodi" name="id_prodi">
+                            <option value="" disabled selected>Pilih Prodi</option>
+                            @foreach ($prodi as $item)
+                                <option value="{{ $item->id }}" {{ old('id_prodi', $users->id_prodi ?? '') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
+                            @endforeach
+                    </select>
+                </div>
+
                 {{-- merubah data prodi dan mahasiswa --}}
                 {{-- @if ($users->prodi != null) --}}
                 <div id="dosenFields" style="display: none;">
@@ -159,8 +170,9 @@
                 <div id="mahasiswaFields" style="display: none;">
                     <div class="form-group">
                         <label for="nim">NIM</label>
-                        <input type="text" name="nim" id="nim"
-                            value="{{ old('nim', $users->mahasiswa->nim) }}" class="form-control">
+                        <input type="text" name="nim" 
+                        value="{{ isset($users->mahasiswa) ? $users->mahasiswa->nim : '' }}" 
+                        class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="gender">Gender</label>
@@ -171,23 +183,21 @@
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="text" name="phone" id="phone"
-                            value="{{ old('phone', $users->mahasiswa->phone) }}" class="form-control">
+                        <input type="text" name="phone" 
+                            value="{{ optional($users->mahasiswa)->phone }}" 
+                            class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="alamat">Alamat</label>
-                        <input type="text" name="alamat" id="alamat"
-                            value="{{ old('alamat', $users->mahasiswa->address) }}" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="prodi">Prodi</label>
-                        <input type="text" name="prodi" id="prodi"
-                            value="{{ old('prodi', $users->mahasiswa->prodi) }}" class="form-control">
+                        <input type="text" name="address" 
+                            value="{{ optional($users->mahasiswa)->address }}" 
+                            class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="semester">Semester</label>
-                        <input type="text" name="semester" id="semester"
-                            value="{{ old('semester', $users->mahasiswa->semester) }}" class="form-control">
+                        <<input type="text" name="semester" 
+                        value="{{ optional($users->mahasiswa)->semester }}" 
+                        class="form-control">                 
                     </div>
                 </div>
                 {{-- @endif --}}
@@ -242,7 +252,7 @@
     
     <script>
         $('.select2').select2({
-            placeholder: "Pilih",
+            placeholder: "Pilih Data",
         });
     </script>
     <script>
