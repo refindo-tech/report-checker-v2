@@ -83,62 +83,59 @@
 
 
                 {{-- merubah kampus --}}
-                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
-                    <div class="form-group">
+                <div class="form-group" id="kampusFields" style="display: none;">
                         <label for="id_kampus">Kampus</label>
                         <select class="form-control select2" id="id_kampus" name="id_kampus" required>
                             <option value="" disabled selected>Pilih Kampus</option>
-                            @foreach ($kampus as $item)
-                                <option value="{{ $item->id }}"
-                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
+                                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                                @foreach ($kampus as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            @else
+                                @foreach ($kampusRole as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
-                @else
-                    <div class="form-group">
-                        <label for="id_kampus">Kampus</label>
-                        <select class="form-control select2" id="id_kampus" name="id_kampus" required>
-                            <option value="" disabled selected>Pilih Kampus</option>
-                            @foreach ($kampusRole as $item)
-                                <option value="{{ $item->id }}"
-                                    {{ old('id_kampus', $user->id_kampus ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @endif
+    
 
                 {{-- dropdown fakultas dan prodi --}}
                 <div class="form-group" id="fakultasFields" style="display: none;">
                     <label for="id_fakultas">Fakultas</label>
                     <select class="form-control select2" id="id_fakultas" name="id_fakultas">
-                        <option value="" disabled selected>Pilih Fakultas</option>
-                        @foreach ($fakultas as $item)
-                            <option value="{{ $item->id }}" {{ old('id_fakultas', $users->id_fakultas ?? '') == $item->id ? 'selected' : '' }}>
-                                {{ $item->name }}
-                            </option>
-                        @endforeach
+                        <option value="" selected disabled>Pilih Fakultas</option>
+                        @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                            @foreach ($fakultas as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        @else
+                            @foreach ($fakultasRole as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 
-                <div class="form-group" id="prodiFields" style="display: none;">
+                <div class="form-group" id="programstudiFields" style="display: none;">
                     <label for="id_prodi">Prodi</label>
                         <select class="form-control select2" id="id_prodi" name="id_prodi">
-                            <option value="" disabled selected>Pilih Prodi</option>
-                            @foreach ($prodi as $item)
-                                <option value="{{ $item->id }}" {{ old('id_prodi', $users->id_prodi ?? '') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
+                            <option value="" selected disabled>Pilih Program Studi</option>
+                            @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                                @foreach ($prodi as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            @else
+                                @foreach ($prodiRole as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            @endif
                     </select>
                 </div>
 
                 {{-- merubah data prodi dan mahasiswa --}}
                 {{-- @if ($users->prodi != null) --}}
-                <div id="dosenFields" style="display: none;">
+                <div id="prodiFields" style="display: none;">
                     <div class="form-group">
                         <label for="nip">NIP</label>
                         <input type="text" name="nip" value="{{ old('nip', $users->prodi->nip ?? '') }}" id="nip"
@@ -155,7 +152,7 @@
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <<input type="text" name="phone" 
+                        <input type="text" name="phone" 
                             value="{{ isset($users->mahasiswa) ? $users->mahasiswa->phone : (isset($users->prodi) ? $users->prodi->phone : '') }}" 
                             class="form-control">
                     </div>
@@ -194,8 +191,8 @@
                             class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="semester">Semester</label>
-                        <<input type="text" name="semester" 
+                        <label for="semester"> Semester </label>
+                        <input type="text" name="semester" 
                         value="{{ optional($users->mahasiswa)->semester }}" 
                         class="form-control">                 
                     </div>
@@ -212,64 +209,54 @@
     <script src="/admin/js/formplugins/select2/select2.bundle.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Pastikan fungsi dijalankan saat halaman dimuat
+        $(document).ready(function() {
+            function toggleRoleFields() {
+                var role = $('#role').val();
+    
+                // Jika role adalah AdminPT, hanya tampilkan kampus dan prodi
+                if (role === "AdminPT") {
+                    $('#kampusFields, #prodiFields').show();
+                    $('#fakultasFields, #mahasiswaFields, #dosenFields, #programstudiFields').hide();
+                }
+                // Jika role adalah Prodi, tampilkan kampus, fakultas, prodi, dan dosen
+                else if (role === "Prodi") {
+                    $('#kampusFields, #fakultasFields, #prodiFields, #programstudiFields, #dosenFields').show();
+                    $('#mahasiswaFields').hide();
+                }
+                // Jika role adalah Mahasiswa, tampilkan kampus, fakultas, mahasiswa, dan program studi
+                else if (role === "Mahasiswa") {
+                    $('#kampusFields, #fakultasFields, #mahasiswaFields, #programstudiFields').show();
+                    $('#prodiFields, #dosenFields').hide();
+                }
+                // Jika role SuperAdmin, sembunyikan semua kecuali role selector
+                else {
+                    $('#kampusFields, #fakultasFields, #prodiFields, #mahasiswaFields, #dosenFields, #programstudiFields').hide();
+                }
+            }
+    
+            // Panggil function setiap kali role berubah
+            $('#role').change(toggleRoleFields);
+    
+            // Jalankan function saat halaman dimuat
             toggleRoleFields();
-    
-            // Tambahkan event listener ke dropdown role
-            document.getElementById("role").addEventListener("change", toggleRoleFields);
-        });
-    
-        function toggleRoleFields() {
-            var role = document.getElementById("role").value;
-            var fakultasFields = document.getElementById("fakultasFields");
-            var prodiFields = document.getElementById("prodiFields");
-            var dosenFields = document.getElementById("dosenFields");
-            var mahasiswaFields = document.getElementById("mahasiswaFields");
-    
-            // Tampilkan fakultas & prodi jika memilih Prodi atau Mahasiswa
-            if (role === "Prodi" || role === "Mahasiswa") {
-                fakultasFields.style.display = "block";
-                prodiFields.style.display = "block";
-            } else {
-                fakultasFields.style.display = "none";
-                prodiFields.style.display = "none";
-            }
-    
-            // Menampilkan dan menyembunyikan dosenFields dan mahasiswaFields
-            if (role === "Prodi") {
-                dosenFields.style.display = "block";
-                mahasiswaFields.style.display = "none";
-            } else if (role === "Mahasiswa") {
-                dosenFields.style.display = "none";
-                mahasiswaFields.style.display = "block";
-            } else {
-                dosenFields.style.display = "none";
-                mahasiswaFields.style.display = "none";
-            }
-        }
-    </script>
-    
-    <script>
-        $('.select2').select2({
-            placeholder: "Pilih Data",
         });
     </script>
+
     <script>
         $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Pilih Data",
+            });
+    
             function loadFakultas(kampus_id, selectedFakultas = null) {
                 if (kampus_id) {
                     $.ajax({
-                        url: '{{ route('user.getFakultasByKampus', ['kampus_id' => '__KAMPUS_ID__']) }}'
-                            .replace('__KAMPUS_ID__', kampus_id),
+                        url: '{{ route('user.getFakultasByKampus', ['kampus_id' => '__KAMPUS_ID__']) }}'.replace('__KAMPUS_ID__', kampus_id),
                         type: 'GET',
                         success: function(data) {
-                            $('#id_fakultas').empty().append(
-                                '<option value="" disabled selected>Pilih Fakultas</option>');
+                            $('#id_fakultas').empty().append('<option value="" disabled selected>Pilih Fakultas</option>');
                             $.each(data, function(key, value) {
-                                $('#id_fakultas').append(
-                                    `<option value="${value.id}" ${selectedFakultas == value.id ? 'selected' : ''}>${value.name}</option>`
-                                );
+                                $('#id_fakultas').append(`<option value="${value.id}" ${selectedFakultas == value.id ? 'selected' : ''}>${value.name}</option>`);
                             });
                             $('#fakultasFields').show();
                         }
@@ -278,20 +265,16 @@
                     $('#fakultasFields, #prodiFields').hide();
                 }
             }
-
+    
             function loadProdi(fakultas_id, selectedProdi = null) {
                 if (fakultas_id) {
                     $.ajax({
-                        url: '{{ route('user.getProdiByFakultas', ['fakultas_id' => '__FAKULTAS_ID__']) }}'
-                            .replace('__FAKULTAS_ID__', fakultas_id),
+                        url: '{{ route('user.getProdiByFakultas', ['fakultas_id' => '__FAKULTAS_ID__']) }}'.replace('__FAKULTAS_ID__', fakultas_id),
                         type: 'GET',
                         success: function(data) {
-                            $('#id_prodi').empty().append(
-                                '<option value="" disabled selected>Pilih Prodi</option>');
+                            $('#id_prodi').empty().append('<option value="" disabled selected>Pilih Prodi</option>');
                             $.each(data, function(key, value) {
-                                $('#id_prodi').append(
-                                    `<option value="${value.id}" ${selectedProdi == value.id ? 'selected' : ''}>${value.name}</option>`
-                                );
+                                $('#id_prodi').append(`<option value="${value.id}" ${selectedProdi == value.id ? 'selected' : ''}>${value.name}</option>`);
                             });
                             $('#prodiFields').show();
                         }
@@ -300,24 +283,23 @@
                     $('#prodiFields').hide();
                 }
             }
-
+    
             $('#id_kampus').change(function() {
                 let kampus_id = $(this).val();
                 loadFakultas(kampus_id);
                 $('#id_prodi').empty().append('<option value="" disabled selected>Pilih Prodi</option>');
                 $('#prodiFields').hide();
             });
-
+    
             $('#id_fakultas').change(function() {
                 let fakultas_id = $(this).val();
                 loadProdi(fakultas_id);
             });
-
-            // Load data saat edit
+    
             let selectedKampus = $('#id_kampus').val();
             let selectedFakultas = '{{ old('id_fakultas', $user->id_fakultas ?? '') }}';
             let selectedProdi = '{{ old('id_prodi', $user->id_prodi ?? '') }}';
-
+    
             if (selectedKampus) {
                 loadFakultas(selectedKampus, selectedFakultas);
                 if (selectedFakultas) {
@@ -326,5 +308,4 @@
             }
         });
     </script>
-
 @endsection
