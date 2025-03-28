@@ -65,7 +65,7 @@
                                             <tbody id="input-container">
                                                 <tr>
                                                     <td>
-                                                        <select name="matakuliah[]" class="form-control select-mata-kuliah">
+                                                        <select name="matakuliah[]" class="form-control select-mata-kuliah2">
                                                             <option value="" data-sks="0">Pilih Mata Kuliah</option>
                                                             @foreach ($matkul as $component)
                                                                 <option value="{{ $component->id }}"
@@ -124,7 +124,7 @@
                                     // $firstAssessment = $report->assesment->first();
                                     // $pivotData = $firstAssessment ? $firstAssessment->pivot : null;
 
-                                    $assesments = $report->assesment->isNotEmpty() ? $report->assesment : [null]; // Jika kosong, buat array dengan satu elemen null
+                                    $assesments = $report->assesment->isNotEmpty() ? $report->assesment : []; // Jika kosong, buat array dengan satu elemen null
                                 @endphp
 
                                 @foreach ($assesments as $assesment)
@@ -215,12 +215,12 @@
             // Fungsi untuk memperbarui opsi yang dinonaktifkan agar mata kuliah yang sudah dipilih tidak muncul
             function disableSelectedOptions() {
                 let selectedValues = new Set();
-                document.querySelectorAll(".select-mata-kuliah").forEach(select => {
+                document.querySelectorAll(".select-mata-kuliah2").forEach(select => {
                     if (select.value) {
                         selectedValues.add(select.value);
                     }
                 });
-                document.querySelectorAll(".select-mata-kuliah").forEach(select => {
+                document.querySelectorAll(".select-mata-kuliah2").forEach(select => {
                     Array.from(select.options).forEach(option => {
                         if (option.value && selectedValues.has(option.value) && option.value !==
                             select.value) {
@@ -276,7 +276,7 @@
                 const newRow = document.createElement("tr");
                 newRow.innerHTML = `
             <td>
-                <select name="matakuliah[]" class="form-control select-mata-kuliah">
+                <select name="matakuliah[]" class="form-control select-mata-kuliah2">
                     <option value="" data-sks="0">Pilih Mata Kuliah</option>
                     ${matkulOptions()}
                 </select>
@@ -300,7 +300,7 @@
                 container.innerHTML = `
             <tr>
                 <td>
-                    <select name="matakuliah[]" class="form-control select-mata-kuliah">
+                    <select name="matakuliah[]" class="form-control select-mata-kuliah2">
                         <option value="" data-sks="0">Pilih Mata Kuliah</option>
                         ${matkulOptions()}
                     </select>
@@ -322,7 +322,7 @@
 
             // Event listener untuk pemilihan mata kuliah
             container.addEventListener("change", function(event) {
-                if (event.target.classList.contains("select-mata-kuliah")) {
+                if (event.target.classList.contains("select-mata-kuliah2")) {
                     const selectedOption = event.target.selectedOptions[0];
                     const sksInput = event.target.closest("tr").querySelector(".total-sks");
                     const sksValue = parseInt(selectedOption.getAttribute("data-sks"), 10);
@@ -397,27 +397,52 @@
             $('.delete').on('click', function() {
                 let row = $(this).closest('tr'); // Ambil baris terdekat jika tombol ada di dalam tabel
                 let assessmentId = row.find(".assessment-id").val(); // Ambil ID dari input dalam row
-                console.log("Assessment ID:", assessmentId);
+                // console.log("Assessment ID:", assessmentId);
 
-                if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-                    $.ajax({
-                        url: '/assessment/delete/' + assessmentId,
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            alert(response.message);
-                            location.reload();
-                        },
-                        error: function(xhr) {
-                            alert("Gagal menghapus data!");
-                        }
-                    });
-                }
+                Swal.fire({
+                    title: "Apakah Anda yakin?",
+                    text: "Data ini akan dihapus secara permanen!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Ya, Hapus!",
+                    cancelButtonText: "Batal"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/assessment/delete/' + assessmentId,
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: "Terhapus!",
+                                    text: response.message,
+                                    icon: "success",
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    title: "Gagal!",
+                                    text: "Data gagal dihapus.",
+                                    icon: "error",
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    }
+                });
             });
+
 
         });
     </script>
-    
+
 @endsection

@@ -23,7 +23,7 @@
             <x-slot name="paneltoolbar">
                 @can('tambah-laporan-akhir')
                     <x-panel.tool-bar>
-                        @if ($reports?->status == 3 || $reports?->status == 4)
+                        @if ($reports?->berkas == null || $reports?->status == 3 || $reports?->status == 4)
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadberkas">
                                 Upload Berkas
                             </button>
