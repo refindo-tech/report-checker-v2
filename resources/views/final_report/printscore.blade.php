@@ -103,7 +103,7 @@
                 @if (empty($kampus->image))
                     <p class="text-danger">Perbarui data kampus</p>
                 @else
-                    <img src="{{ asset('storage/kampus/' . $kampus->image) }}" alt="Gambar Kampus">
+                    <img src="{{ $img_kampus }}" alt="Gambar Kampus">
                 @endif
             </td>
             <td class="center">

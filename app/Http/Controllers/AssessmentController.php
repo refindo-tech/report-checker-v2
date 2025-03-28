@@ -255,15 +255,22 @@ class AssessmentController extends Controller
      */
     public function destroy($id)
     {
-        // Cari record assessment berdasarkan id (pastikan $id adalah id dari record laprak_has_assesment)
-        $assessment = laprak_has_assesment::findOrFail($id);
+        try {
+            // Cari record assessment berdasarkan id
+            $assessment = laprak_has_assesment::findOrFail($id);
 
-        // Hapus record
-        $assessment->delete();
+            // Hapus record
+            $assessment->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data assessment berhasil dihapus!'
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data assessment berhasil dihapus!'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data! ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

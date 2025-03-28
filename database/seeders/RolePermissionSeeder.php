@@ -129,6 +129,7 @@ class RolePermissionSeeder extends Seeder
         $roleProdi->givePermissionTo('tambah-assessment');
         $roleProdi->givePermissionTo('edit-assessment');
         $roleProdi->givePermissionTo('lihat-assessment');
+        $roleProdi->givePermissionTo('hapus-assessment');
         $roleProdi->givePermissionTo('print-assessment');
 
         $roleProdi->givePermissionTo('lihat-kampus');
