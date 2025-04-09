@@ -201,6 +201,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <!-- Tambahkan SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         let maksSKS = {{ $reportFirst->maks_sks ?? 24 }}; // Data dari database
         let sksTerpakai = {{ $sks_terpakai ?? 0 }}; // Jika belum ada, default 0

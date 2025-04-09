@@ -107,7 +107,7 @@
             <p>Mahasiswa dapat memantau hasil evaluasi secara real-time, memahami standar penilaian, serta mendapatkan umpan balik langsung dari dosen. Sementara itu, dosen dapat melakukan penilaian dengan lebih sistematis melalui format standar yang disediakan. Rekapitulasi hasil evaluasi juga dapat dikelola secara otomatis, meningkatkan transparansi, akurasi, dan efisiensi dalam proses evaluasi capaian pembelajaran mahasiswa.</p>
         </div>
         <div class="logo-container">
-            <img src="/admin/img/AA/twh.png" alt="Logo MBKM">
+            <img src="/admin/img/simikro2.png" alt="Logo MBKM">
         </div>
     </div>
     <div class="footer">
