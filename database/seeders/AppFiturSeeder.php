@@ -22,19 +22,19 @@ class AppFiturSeeder extends Seeder
             ],
             [
                 'nama_fitur' => '_app_shortcuts',
-                'aktif' => 'Y',
+                'aktif' => 'N',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'nama_fitur' => '_app_message',
-                'aktif' => 'Y',
+                'aktif' => 'N',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'nama_fitur' => '_app_notification',
-                'aktif' => 'Y',
+                'aktif' => 'N',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

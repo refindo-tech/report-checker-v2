@@ -1,15 +1,15 @@
 <aside class="page-sidebar">
-    <div class="page-logo">
+    <div class="page-logo" style="align-items: center">
         {{-- <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
             data-toggle="modal" data-target="#modal-shortcut"> --}}
             <img src="/admin/img/logountirta.png" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
-                aria-roledescription="logo" style="width: 50px; height: auto;">
-            <img src="/admin/img/simikro.png" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
-                aria-roledescription="icon" style="width: 130px; position: relative; margin-left: 10px;">
+                aria-roledescription="logo" style="height: 50px; width: auto;">
+            <img src="/admin/img/simikro2.png" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
+                aria-roledescription="icon" style="height: 50px; width: auto; position: relative; margin-left: 10px;">
             {{-- <img src="/admin/img/{{ $profileApp->app_logo ?? '' }}" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
                 aria-roledescription="logo"> --}}
             {{-- <span class="page-logo-text mr-1">{{ $profileApp->app_nama ?? '' }}</span> --}}
-            <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+            {{-- <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span> --}}
             {{-- <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
         </a> --}}
     </div>

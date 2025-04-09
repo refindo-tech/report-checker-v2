@@ -27,7 +27,6 @@ class AssessmentController extends Controller
 
         // Ambil laporan dengan relasi ke mikroskill melalui pivot table
         $reportFirst = finalReport::with(['user', 'mahasiswa', 'assesment'])
-            ->where('status', '2')
             ->where('user_id', $id)
             ->latest()
             ->firstOrFail(); // Pastikan data ada, kalau tidak akan menampilkan error 404
@@ -35,7 +34,6 @@ class AssessmentController extends Controller
         // dd($report, $matkul);
         // Inisialisasi array untuk menyimpan permission role
         $reports = finalReport::with(['user', 'mahasiswa', 'assesment'])
-            ->where('status', '2')
             ->where('user_id', $id)
             ->orderBy('created_at', 'desc')
             ->get();
