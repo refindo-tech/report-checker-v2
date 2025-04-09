@@ -96,7 +96,7 @@
             @endcan
 
             {{-- TABEL --}}
-            @can('lihat-mikroskill')
+            @can('lihat-matakuliah')
                 <h3>Daftar Mata Kuliah</h3>
                 <table id="dt-basic-example" class="table table-bordered">
                     <thead>
@@ -105,7 +105,7 @@
                             <th>Program Studi</th>
                             <th>Nama Mata Kuliah</th>
                             <th>SKS</th>
-                            @can('hapus-mikroskill')
+                            @can('hapus-matakuliah')
                                 <th>Aksi</th>
                             @endcan
                         </tr>
@@ -126,7 +126,7 @@
                                         <input type="number" class="form-control editable" data-id="{{ $item->id }}"
                                             data-column="sks" value="{{ $item->sks }}">
                                     </td>
-                                    @can('hapus-mikroskill')
+                                    @can('hapus-matakuliah')
                                         <td>
                                             <a href="javascript:void(0);" onclick="confirmDelete({{ $item->id }})"
                                                 class="btn btn-danger">
@@ -157,7 +157,7 @@
                                         <input type="number" class="form-control editable" data-id="{{ $item->id }}"
                                             data-column="sks" value="{{ $item->sks }}">
                                     </td>
-                                    @can('hapus-mikroskill')
+                                    @can('hapus-matakuliah')
                                         <td>
                                             <a href="javascript:void(0);" onclick="confirmDelete({{ $item->id }})"
                                                 class="btn btn-danger">
