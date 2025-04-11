@@ -24,7 +24,7 @@
         </div>
         <x-panel.show title="Daftar" subtitle="Laporan Akhir">
             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                <thead class="bg-primary text-white">
+                <thead class="bg-warning text-white">
                     <tr>
                         <th>NIM</th>
                         <th>Nama Mahasiswa</th>
@@ -54,18 +54,17 @@
                 searching: true,
             });
 
-            $('.js-thead-colors a').on('click', function() {
-                var theadColor = $(this).attr("data-bg");
-                console.log(theadColor);
-                $('#dt-basic-example thead').removeClassPrefix('bg-').addClass(theadColor);
-            });
+            // $('.js-thead-colors a').on('click', function() {
+            //     var theadColor = $(this).attr("data-bg");
+            //     console.log(theadColor);
+            //     $('#dt-basic-example thead').removeClassPrefix('bg-').addClass(theadColor);
+            // });
 
             $('.js-tbody-colors a').on('click', function() {
                 var theadColor = $(this).attr("data-bg");
                 console.log(theadColor);
                 $('#dt-basic-example').removeClassPrefix('bg-').addClass(theadColor);
             });
-
         });
     </script>
 @endsection

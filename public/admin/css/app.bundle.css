@@ -357,8 +357,8 @@ RESULT:
 .page-logo, .page-sidebar, .nav-footer, .bg-brand-gradient {
   background-image: -webkit-gradient(linear, right top, left top, from(rgba(51, 148, 225, 0.18)), to(transparent));
   background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
-  background-color: #584475; }
-
+  background-color: #d79b1b; } /* test */
+  
 /*
 %shadow-hover {
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 0 2px rgba(0,0,0,0.24);
@@ -506,7 +506,7 @@ RESULT:
           box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.125);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   border-width: 0 0 1px 0;
-  background: #fff;
+  background: #ffc241;
   padding: 16px 16px 10px; }
 
 .nav-function-fixed:not(.nav-function-top) .page-header [data-class="nav-function-fixed"] {
@@ -737,7 +737,8 @@ html {
     text-rendering: optimizeLegibility;
     background-color: #fff; }
     html body a {
-      color: #886ab5;
+      color: #666666; 
+      /* test tulisan simikro di atas tabel kecil */
       text-decoration: none;
       background-color: transparent; }
       html body a:hover {
@@ -758,7 +759,8 @@ html {
     overflow: visible; }
     .header-icon:not(.btn) > [class*='fa-']:first-child,
     .header-icon:not(.btn) > .ni:first-child {
-      color: #886ab5;
+      color: #ffc241;
+      /* test icon nav sebelah kanan */
       vertical-align: middle; }
     .header-icon:not(.btn) > [class*='fa-']:first-child {
       font-size: 21px; }
@@ -1181,7 +1183,8 @@ html {
 .nav-title {
   text-transform: uppercase;
   margin: 0;
-  color: #8268a8;
+  color: #000000; 
+  /* test warna judul nav*/
   padding: 1rem 2rem;
   margin-top: 1.5rem;
   font-size: 0.7rem;
@@ -1262,7 +1265,8 @@ html {
       outline: 0;
       padding: 0.8125rem 2rem;
       font-size: 0.875rem;
-      color: #bdafd1;
+      color: #000000;
+      /* test warna nama isi nav */
       font-weight: 400;
       text-decoration: none;
       position: relative;
@@ -1321,7 +1325,8 @@ html {
         margin-right: 0.25rem;
         font-size: 1.125rem;
         width: 1.75rem;
-        color: #876fab;
+        color: #000000;
+        /* test warna icon */
         text-align: left; }
       .nav-menu li a > .nav-link-text {
         -webkit-box-flex: 1;
@@ -1394,7 +1399,7 @@ html {
           color: white; }
         .nav-menu li > ul li.active > a:hover > .nav-link-text > [class*='fa-'],
         .nav-menu li > ul li.active > a:hover > .nav-link-text > .ni {
-          color: #a8a6ac; }
+          color: #a6aca6; }
       .nav-menu li > ul li:last-child > ul {
         padding-bottom: 0; }
       .nav-menu li > ul li > ul li.active > a {
