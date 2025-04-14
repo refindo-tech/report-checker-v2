@@ -16,8 +16,15 @@ class KampusController extends Controller
     public function index()
     {
         $kampus = Kampus::where('id', Auth::user()->id_kampus)->get();
+
+        $kampusAdmin = null;
+
+        if (Auth::user()->id_kampus) {
+            $kampusAdmin = Kampus::find(Auth::user()->id_kampus);
+        }
+
         // dd($kampuses);
-        return view('kampus.index', compact('kampus'));
+        return view('kampus.index', compact('kampus', 'kampusAdmin'));
     }
 
     /**

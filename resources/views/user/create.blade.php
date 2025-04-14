@@ -33,8 +33,8 @@
                         @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
                             <option value="SuperAdmin" {{ old('role') == 'SuperAdmin' ? 'selected' : '' }}>Super Admin
                             </option>
+                            <option value="AdminPT" {{ old('role') == 'AdminPT' ? 'selected' : '' }}>Admin PT</option>
                         @endif
-                        <option value="AdminPT" {{ old('role') == 'AdminPT' ? 'selected' : '' }}>Admin PT</option>
                         <option value="Prodi" {{ old('role') == 'Prodi' ? 'selected' : '' }}>Prodi</option>
                         <option value="Mahasiswa" {{ old('role') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                     </select>
@@ -42,22 +42,24 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                <!-- Pilih Kampus -->
-                <div class="form-group" id="kampusFields" style="display: none;">
-                    <label for="kampus">Kampus</label>
-                    <select class="form-control select2" name="id_kampus" id="id_kampus" required>
-                        <option value="" selected disabled>Pilih Kampus</option>
-                        @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
-                            @foreach ($kampus as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        @else
-                            @foreach ($kampusRole as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
+                @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                    <!-- Pilih Kampus -->
+                    <div class="form-group" id="kampusFields" style="display: none;">
+                        <label for="kampus">Kampus</label>
+                        <select class="form-control select2" name="id_kampus" id="id_kampus" required>
+                            <option value="" selected disabled>Pilih Kampus</option>
+                            @if (auth()->user()->getRoleNames()->first() == 'SuperAdmin')
+                                @foreach ($kampus as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            @else
+                                @foreach ($kampusRole as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                @endif
 
                 <!-- Pilih Fakultas -->
                 <div class="form-group" id="fakultasFields" style="display: none;">
@@ -116,7 +118,7 @@
                 </div>
 
                 <!-- Form tambahan untuk Dosen -->
-                <div id="prodiFields" style="display: none;">
+                {{-- <div id="prodiFields" style="display: none;">
                     <div class="form-group">
                         <label for="nip">NIP</label>
                         <input type="text" name="nip" id="nip" class="form-control">
@@ -148,10 +150,10 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Form tambahan untuk Mahasiswa -->
-                <div id="mahasiswaFields" style="display: none;">
+                {{-- <div id="mahasiswaFields" style="display: none;">
                     <div class="form-group">
                         <label for="nim">NIM</label>
                         <input type="text" name="nim" id="nim" class="form-control">
@@ -190,7 +192,7 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
                 <x-slot name="panelcontentfoot">
                     <x-button type="submit" color="primary" :label="__('Save')" class="ml-auto" />
                 </x-slot>

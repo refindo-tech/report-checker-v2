@@ -21,7 +21,7 @@
         <span class="fw-300 fs-xs d-block opacity-50">
             <small>Selamat Datang</small>
         </span>
-        <span class="fw-500 fs-xl d-block color-primary-500">
+        <span class="fw-500 fs-xl d-block color-warning-800">
             {{ auth()->user()->name }}
             {{-- @dd(Auth(), auth()->user(), auth()->user()->name, auth()->user()->getRoleNames()) --}}
         </span>

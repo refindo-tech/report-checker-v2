@@ -19,34 +19,35 @@
             ])
             @endcomponent
         </div>
-        <x-panel.show title="Daftar" subtitle="Pengguna WebApps">
-            <x-slot name="paneltoolbar">
-                @can('tambah-user')
-                    <x-panel.tool-bar>
-                        <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
-                    </x-panel.tool-bar>
-                @endcan
-            </x-slot>
-            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Role</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>image</th>
-                        @canany(['edit-user', 'hapus-user'])
-                            <th>Aksi</th>
-                        @endcanany
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($users as $user)
+        @if (Auth::user()->getRoleNames()->first() == 'SuperAdmin')
+            <x-panel.show title="Daftar" subtitle="Pengguna WebApps">
+                <x-slot name="paneltoolbar">
+                    @can('tambah-user')
+                        <x-panel.tool-bar>
+                            <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
+                        </x-panel.tool-bar>
+                    @endcan
+                </x-slot>
+                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                    <thead>
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                <span
-                                    class="badge 
+                            <th>No</th>
+                            <th>Role</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>image</th>
+                            @canany(['edit-user', 'hapus-user'])
+                                <th>Aksi</th>
+                            @endcanany
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($users as $user)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    <span
+                                        class="badge 
                                         @switch($user->getRoleNames()->first())
                                             @case('SuperAdmin') bg-danger @break
                                             @case('AdminPT') bg-primary @break
@@ -54,23 +55,22 @@
                                             @case('Mahasiswa') bg-secondary @break
                                             @default bg-secondary
                                         @endswitch">
-                                    {{ $user->getRoleNames()->first() ?? 'Tidak Tersedia' }}
-                                </span>
+                                        {{ $user->getRoleNames()->first() ?? 'Tidak Tersedia' }}
+                                    </span>
 
-                            </td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>
-                                @if ($user->image == null)
-                                    <span class="badge bg-primary">No Image</span>
-                                @else
-                                    <img src="{{ asset('storage/profile/' . $user->image) }}" alt="{{ $user->name }}"
-                                        style="max-width: 50px">
-                                @endif
-                            </td>
-                            @canany(['edit-user', 'hapus-user'])
+                                </td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
                                 <td>
-                                    <a href="{{ route('user.show', $user->id) }}" class="btn btn-info">Detail</a>
+                                    @if ($user->image == null)
+                                        <span class="badge bg-primary">No Image</span>
+                                    @else
+                                        <img src="{{ asset('storage/profile/' . $user->image) }}" alt="{{ $user->name }}"
+                                            style="max-width: 50px">
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('user.show', $user->id) }}" class="btn btn-info">Rincian</a>
 
                                     {{-- Tombol Edit --}}
                                     @can('edit-user')
@@ -85,19 +85,97 @@
 
                                     {{-- Form Hapus --}}
                                     @can('hapus-user')
-                                        <form id="delete-form-{{ $user->id }}" action="{{ route('user.destroy', $user->id) }}"
-                                            method="POST" style="display:none;">
+                                        <form id="delete-form-{{ $user->id }}"
+                                            action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                            style="display:none;">
                                             @csrf
                                             @method('DELETE')
                                         </form>
                                     @endcan
                                 </td>
-                            @endcanany
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </x-panel.show>
+        @else
+            <x-panel.show title="Daftar" subtitle="Pengguna WebApps">
+                <x-slot name="paneltoolbar">
+                    @can('tambah-user')
+                        <x-panel.tool-bar>
+                            <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
+                        </x-panel.tool-bar>
+                    @endcan
+                </x-slot>
+                <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Role</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>image</th>
+                            <th>Aksi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </x-panel.show>
+                    </thead>
+                    <tbody>
+                        @foreach ($usersAdmin as $user)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    <span
+                                        class="badge 
+                                        @switch($user->getRoleNames()->first())
+                                            @case('SuperAdmin') bg-danger @break
+                                            @case('AdminPT') bg-primary @break
+                                            @case('Prodi') bg-success @break
+                                            @case('Mahasiswa') bg-secondary @break
+                                            @default bg-secondary
+                                        @endswitch">
+                                        {{ $user->getRoleNames()->first() ?? 'Tidak Tersedia' }}
+                                    </span>
+
+                                </td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>
+                                    @if ($user->image == null)
+                                        <span class="badge bg-primary">No Image</span>
+                                    @else
+                                        <img src="{{ asset('storage/profile/' . $user->image) }}"
+                                            alt="{{ $user->name }}" style="max-width: 50px">
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('user.show', $user->id) }}" class="btn btn-info">Rincian</a>
+
+                                    {{-- Tombol Edit --}}
+                                    @can('edit-user')
+                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning">Edit</a>
+                                    @endcan
+
+                                    {{-- Tombol Hapus --}}
+                                    @can('hapus-user')
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="confirmDelete({{ $user->id }})">Hapus</button>
+                                    @endcan
+
+                                    {{-- Form Hapus --}}
+                                    @can('hapus-user')
+                                        <form id="delete-form-{{ $user->id }}"
+                                            action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                            style="display:none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    @endcan
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </x-panel.show>
+        @endif
     </main>
 @endsection
 @section('pages-script')

@@ -19,8 +19,13 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+        $usersAdmin = User::where('id_kampus', auth()->user()->id_kampus)
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'SuperAdmin');
+            })
+            ->get();
 
-        return view('user.index', compact('users'));
+        return view('user.index', compact('users', 'usersAdmin'));
     }
 
     public function create()
@@ -33,7 +38,7 @@ class UserController extends Controller
         $prodiRole = ProgramStudi::whereHas('fakultas', function ($query) {
             $query->where('id_kampus', auth()->user()->id_kampus);
         })->get();
-        // dd($fakultasRole);
+        // dd($fakultasRole, auth()->user());
         // $programStudi = ProgramStudi::where('id_fakultas', $fakultasRole->id)->with('fakultas.kampus')->get();
         return view('user.create', compact('kampus', 'prodi', 'fakultas', 'fakultasRole', 'kampusRole', 'prodiRole'));
     }
@@ -43,7 +48,6 @@ class UserController extends Controller
         // dd(request()->all());
 
         $validator = Validator::make($request->all(), [
-            'id_kampus' => 'required',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
@@ -53,85 +57,144 @@ class UserController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        if (auth()->user()->roles->first()->name == 'SuperAdmin') {
+            if ($request->role == 'Prodi') {
 
-        if ($request->role == 'Prodi') {
+                // dd(request()->all());
+                // Simpan data ke database
+                $user = User::create([
+                    'id_kampus' => $request->id_kampus,
+                    'id_prodi' => $request->id_prodi,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
 
-            // dd(request()->all());
-            // Simpan data ke database
-            $user = User::create([
-                'id_kampus' => $request->id_kampus,
-                'id_prodi' => $request->id_prodi,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'role' => $request->role,
-            ]);
+                // assign Role menggunakan spatie
+                $user->assignRole('Prodi');
 
-            // assign Role menggunakan spatie
-            $user->assignRole('Prodi');
+                // Prodi::create([
+                //     'user_id' => $user->id,
+                //     'nip' => $request->nip,
+                //     'gender' => $request->gender,
+                //     'phone' => $request->phone,
+                //     'address' => $request->alamat,
+                // ]);
+            } elseif ($request->role == 'Mahasiswa') {
+                // dd($request->all());
+                // Simpan data ke database
+                $user = User::create([
+                    'id_kampus' => $request->id_kampus,
+                    'id_prodi' => $request->id_prodi,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
+                // assign Role menggunakan spatie
+                $user->assignRole('Mahasiswa');
 
-            Prodi::create([
-                'user_id' => $user->id,
-                'nip' => $request->nip,
-                'gender' => $request->gender,
-                'phone' => $request->phone,
-                'address' => $request->alamat,
-            ]);
-        } elseif ($request->role == 'Mahasiswa') {
-            // dd($request->all());
-            // Simpan data ke database
-            $user = User::create([
-                'id_kampus' => $request->id_kampus,
-                'id_prodi' => $request->id_prodi,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'role' => $request->role,
-            ]);
-            // assign Role menggunakan spatie
-            $user->assignRole('Mahasiswa');
+                // Mahasiswa::create([
+                //     'user_id' => $user->id,
+                //     'nim' => $request->nim,
+                //     'gender' => $request->gender,
+                //     'phone' => $request->phone,
+                //     'address' => $request->alamat,
+                //     'semester' => $request->semester,
+                // ]);
+            } elseif ($request->role == 'AdminPT') {
+                // dd(request()->all());
+                // Simpan data ke database
+                $user = User::create([
+                    'id_kampus' => $request->id_kampus,
+                    'id_prodi' => $request->id_prodi,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
 
-            Mahasiswa::create([
-                'user_id' => $user->id,
-                'nim' => $request->nim,
-                'gender' => $request->gender,
-                'phone' => $request->phone,
-                'address' => $request->alamat,
-                'semester' => $request->semester,
-            ]);
-        } elseif ($request->role == 'AdminPT') {
-            // dd(request()->all());
-            // Simpan data ke database
-            $user = User::create([
-                'id_kampus' => $request->id_kampus,
-                'id_prodi' => $request->id_prodi,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'role' => $request->role,
-            ]);
+                // assign Role menggunakan spatie
+                $user->assignRole('AdminPT');
 
-            // assign Role menggunakan spatie
-            $user->assignRole('AdminPT');
-
-            Prodi::create([
-                'user_id' => $user->id,
-                'nip' => $request->nip,
-                'gender' => $request->gender,
-                'phone' => $request->phone,
-                'address' => $request->alamat,
-            ]);
+                // Prodi::create([
+                //     'user_id' => $user->id,
+                //     'nip' => $request->nip,
+                //     'gender' => $request->gender,
+                //     'phone' => $request->phone,
+                //     'address' => $request->alamat,
+                // ]);
+            } else {
+                // Simpan data ke database
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
+                // assign Role menggunakan spatie
+                $user->assignRole('SuperAdmin');
+            }
         } else {
-            // Simpan data ke database
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'role' => $request->role,
-            ]);
-            // assign Role menggunakan spatie
-            $user->assignRole('SuperAdmin');
+            if ($request->role == 'Prodi') {
+
+                // dd(request()->all());
+                // Simpan data ke database
+                $user = User::create([
+                    'id_kampus' => auth()->user()->id_kampus,
+                    'id_prodi' => $request->id_prodi,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
+
+                // assign Role menggunakan spatie
+                $user->assignRole('Prodi');
+
+            } elseif ($request->role == 'Mahasiswa') {
+                // dd($request->all());
+                // Simpan data ke database
+                $user = User::create([
+                    'id_kampus' => auth()->user()->id_kampus,
+                    'id_prodi' => $request->id_prodi,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
+                // assign Role menggunakan spatie
+                $user->assignRole('Mahasiswa');
+
+            } elseif ($request->role == 'AdminPT') {
+                // dd(request()->all());
+                // Simpan data ke database
+                $user = User::create([
+                    'id_kampus' => auth()->user()->id_kampus,
+                    'id_prodi' => $request->id_prodi,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
+
+                // assign Role menggunakan spatie
+                $user->assignRole('AdminPT');
+            } else {
+                // Simpan data ke database
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role,
+                ]);
+                // assign Role menggunakan spatie
+                $user->assignRole('SuperAdmin');
+            }
         }
+
+
 
 
         // menampilkan message success

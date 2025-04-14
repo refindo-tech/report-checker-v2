@@ -55,8 +55,12 @@
                         @endif
                     </p>
                     <p><strong>Kampus:</strong> {{ $user->kampus->name }}</p>
-                    <p><strong>Nama:</strong> {{ $user->name }}</p>
-                    <p><strong>Email:</strong> {{ $user->email }}</p>
+                    @if($user->roles->first()->name == 'Prodi' || $user->roles->first()->name == 'Mahasiswa')
+                    <p><strong>Fakultas:</strong> {{ $user->programStudi->fakultas->name ?? '-' }}</p>
+                    <p><strong>Program Studi:</strong> {{ $user->programStudi->name ?? '-' }}</p>
+                    @endif
+                    <p><strong>Nama:</strong> {{ $user->name ?? '-' }}</p>
+                    <p><strong>Email:</strong> {{ $user->email ?? '-' }}</p>
                     <p><strong>Photo:</strong>
                         @if ($user->image == null)
                             <span class="badge bg-primary text-white">No Image</span>
@@ -80,12 +84,16 @@
                         <p><strong>Semester:</strong> {{ $user->Mahasiswa->semester ?? '-' }}</p>
                     @endif
 
-                    <a href="{{ route('user.edit', $user) }}" class="btn btn-primary">Edit</a>
-                    <form action="{{ route('user.destroy', $user) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                    @can('edit-user')
+                        <a href="{{ route('user.edit', $user) }}" class="btn btn-primary">Edit</a>
+                    @endcan
+                    @can('hapus-user')
+                        <form action="{{ route('user.destroy', $user) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    @endcan
                     <a href="{{ route('user.index') }}" class="btn btn-secondary">Back</a>
                 </div>
             </div>

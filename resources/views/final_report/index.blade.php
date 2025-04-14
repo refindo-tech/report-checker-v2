@@ -123,13 +123,14 @@
             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                 <thead>
                     <tr>
-                        <th>Pengajuan Ke</th>
+                        <th>NO</th>
                         <th>Nama</th>
+                        <th>Laporan Akhir</th>
+                        <th>Sertifikat</th>
+                        <th>Dokumentasi</th>
+                        <th>Nilai Rekomendasi Program</th>
+                        <th>Nilai Test Mikro</th>
                         <th>Status</th>
-                        <th>Nilai Tes</th>
-                        <th>Berkas Laporan Akhir</th>
-                        <th>Berkas Sertifikat</th>
-                        <th>Berkas Dokumentasi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -138,22 +139,6 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $report->user->name }}</td>
-                            <td>
-                                @if ($report->nilai_mikroskill != null)
-                                    @if ($report->status == 1)
-                                        <span class="badge badge-primary">Menunggu Validasi</span>
-                                    @elseif ($report->status == 2)
-                                        <span class="badge badge-warning">Menunggu Penilaian</span>
-                                    @elseif ($report->status == 3)
-                                        <span class="badge badge-danger">Tidak Valid</span>
-                                    @elseif ($report->status == 4)
-                                        <span class="badge badge-success">Berhasil Dinilai</span>
-                                    @endif
-                                @else
-                                    <span class="text-danger">Silahkan tes terlebih dahulu</span>
-                                @endif
-                            </td>
-                            <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
                             <td>
                                 @if ($report->laprak)
                                     <a href="{{ asset('storage/report/' . $report->laprak) }}" target="_blank">
@@ -194,6 +179,23 @@
                                     @endif
                                 @else
                                     <span class="text-danger">Belum diisi</span>
+                                @endif
+                            </td>
+                            <td>test</td>
+                            <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
+                            <td>
+                                @if ($report->nilai_mikroskill != null)
+                                    @if ($report->status == 1)
+                                        <span class="badge badge-primary">Menunggu Validasi</span>
+                                    @elseif ($report->status == 2)
+                                        <span class="badge badge-warning">Menunggu Penilaian</span>
+                                    @elseif ($report->status == 3)
+                                        <span class="badge badge-danger">Tidak Valid</span>
+                                    @elseif ($report->status == 4)
+                                        <span class="badge badge-success">Berhasil Dinilai</span>
+                                    @endif
+                                @else
+                                    <span class="text-danger">Silahkan tes terlebih dahulu</span>
                                 @endif
                             </td>
                             <td>

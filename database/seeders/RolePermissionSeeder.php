@@ -81,7 +81,6 @@ class RolePermissionSeeder extends Seeder
 
         // memberikan permission ke role
         $roleAdmin->givePermissionTo('tambah-user');
-        $roleAdmin->givePermissionTo('edit-user');
         $roleAdmin->givePermissionTo('lihat-user');
 
         $roleAdmin->givePermissionTo('hapus-laporan-akhir');
@@ -96,11 +95,6 @@ class RolePermissionSeeder extends Seeder
         $roleAdmin->givePermissionTo('hapus-mikroskill');
         $roleAdmin->givePermissionTo('lihat-mikroskill');
 
-        $roleAdmin->givePermissionTo('tambah-matakuliah');
-        $roleAdmin->givePermissionTo('edit-matakuliah');
-        $roleAdmin->givePermissionTo('hapus-matakuliah');
-        $roleAdmin->givePermissionTo('lihat-matakuliah');
-
         $roleAdmin->givePermissionTo('tambah-programstudi');
         $roleAdmin->givePermissionTo('edit-programstudi');
         $roleAdmin->givePermissionTo('hapus-programstudi');
@@ -111,7 +105,6 @@ class RolePermissionSeeder extends Seeder
         $roleAdmin->givePermissionTo('hapus-fakultas');
         $roleAdmin->givePermissionTo('lihat-fakultas');
 
-        $roleAdmin->givePermissionTo('tambah-kampus');
         $roleAdmin->givePermissionTo('edit-kampus');
         $roleAdmin->givePermissionTo('lihat-kampus');
         $roleAdmin->givePermissionTo('print-assessment');

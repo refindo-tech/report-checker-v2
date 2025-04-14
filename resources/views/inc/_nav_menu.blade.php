@@ -22,7 +22,7 @@
     <li class="{{ Request::is('about') ? 'active' : '' }}">
         <a href="/about" title="About" data-filter-tags="application about">
             <i class="fal fa-info-circle"></i>
-            <span class="nav-link-text" data-i18n="nav.application_about">About</span>
+            <span class="nav-link-text" data-i18n="nav.application_about">Tentang Simikro</span>
         </a>
     </li>
 </ul>

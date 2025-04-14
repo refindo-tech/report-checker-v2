@@ -24,7 +24,7 @@
         </div>
         <x-panel.show title="Daftar" subtitle="Laporan Akhir">
             <x-slot name="paneltoolbar">
-                @can('tambah-laporan-akhir')
+                {{-- @can('tambah-laporan-akhir')
                     <x-panel.tool-bar>
                         @if ($reports?->berkas == null || $reports?->status == 3 || $reports?->status == 0)
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadberkas">
@@ -117,18 +117,19 @@
                             </div>
                         </div>
                     </div>
-                @endcan
+                @endcan --}}
             </x-slot>
             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                 <thead>
                     <tr>
-                        <th>Pengajuan Ke</th>
+                        <th>NO</th>
                         <th>Nama</th>
+                        <th>Laporan Akhir</th>
+                        <th>Sertifikat</th>
+                        <th>Dokumentasi</th>
+                        <th>Nilai Rekomendasi Program</th>
+                        <th>Nilai Test Mikro</th>
                         <th>Status</th>
-                        <th>Nilai Tes</th>
-                        <th>Berkas Laporan Akhir</th>
-                        <th>Berkas Sertifikat</th>
-                        <th>Berkas Dokumentasi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -137,18 +138,6 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $report->user->name }}</td>
-                            <td>
-                                @if ($report->status == 1)
-                                    <span class="badge badge-primary">Menunggu Validasi</span>
-                                @elseif ($report->status == 2)
-                                    <span class="badge badge-warning">Menunggu Penilaian</span>
-                                @elseif ($report->status == 3)
-                                    <span class="badge badge-danger">Tidak Valid</span>
-                                @elseif ($report->status == 4)
-                                    <span class="badge badge-success">Berhasil Dinilai</span>
-                                @endif
-                            </td>
-                            <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
                             <td>
                                 @if ($report->laprak)
                                     <a href="{{ asset('storage/report/' . $report->laprak) }}" target="_blank">
@@ -191,21 +180,45 @@
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
                             </td>
+                            <td>{{ $report->nilai_sertifikat ?? 'Belum Tes' }}</td>
+                            <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
+                            <td>
+                                @if ($report->nilai_mikroskill != null)
+                                    @if ($report->status == 1)
+                                        <span class="badge badge-danger">MENUNGGU VALIDASI</span>
+                                    @elseif ($report->status == 2)
+                                        <span class="badge badge-warning">MENUNGGU PENILAIAN</span>
+                                    @elseif ($report->status == 3)
+                                        <span class="badge badge-primary">DOKUMEN DIKEMBALIKAN</span>
+                                    @elseif ($report->status == 4)
+                                        <span class="badge badge-info">SUDAH DINILAI</span>
+                                    @endif
+                                @else
+                                    <span class="text-danger">Silahkan tes terlebih dahulu</span>
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">
-                                    <i class="fa fa-eye"></i>
+                                    Rincian
                                 </a>
 
-                                @if ($report->status == 4)
-                                    <a href="{{ route('assessment.printscore') }}" class="btn btn-info">
-                                        <i class="fa fa-download"></i> Nilai Akhir
+                                {{-- @if ($report->status == 4)
+                                    <a href="{{ route('report.printscore') }}" class="btn btn-info">
+                                        Nilai Akhir
                                     </a>
+                                @endif --}}
+                                @if (Auth::user()->getRoleNames()->first() == 'Prodi')
+                                    @if ($report->status == 2)
+                                        <a href="{{ route('assessment.index', $report->user_id) }}" class="btn btn-success">
+                                            Mulai Penilaian
+                                        </a>
+                                    @endif
                                 @endif
-                                
+
                                 @if ($report->status == 1)
-                                <a href="{{ route('report.review', $report->id) }}" class="btn btn-primary">
-                                    <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                </a>
+                                    <a href="{{ route('report.review', $report->id) }}" class="btn btn-primary">
+                                        Validasi Berkas
+                                    </a>
                                 @endif
                             </td>
                         </tr>

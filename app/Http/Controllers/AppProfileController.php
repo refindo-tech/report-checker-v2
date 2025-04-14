@@ -33,8 +33,13 @@ class AppProfileController extends Controller
         ]);
 
         if ($request->hasFile('app_icon')) {
-            if ($appProfile->app_icon) {
-                unlink(public_path('admin/img/' . $appProfile->app_icon));
+            if ($appProfile->app_icon !== null) {
+                $oldIconPath = public_path('admin/img/' . $appProfile->app_icon);
+
+                // Cek dulu apakah file-nya ada sebelum di-unlink
+                if (file_exists($oldIconPath)) {
+                    unlink($oldIconPath);
+                }
             }
             $appIconFile = $request->file('app_icon');
             $appIconName = time() . '_' . $appIconFile->getClientOriginalName();

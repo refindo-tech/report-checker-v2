@@ -29,10 +29,10 @@
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <div
                         class="p-3 
-                    @if ($mahasiswaViewFirst->status == 1) bg-primary 
+                    @if ($mahasiswaViewFirst->status == 1) bg-danger 
                     @elseif($mahasiswaViewFirst->status == 2) bg-warning 
-                    @elseif($mahasiswaViewFirst->status == 3) bg-danger 
-                    @elseif($mahasiswaViewFirst->status == 4) bg-success 
+                    @elseif($mahasiswaViewFirst->status == 3) bg-primary 
+                    @elseif($mahasiswaViewFirst->status == 4) bg-info 
                     @else bg-secondary @endif 
                     rounded overflow-hidden position-relative text-white mb-g stat-card">
                         <div class="">
@@ -44,9 +44,9 @@
                                         @elseif ($mahasiswaViewFirst->status == 2)
                                             Menunggu Penilaian
                                         @elseif ($mahasiswaViewFirst->status == 3)
-                                            Tidak Valid
+                                            Dokumen Dikembalikan
                                         @elseif ($mahasiswaViewFirst->status == 4)
-                                            Berhasil Dinilai
+                                            Sudah Dinilai
                                         @else
                                             Tidak Ada Progres
                                         @endif
@@ -149,48 +149,58 @@
                 </div>
             </div>
 
-            <div class="card mb-g p-2">
-                <div class="card-body">
-                    <h3 class="fw-500">Data Status Penilaian Mahasiswa</h3>
-                    <div class="table-responsive">
-                        <table id="data-table" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($prodiGet as $item)
-                                    <tr onclick="window.location='{{ route('assessment.index', $item->user->id) }}';"
-                                        style="cursor: pointer;">
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->mahasiswa->nim }}</td>
-                                        <td>{{ $item->user->name }}</td>
-                                        <td>
-                                            @if ($item->nilai_mikroskill != null)
-                                                @if ($item->status == 1)
-                                                    <span class="badge badge-primary">Menunggu Validasi</span>
-                                                @elseif ($item->status == 2)
-                                                    <span class="badge badge-warning">Menunggu Penilaian</span>
-                                                @elseif ($item->status == 3)
-                                                    <span class="badge badge-danger">Tidak Valid</span>
-                                                @elseif ($item->status == 4)
-                                                    <span class="badge badge-success">Berhasil Dinilai</span>
-                                                @endif
-                                            @else
-                                                <span class="text-danger">Belum Isi Tes Mikroskill</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <x-panel.show title="Data Status Validasi Mahasiswa">
+                <table id="dt-basic-example-admin" class="table table-bordered table-hover table-striped w-100">
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>Fakultas</th>
+                            <th>Prodi</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>NIM</th>
+                            <th>Status</th>
+                            <th>Lihat Hasil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($prodiGet as $item)
+                            <tr onclick="window.location='{{ route('report.indexMahasiswa', $item->user->id) }}';"
+                                style="cursor: pointer;">
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->user->programStudi->fakultas->name ?? '-' }}</td>
+                                <td>{{ $item->user->programStudi->name ?? '-' }}</td>
+                                <td>{{ $item->user->name ?? '-' }}</td>
+                                <td>{{ $item->mahasiswa->nim ?? '-' }}</td>
+                                <td>
+                                    @if ($item->nilai_mikroskill != null)
+                                        @if ($item->status == 1)
+                                            <span class="badge badge-danger">MENUNGGU VALIDASI</span>
+                                        @elseif ($item->status == 2)
+                                            <span class="badge badge-warning">MENUNGGU PENILAIAN</span>
+                                        @elseif ($item->status == 3)
+                                            <span class="badge badge-primary">DOKUMEN DIKEMBALIKAN</span>
+                                        @elseif ($item->status == 4)
+                                            <span class="badge badge-info">SUDAH DINILAI</span>
+                                        @endif
+                                    @else
+                                        <span class="text-danger">Belum Isi Tes Mikroskill</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->status != 3)
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn-sm btn-success mr-1">
+                                            Nilai Rekomendasi
+                                        </a>
+                                    @else
+                                        <span class="text-danger">Dokumen Dikembalikan</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </x-panel.show>
         @else
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-3">
@@ -218,11 +228,11 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <div class="p-3 bg-danger-400 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                    <div class="p-3 bg-primary-400 rounded overflow-hidden position-relative text-white mb-g stat-card">
                         <div class="">
                             <h3 class="display-4 d-block l-h-n m-0 fw-500">
                                 <span id="invalid-count">{{ $notValid ?? 0 }}</span>
-                                <small class="m-0 l-h-n">Tidak Valid</small>
+                                <small class="m-0 l-h-n">Dokumen Dikembalikan</small>
                             </h3>
                         </div>
                         <i class="fal fa-times-circle position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
@@ -231,52 +241,58 @@
                 </div>
             </div>
 
-            <div class="card mb-g p-2">
-                <div class="card-body">
-                    <h3 class="fw-500">Data Status Validasi Mahasiswa</h3>
-                    <div class="table-responsive">
-                        <table id="data-table" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Fakultas</th>
-                                    <th>Program Studi</th>
-                                    <th>NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($adminGet as $item)
-                                    <tr tr
-                                        onclick="window.location='{{ route('report.indexMahasiswa', $item->user->id) }}';"
-                                        style="cursor: pointer;">
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->user->programStudi->fakultas->name ?? '-' }}</td>
-                                        <td>{{ $item->user->programStudi->name ?? '-' }}</td>
-                                        <td>{{ $item->user->mahasiswa->nim ?? '-' }}</td>
-                                        <td>{{ $item->user->name ?? '-' }}</td>
-                                        <td>
-                                            @if ($item->nilai_mikroskill != null)
-                                                @if ($item->status == 1)
-                                                    <span class="badge badge-primary">Menunggu Validasi</span>
-                                                @elseif ($item->status == 2)
-                                                    <span class="badge badge-warning">Menunggu Penilaian</span>
-                                                @elseif ($item->status == 3)
-                                                    <span class="badge badge-danger">Tidak Valid</span>
-                                                @elseif ($item->status == 4)
-                                                    <span class="badge badge-success">Berhasil Dinilai</span>
-                                                @endif
-                                            @else
-                                                <span class="text-danger">Belum Isi Tes Mikroskill</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <x-panel.show title="Data Status Validasi Mahasiswa">
+                <table id="dt-basic-example-admin" class="table table-bordered table-hover table-striped w-100">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Fakultas</th>
+                            <th>Program Studi</th>
+                            <th>Nama</th>
+                            <th>NIM</th>
+                            <th>Status</th>
+                            <th>Lihat Hasil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($adminGet as $item)
+                            <tr tr onclick="window.location='{{ route('report.indexMahasiswa', $item->user->id) }}';"
+                                style="cursor: pointer;">
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->user->programStudi->fakultas->name ?? '-' }}</td>
+                                <td>{{ $item->user->programStudi->name ?? '-' }}</td>
+                                <td>{{ $item->user->name ?? '-' }}</td>
+                                <td>{{ $item->user->mahasiswa->nim ?? '-' }}</td>
+                                <td>
+                                    @if ($item->nilai_mikroskill != null)
+                                        @if ($item->status == 1)
+                                            <span class="badge badge-danger">MENUNGGU VALIDASI</span>
+                                        @elseif ($item->status == 2)
+                                            <span class="badge badge-warning">MENUNGGU PENILAIAN</span>
+                                        @elseif ($item->status == 3)
+                                            <span class="badge badge-primary">DOKUMEN DIKEMBALIKAN</span>
+                                        @elseif ($item->status == 4)
+                                            <span class="badge badge-info">SUDAH DINILAI</span>
+                                        @endif
+                                    @else
+                                        <span class="text-danger">Belum Isi Tes Mikroskill</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->status != 3)
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn-sm btn-success mr-1">
+                                            Nilai Rekomendasi
+                                        </a>
+                                    @else
+                                        <span class="text-danger">Dokumen Dikembalikan</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </x-panel.show>
 
         @endif
 
@@ -289,6 +305,7 @@
     <script src="/admin/js/statistics/easypiechart/easypiechart.bundle.js"></script>
     <script src="/admin/js/statistics/flot/flot.bundle.js"></script>
     <script src="/admin/js/miscellaneous/jqvmap/jqvmap.bundle.js"></script>
+    <script src="/admin/js/datagrid/datatables/datatables.bundle.js"></script>
     <script>
         $(document).ready(function() {
             //$('#js-page-content').smartPanel();
@@ -890,9 +907,22 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#dt-basic-example').DataTable({
+            $('#dt-basic-example-admin').dataTable({
                 responsive: true
             });
+
+            $('.js-thead-colors a').on('click', function() {
+                var theadColor = $(this).attr("data-bg");
+                console.log(theadColor);
+                $('#dt-basic-example-admin thead').removeClassPrefix('bg-').addClass(theadColor);
+            });
+
+            $('.js-tbody-colors a').on('click', function() {
+                var theadColor = $(this).attr("data-bg");
+                console.log(theadColor);
+                $('#dt-basic-example-admin').removeClassPrefix('bg-').addClass(theadColor);
+            });
+
         });
     </script>
 

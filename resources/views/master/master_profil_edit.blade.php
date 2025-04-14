@@ -57,7 +57,7 @@
                             @if (Auth::user()->getRoleNames()->first() == 'Prodi' || Auth::user()->getRoleNames()->first() == 'AdminPT')
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="nip">NIP</label>
+                                        <label for="nip">NIDN</label>
                                         <input type="number" name="nip"
                                             value="{{ old('nip', $users->prodi->nip ?? '') }}" class="form-control">
                                     </div>

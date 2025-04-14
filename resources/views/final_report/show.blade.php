@@ -22,7 +22,7 @@
             ])
             @endcomponent
         </div>
-        <x-panel.show title="Detail" subtitle="Laporan Akhir">
+        <x-panel.show title="Rincian" subtitle="Laporan Akhir">
             <x-slot name="paneltoolbar">
                 <x-panel.tool-bar>
                     <button class="btn btn-toolbar-master" type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -30,7 +30,7 @@
                         <i class="fal fa-ellipsis-v"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-animated dropdown-menu-right">
-                        <a class="dropdown-item" href="{{ route('report.index') }}">Kembali</a>
+                        <a class="dropdown-item" href="{{ route('report.indexMahasiswa', $finalReport->user_id) }}">Kembali</a>
                     </div>
                 </x-panel.tool-bar>
             </x-slot>
@@ -47,11 +47,11 @@
                     </div>
                     <div class="flex items-center">
                         <p class="text-sm text-gray-600 mr-4">
-                            <strong>Tanggapan: <br /></strong>
+                            <strong>KOMENTAR: <br /></strong>
                             @if ($finalReport->feedback != null)
                                 {!! nl2br(e($finalReport->feedback)) !!}
                             @else
-                                <span class="text-danger">Tidak ada tanggapan</span>
+                                <span class="text-danger">Tidak ada komentar</span>
                             @endif
                         </p>
                         <p class="text-xs text-gray-500">
@@ -181,7 +181,7 @@
                     @endcanany
                     @if (Auth::user()->getRoleNames()->first() == 'AdminPT' ||
                             Auth::user()->getRoleNames()->first() == 'SuperAdmin' ||
-                            (Auth::user()->getRoleNames()->first() == 'Prodi' && $finalReport->status == 4))
+                            Auth::user()->getRoleNames()->first() == 'Prodi')
                         <a href="{{ route('report.indexMahasiswa', $finalReport->user_id) }}"
                             class="btn btn-secondary">Back</a>
                     @else
@@ -189,6 +189,7 @@
                     @endif
                 </div>
             </div>
+            {{-- @dd($finalReport) --}}
         </x-panel.show>
     </main>
 @endsection

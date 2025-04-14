@@ -22,15 +22,16 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
 
     // Rute untuk melihat barang masuk (Admin, Gudang, Purchasing)
-    Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
-        Route::get('/index/{id}', [AssessmentController::class, 'index'])->name('assessment.index');
+    Route::middleware('permission:print-assessment')->prefix('assessment')->group(function () {
         Route::get('/cetak-rekomendasi/{id}', [AssessmentController::class, 'print'])->name('rekomendasi.print');
         Route::get('/cetak-nilai/{id}', [AssessmentController::class, 'printScore'])->name('assessment.printscore');
+    });
+    Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
+        Route::get('/index/{id}', [AssessmentController::class, 'index'])->name('assessment.index');
         Route::get('/publish/{id}', [AssessmentController::class, 'publish'])->name('assessment.publish');
         Route::get('/unpublish/{id}', [AssessmentController::class, 'unpublish'])->name('assessment.unpublish');
     });
-    Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {
-    });
+    Route::middleware('permission:lihat-assessment')->prefix('assessment')->group(function () {});
     Route::middleware('role:Prodi|SuperAdmin')->prefix('assessment')->group(function () {
         Route::get('/indexDosen', [AssessmentController::class, 'indexDosen'])->name('assessment.indexDosen');
     });

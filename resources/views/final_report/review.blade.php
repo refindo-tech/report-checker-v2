@@ -34,7 +34,8 @@
                             <i class="fal fa-ellipsis-v"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-animated dropdown-menu-right">
-                            <a class="dropdown-item" href="{{ route('report.indexMahasiswa', $report->user_id) }}">Kembali</a>
+                            <a class="dropdown-item"
+                                href="{{ route('report.indexMahasiswa', $report->user_id) }}">Kembali</a>
                         </div>
                     </x-panel.tool-bar>
                 </x-slot>
@@ -43,97 +44,77 @@
                     <!-- Pilih Status -->
 
                     <!-- Validasi Berkas -->
-                    <div class="col-md-12">
-                        {{-- <label>Validasi Berkas</label> --}}
-                        <div class="form-group">
-                            <div class="mb-2">
-                                <strong>Laporan Akhir</strong>
-                                <div class="d-flex gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="laprak" id="laprak_valid"
-                                            value="1" required>
-                                        <label class="form-check-label text-success" for="laprak_valid">Valid</label>
-                                    </div> &NonBreakingSpace;&NonBreakingSpace;
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="laprak" id="laprak_invalid"
-                                            value="0" required>
-                                        <label class="form-check-label text-danger" for="laprak_invalid">Tidak Valid</label>
-                                    </div>
-                                </div>
-                            </div>
+                    <table class="table table-bordered table-hover table-striped w-100">
+                        <tr>
+                            <td><strong>NAMA</strong></td>
+                            <td><strong>{{ $report->user->name ?? '-' }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>NIM</strong></td>
+                            <td><strong>{{ $report->user->mahasiswa->nim ?? '-' }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>PRODI / FAK</strong></td>
+                            <td><strong>{{ $report->user->programStudi->name ?? '-' }} /
+                                    {{ $report->user->programStudi->fakultas->name ?? '-' }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>LAPORAN AKHIR</strong></td>
+                            <td>
+                                <label class="text-success"><input type="radio" name="laprak" value="1" required>
+                                    VALID</label>
+                                <label class="text-danger"><input type="radio" name="laprak" value="0" required>
+                                    TIDAK VALID</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>SERTIFIKAT</strong></td>
+                            <td>
+                                <label class="text-success"><input type="radio" name="sertifikat" value="1" required>
+                                    VALID</label>
+                                <label class="text-danger"><input type="radio" name="sertifikat" value="0" required>
+                                    TIDAK
+                                    VALID</label><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>DOKUMENTASI</strong></td>
+                            <td>
+                                <label class="text-success"><input type="radio" name="dokumentasi" value="1" required> VALID</label>
+                                <label class="text-danger"><input type="radio" name="dokumentasi" value="0" required> TIDAK VALID</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>NILAI REKOMENDASI PROGRAM</strong></td>
+                            <td><input type="number" name="nilai_sertifikat" placeholder="MASUKKAN NILAI SERTIFIKAT"
+                                    class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>NILAI TEST MIKROSKILL</strong></td>
+                            <td>
+                                <label class="text-success"><input type="radio" name="tes_mikroskill" value="1" required> VALID</label>
+                                <label class="text-danger"><input type="radio" name="tes_mikroskill" value="0" required> TIDAK
+                                    VALID</label><br>
+                                <input type="number" name="nilai_mikroskill"
+                                    value="{{ old('nilai_mikroskill') . $report->nilai_mikroskill }}"
+                                    placeholder="TAMPILKAN NILAI TEST MIKROSKILL" min="0" max="100"
+                                    class="form-control mt-2">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>MAKSIMAL SKS</strong></td>
+                            <td><input type="number" name="maks_sks"
+                                    placeholder="MASUKKAN MAKSIMAL SKS YANG DAPAT DIKONVERSI" min="0" max="24"
+                                    class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>KOMENTAR</strong></td>
+                            <td>
+                                <textarea name="feedback" rows="3" class="form-control" placeholder="MASUKKAN KOMENTAR DISINI"></textarea>
+                            </td>
+                        </tr>
+                    </table>
 
-                            <div class="mb-2">
-                                <strong>Sertifikat</strong>
-                                <div class="d-flex gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sertifikat"
-                                            id="sertifikat_valid" value="1" required>
-                                        <label class="form-check-label text-success" for="sertifikat_valid">Valid</label>
-                                    </div> &NonBreakingSpace;&NonBreakingSpace;
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sertifikat"
-                                            id="sertifikat_invalid" value="0" required>
-                                        <label class="form-check-label text-danger" for="sertifikat_invalid">Tidak
-                                            Valid</label>
-                                    </div>
-                                </div>
-                                <input type="number" class="form-control mt-2" name="nilai_sertifikat"
-                                    id="nilai_sertifikat" placeholder="Masukkan nilai sertifikat" min="0"
-                                    max="100">
-                            </div>
-
-                            <div class="mb-2">
-                                <strong>Dokumentasi</strong>
-                                <div class="d-flex gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="dokumentasi"
-                                            id="dokumentasi_valid" value="1" required>
-                                        <label class="form-check-label text-success" for="dokumentasi_valid">Valid</label>
-                                    </div> &NonBreakingSpace;&NonBreakingSpace;
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="dokumentasi"
-                                            id="dokumentasi_invalid" value="0" required>
-                                        <label class="form-check-label text-danger" for="dokumentasi_invalid">Tidak
-                                            Valid</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-2">
-                                <strong>Tes Mikroskill</strong>
-                                <div class="d-flex gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="tes_mikroskill"
-                                            id="tes_mikroskill_valid" value="1" required>
-                                        <label class="form-check-label text-success"
-                                            for="tes_mikroskill_valid">Valid</label>
-                                    </div> &NonBreakingSpace;&NonBreakingSpace;
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="tes_mikroskill"
-                                            id="tes_mikroskill_invalid" value="0" required>
-                                        <label class="form-check-label text-danger" for="tes_mikroskill_invalid">Tidak
-                                            Valid</label>
-                                    </div>
-                                </div>
-                                <input type="number" class="form-control mt-2" name="nilai_mikroskill" value="{{ old('nilai_mikroskill') . $report->nilai_mikroskill }}"
-                                    id="nilai_mikroskill" placeholder="Masukkan nilai tes mikroskill" min="0"
-                                    max="100">
-                            </div>
-
-                            <div class="mb-2">
-                                <strong>Maksimal SKS</strong>
-                                <input type="number" class="form-control mt-2" name="maks_sks" id="maks_sks"
-                                    placeholder="Maksimal SKS yang dapat diambil" min="0" max="24">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Feedback / Komentar -->
-                    <div class="col-md-12">
-                        <label for="feedback">Feedback / Komentar</label>
-                        <textarea name="feedback" id="feedback" class="form-control" rows="3"
-                            placeholder="Berikan alasan atau komentar"></textarea>
-                    </div>
                 </div>
 
 

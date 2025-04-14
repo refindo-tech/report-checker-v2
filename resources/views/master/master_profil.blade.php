@@ -51,7 +51,7 @@
                                     <ul class="list-group list-group-flush text-left">
                                         @if (Auth::user()->getRoleNames()->first() == 'Prodi' || Auth::user()->getRoleNames()->first() == 'AdminPT')
                                             <li class="list-group-item">
-                                                <strong>NIP:</strong> {{ $user->prodi->nip ?? '-' }}
+                                                <strong>NIDN:</strong> {{ $user->prodi->nip ?? '-' }}
                                             </li>
                                             <li class="list-group-item">
                                                 <strong>Gender:</strong>

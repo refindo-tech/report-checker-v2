@@ -34,7 +34,7 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <!-- Button Upload -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
-                            <i class="fa fa-plus"></i> Tambah Mata Kuliah
+                            <i class="fa fa-plus"></i> Pilih Mata Kuliah
                         </button>
                     </div>
                     <!-- Modal Large -->
@@ -108,6 +108,12 @@
                 </x-slot>
             @endcan
             @can('lihat-assessment')
+                <label for="nama">Nama Mahasiswa: <strong>{{ $reportFirst->user->name }}</strong></label><br>
+                <label for="nim">NIM: <strong>{{ $reportFirst->user->mahasiswa->nim }}</strong></label><br>
+                <label for="nilairekomendasi">Nilai Rekomendasi Program:
+                    <strong>{{ $reportFirst->nilai_sertifikat }}</strong></label><br>
+                <label for="nilaitest">Nilai Test Mikroskill: <strong>{{ $reportFirst->nilai_mikroskill }}</strong></label><br>
+                <label for="makssks">Maksimal SKS: <strong>{{ $reportFirst->maks_sks }}</strong></label><br>
                 <div class="table-responsive">
                     <table id="dt-mahasiswa" class="table table-bordered">
                         <thead class="bg-primary text-white">
@@ -126,6 +132,7 @@
 
                                     $assesments = $report->assesment->isNotEmpty() ? $report->assesment : []; // Jika kosong, buat array dengan satu elemen null
                                 @endphp
+                                {{-- @dd($assesments); --}}
 
                                 @foreach ($assesments as $assesment)
                                     <tr>
@@ -137,8 +144,8 @@
                                         {{-- @dd($assesment->pivot, $report, $firstAssessment, $pivotData); --}}
                                         <td>
                                             <select name="matakuliah[{{ $report->id }}][]"
-                                                class="form-control select-mata-kuliah editable" data-id="{{ $report->id }}"
-                                                data-column="matakuliah">
+                                                class="form-control select-mata-kuliah editable"
+                                                data-id="{{ $report->id }}" data-column="matakuliah">
                                                 <option value="" data-sks="0">Pilih Mata Kuliah</option>
                                                 @foreach ($matkul as $component)
                                                     <option value="{{ $component->id }}" data-sks="{{ $component->sks }}"
@@ -175,10 +182,10 @@
                     </table>
                 </div>
                 <div class="d-flex justify-content-end mt-3 ">
-                    <a href="{{ route('rekomendasi.print', $report->id) }}" class="btn btn-success mr-1">
+                    <a href="{{ route('rekomendasi.print', $reportFirst->id) }}" class="btn btn-success mr-1">
                         <i class="fa fa-download"></i> Nilai Rekomendasi
                     </a>
-                    <a href="{{ route('assessment.printscore', $report->id) }}" class="btn btn-success mr-1">
+                    <a href="{{ route('assessment.printscore', $reportFirst->id) }}" class="btn btn-success mr-1">
                         <i class="fa fa-download"></i> Nilai Akhir
                     </a>
                     @if ($report->status == 4)
