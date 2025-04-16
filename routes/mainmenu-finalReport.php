@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/index', [FinalReportController::class, 'index'])->name('report.index');
         
         Route::get('/cetak-rekomendasi', [FinalReportController::class, 'print'])->name('report.print');
-        Route::get('/cetak-nilai', [FinalReportController::class, 'printScore'])->name('report.printscore');
+        Route::get('/cetak-nilai/{id}', [FinalReportController::class, 'printScore'])->name('report.printscore');
 
         Route::get('/test-mikroskill/{id}', [FinalReportController::class, 'tesMikroskill'])->name('report.testMikroskill');
         Route::post('/test-mikroskill/{id}', [FinalReportController::class, 'tesMikroskillStore'])->name('report.tesMikroskillStore');

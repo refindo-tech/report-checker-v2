@@ -71,11 +71,11 @@
         </a>
     </li>
 @endcan
-<li class="nav-title">Settings</li>
+<li class="nav-title">Pengaturan</li>
 <li class="{{ Request::is('settings/*') ? 'active open' : '' }}">
     <a href="#" title="Settings" data-filter-tags="settings">
         <i class="fal fa-cogs"></i>
-        <span class="nav-link-text" data-i18n="nav.settings">Settings</span>
+        <span class="nav-link-text" data-i18n="nav.settings">Pengaturan</span>
     </a>
     <ul>
         <!-- Pengguna -->

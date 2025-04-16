@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Fakultas;
 use App\Models\finalReport;
 use App\Models\Kampus;
+use App\Models\laprak_has_assesment;
 use App\Models\laprak_has_mikroskill;
 use App\Models\ProgramStudi;
 use App\Models\User;
@@ -34,9 +35,45 @@ class FinalReportController extends Controller
         return view('final_report.print');
     }
 
-    public function printScore()
+    public function printScore($id)
     {
-        return view('final_report.printscore');
+        $report = finalReport::with('user', 'reviewer', 'mahasiswa')->find($id);
+        $kampus = Kampus::where('id', $report->user->id_kampus)->first();
+        // dd($report, $kampus);    
+        $pivotData = laprak_has_assesment::with('assesment', 'report')->where('id_laprak', $report->id)->get();
+        $totalSks = $pivotData->sum(function ($data) {
+            return $data->matkul->sks ?? 0;
+        });
+        // dd($pivotData);
+
+        $opciones_ssl = array(
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        $img_path = public_path('admin/img/logountirta.png');
+        $img_kampus = public_path('storage/kampus/' . $kampus->image);
+        // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
+        // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
+        // $img_base_64 = base64_encode($data);
+        // $path_img = 'data:image/' . $extencion . ';base64,' . $img_base_64;
+
+        // $path_img = asset('admin/img/logountirta.png');
+
+        // Pastikan data dikirim sebagai array
+        $pdf = PDF::loadView('final_report.printscore', [
+            'report' => $report,
+            'kampus' => $kampus,
+            'totalSks' => $totalSks,
+            'pivotData' => $pivotData,
+            'path_img' => $img_path,
+            'img_kampus' => $img_kampus,
+        ]);
+
+        // Download file PDF
+        return $pdf->stream();
     }
 
 
