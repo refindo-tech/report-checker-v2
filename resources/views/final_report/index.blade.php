@@ -120,6 +120,7 @@
                     </div>
                 @endcan
             </x-slot>
+            {{-- MAHASISWA --}}
             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                 <thead>
                     <tr>
@@ -181,33 +182,40 @@
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
                             </td>
-                            <td>test</td>
+                            <td>{{ $report->nilai_sertifikat ?? 'Belum Tes' }}</td>
                             <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
                             <td>
                                 @if ($report->nilai_mikroskill != null)
                                     @if ($report->status == 1)
-                                        <span class="badge badge-primary">Menunggu Validasi</span>
+                                        <span class="badge badge-danger">MENUNGGU VALIDASI</span>
                                     @elseif ($report->status == 2)
-                                        <span class="badge badge-warning">Menunggu Penilaian</span>
+                                        <span class="badge badge-warning">MENUNGGU PENILAIAN</span>
                                     @elseif ($report->status == 3)
-                                        <span class="badge badge-danger">Tidak Valid</span>
+                                        {{-- Tidak Valid --}}
+                                        <span class="badge badge-primary">DOKUMEN DIKEMBALIKAN</span>
                                     @elseif ($report->status == 4)
-                                        <span class="badge badge-success">Berhasil Dinilai</span>
+                                        {{-- Berhasil Dinilai --}}
+                                        <span class="badge badge-info">SUDAH DINILAI</span>
                                     @endif
                                 @else
                                     <span class="text-danger">Silahkan tes terlebih dahulu</span>
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">
-                                    <i class="fa fa-eye"></i>
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Rincian
                                 </a>
 
-                                @if ($report->status == 4)
-                                    <a href="{{ route('report.printscore') }}" class="btn btn-info">
+                                {{-- @if ($report->status == 4)
+                                    <a href="{{ route('report.printscore', $report->id) }}" class="btn btn-info">
                                         <i class="fa fa-download"></i> Nilai Akhir
                                     </a>
-                                @endif
+                                @endif --}}
+                                    {{-- CONTOH --}}
+                                {{-- @if ($report->status == 4)
+                                    <a href="{{ route('report.printscore') }}" target="_blank">
+                                <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
+                                    </a>
+                                @endif --}}
 
                                 @if ($report->status == 1 || $report->nilai_mikroskill == null)
                                     <a href="{{ route('report.testMikroskill', $report->id) }}" class="btn btn-success">

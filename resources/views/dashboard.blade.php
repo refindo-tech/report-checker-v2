@@ -80,7 +80,8 @@
                                 <th>No</th>
                                 <th>Tanggal Unggah</th>
                                 <th>Status</th>
-                                <th>Feedback</th>
+                                <th>Update Terbaru</th>
+                                <th>Lihat Penilaian</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,7 +102,19 @@
                                                 <span class="badge badge-success">Berhasil Dinilai</span>
                                             @endif
                                         </td>
-                                        <td>Dokumen sedang diperiksa.</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($item->updated_at)->translatedFormat('j F Y H:i') }}
+                                        </td>
+                                        <td>
+                                            @if ($item->status != 3)
+                                                <a href="{{ route('assessment.printscore', $item->id) }}"
+                                                    class="btn-sm btn-success mr-1">
+                                                    Hasil Penilaian
+                                                </a>
+                                            @else
+                                                <span class="text-danger">Dokumen Belum Diterbitkan</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else

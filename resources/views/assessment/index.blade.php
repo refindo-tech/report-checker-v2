@@ -182,11 +182,15 @@
                     </table>
                 </div>
                 <div class="d-flex justify-content-end mt-3 ">
-                    <a href="{{ route('rekomendasi.print', $reportFirst->id) }}" class="btn btn-success mr-1">
+                    {{-- <a href="{{ route('rekomendasi.print', $reportFirst->id) }}" class="btn btn-success mr-1">
                         <i class="fa fa-download"></i> Nilai Rekomendasi
-                    </a>
-                    <a href="{{ route('assessment.printscore', $reportFirst->id) }}" class="btn btn-success mr-1">
-                        <i class="fa fa-download"></i> Nilai Akhir
+                    </a> --}}
+                    {{-- <div class="modal-footer mt-3">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div> --}}
+                    <a href="#" type="submit" class="btn btn-primary mr-1">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan
                     </a>
                     @if ($report->status == 4)
                         <a href="{{ route('assessment.unpublish', $report->id) }}" class="btn btn-warning mr-1">
@@ -197,6 +201,9 @@
                             <i class="fa-solid fa-upload"></i> Terbitkan
                         </a>
                     @endif
+                    <a href="{{ route('assessment.printscore', $reportFirst->id) }}" class="btn btn-success mr-1">
+                        <i class="fa fa-download"></i> Hasil Penilaian
+                    </a>
                 </div>
             @endcan
         </x-panel.show>

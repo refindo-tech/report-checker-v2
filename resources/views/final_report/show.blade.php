@@ -156,15 +156,31 @@
                     <p><strong>Jenis Kegiatan:</strong>
                         {{ $finalReport->JenisKegiatan }}
                     </p>
-                    <p><strong>status:</strong>
+                    <p><strong>Status Pengajuan:</strong>
                         @if ($finalReport->status == 1)
-                            <span class="badge badge-primary">Menunggu Validasi</span>
+                            <span class="badge badge-danger">MENUNGGU VALIDASI</span>
                         @elseif ($finalReport->status == 2)
-                            <span class="badge badge-warning">Menunggu Penilaian</span>
+                            <span class="badge badge-warning">MENUNGGU PENILAIAN</span>
                         @elseif ($finalReport->status == 3)
-                            <span class="badge badge-danger">Tidak Valid</span>
+                            <span class="badge badge-primary">DOKUMEN DIKEMBALIKAN</span>
                         @elseif ($finalReport->status == 4)
-                            <span class="badge badge-success">Berhasil Dinilai</span>
+                            <span class="badge badge-info">SUDAH DINILAI</span>
+                        @endif
+                    </p>
+                    <p><strong>Lihat Hasil:</strong>
+                        @if ($finalReport->status == 1)
+                            <span class="text-danger">Belum Ada Hasil</span>
+                        @elseif ($finalReport->status == 2)
+                            <span class="text-danger">Belum Ada Hasil</span>
+                        @elseif ($finalReport->status == 3)
+                            <span class="text-danger">Lihat Komentar</span>
+                        @elseif ($finalReport->status == 4)
+                            {{-- <a href="{{ route('report.printscore', $finalReport->id) }}"  class="btn btn-info">
+                                <i class="fa fa-download"></i> 
+                            </a> --}}
+                            <a href="{{ route('report.printscore', $finalReport->id) }}" target="_blank" class="btn btn-info">
+                                <i class="fa fa-download"></i> Hasil Penilaian
+                            </a>
                         @endif
                     </p>
                     @canany(['edit-laporan-akhir', 'hapus-laporan-akhir'])
