@@ -357,7 +357,7 @@ RESULT:
 .page-logo, .page-sidebar, .nav-footer, .bg-brand-gradient {
   background-image: -webkit-gradient(linear, right top, left top, from(rgba(51, 148, 225, 0.18)), to(transparent));
   background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
-  background-color: #d79b1b; } /* test */
+  background-color: #b98500; } /* test */
   
 /*
 %shadow-hover {
@@ -759,7 +759,7 @@ html {
     overflow: visible; }
     .header-icon:not(.btn) > [class*='fa-']:first-child,
     .header-icon:not(.btn) > .ni:first-child {
-      color: #ffc241;
+      color: #e9b70b;
       /* test icon nav sebelah kanan */
       vertical-align: middle; }
     .header-icon:not(.btn) > [class*='fa-']:first-child {
@@ -1183,7 +1183,7 @@ html {
 .nav-title {
   text-transform: uppercase;
   margin: 0;
-  color: #000000; 
+  color: #e9b70b; 
   /* test warna judul nav*/
   padding: 1rem 2rem;
   margin-top: 1.5rem;
@@ -1210,7 +1210,7 @@ html {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center;
-    color: #967bbd; }
+    color: #e9b70b; }
     .nav-menu b.collapse-sign > [class*='fa-'],
     .nav-menu b.collapse-sign > .ni {
       font-size: inherit; }
@@ -1226,13 +1226,13 @@ html {
       /* arrow that appears next to active/selected items */ }
       .nav-menu li.active > a {
         color: white;
-        background-color: rgba(255, 255, 255, 0.04);
+        background-color: rgba(204, 41, 41, 0.04);
         -webkit-box-shadow: inset 3px 0 0 #886ab5;
                 box-shadow: inset 3px 0 0 #886ab5;
         font-weight: 400; }
         .nav-menu li.active > a:hover > [class*='fa-'],
         .nav-menu li.active > a:hover > .ni {
-          color: #a8a6ac; }
+          color: #ffffff; }
       .nav-menu li.active > ul {
         display: block; }
       .nav-menu li.active:not(.open) > a:before {
@@ -1265,7 +1265,7 @@ html {
       outline: 0;
       padding: 0.8125rem 2rem;
       font-size: 0.875rem;
-      color: #000000;
+      color: #e9b70b;
       /* test warna nama isi nav */
       font-weight: 400;
       text-decoration: none;
@@ -1325,7 +1325,7 @@ html {
         margin-right: 0.25rem;
         font-size: 1.125rem;
         width: 1.75rem;
-        color: #000000;
+        color: #e9b70b;
         /* test warna icon */
         text-align: left; }
       .nav-menu li a > .nav-link-text {
@@ -1351,7 +1351,8 @@ html {
           color: #fff; }
         .nav-menu li a:hover > [class*='fa-'],
         .nav-menu li a:hover > .ni {
-          color: #a8a6ac; }
+          color: #fff; }
+          /* test warna icon hover */
         .nav-menu li a:hover > .badge {
           -webkit-box-shadow: 0 0 0 1px rgba(107, 83, 143, 0.8);
                   box-shadow: 0 0 0 1px rgba(107, 83, 143, 0.8);
@@ -1365,7 +1366,8 @@ html {
       padding-top: 10px;
       padding-bottom: 10px; }
       .nav-menu li > ul li a {
-        color: #af9fc7;
+        color: #e9b70b;
+        /* test warna text dropdown nav menu */
         padding: 0.8125rem 2rem 0.8125rem 4rem; }
         .nav-menu li > ul li a b.collapse-sign > [class*='fa-'],
         .nav-menu li > ul li a b.collapse-sign > .ni {
@@ -1374,7 +1376,8 @@ html {
         .nav-menu li > ul li a > .ni {
           margin-left: -2.1875rem;
           margin-right: 0.9375rem;
-          color: #876fab;
+          color: #e9b70b;
+          /* test warna icon dropdown nav menu */
           font-size: 0.875rem;
           width: 1.25rem;
           text-align: center; }
@@ -6276,7 +6279,7 @@ input[type="checkbox"]:checked + .custom-control-label {
   font-weight: 400;
   min-height: 45px;
   padding: 0.25rem 1rem 0.25rem 2rem;
-  color: #666666;
+  color: #fff;
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
