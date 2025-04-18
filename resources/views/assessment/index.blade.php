@@ -189,9 +189,12 @@
                         <button type="submit" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div> --}}
-                    <a href="#" type="submit" class="btn btn-primary mr-1">
+
+                    
+                    {{-- FITUR SIMPAN --}}
+                    {{-- <a href="#" type="submit" class="btn btn-primary mr-1">
                         <i class="fa-solid fa-floppy-disk"></i> Simpan
-                    </a>
+                    </a> --}}
                     @if ($report->status == 4)
                         <a href="{{ route('assessment.unpublish', $report->id) }}" class="btn btn-warning mr-1">
                             <i class="fa-solid fa-upload"></i> Tidak Terbitkan
