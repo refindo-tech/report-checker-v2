@@ -182,9 +182,12 @@
                     </table>
                 </div>
                 <div class="d-flex justify-content-end mt-3 ">
+
                     @if ($reportFirst->status == 4)
                         <a href="{{ route('assessment.unpublish', $reportFirst->id) }}" class="btn btn-warning mr-1">
                             <i class="fa-solid fa-download"></i> Tidak Terbitkan
+
+                    
                         </a>
                     @else
                         <a href="{{ route('assessment.publish', $reportFirst->id) }}" class="btn btn-warning mr-1">

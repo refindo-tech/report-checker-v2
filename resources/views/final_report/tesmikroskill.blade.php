@@ -24,7 +24,7 @@
         </div>
 
         <div class="container mt-3">
-            <form action="{{ route('report.tesMikroskillStore', $report->id) }}" method="POST">
+            <form id="tesForm" action="{{ route('report.tesMikroskillStore', $report->id) }}" method="POST">
                 @csrf
                 <div class="card">
                     <div class="card-header">
@@ -85,31 +85,30 @@
                         @foreach ($groups as $groupTitle => $questions)
                             <h5 class="mt-4">{{ $groupTitle }}</h5>
                             @foreach ($questions as $question)
-                                <div class="form-group">
-                                    <label>{{ $question }}</label>
-                                    @for ($i = 1; $i <= 4; $i++)
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio"
-                                                name="question{{ $questionIndex }}"
-                                                id="question{{ $questionIndex }}-{{ $i }}"
-                                                value="{{ $i }}" required>
-                                            <label class="form-check-label"
-                                                for="question{{ $questionIndex }}-{{ $i }}">
-                                                @if ($i == 1)
-                                                    1 - Sangat Rendah
-                                                @elseif ($i == 2)
-                                                    2 - Rendah
-                                                @elseif ($i == 3)
-                                                    3 - Tinggi
-                                                @elseif ($i == 4)
-                                                    4 - Sangat Tinggi
-                                                @else
-                                                    {{ $i }}
-                                                @endif
-                                            </label>
-                                        </div>
-                                    @endfor
-                                </div>
+                            <div class="form-group" id="question-group-{{ $questionIndex }}">
+                                <label>{{ $question }}</label>
+                                @for ($i = 1; $i <= 4; $i++)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio"
+                                            name="question{{ $questionIndex }}"
+                                            id="question{{ $questionIndex }}-{{ $i }}"
+                                            value="{{ $i }}">
+                                        <label class="form-check-label"
+                                            for="question{{ $questionIndex }}-{{ $i }}">
+                                            @if ($i == 1)
+                                                1 - Sangat Rendah
+                                            @elseif ($i == 2)
+                                                2 - Rendah
+                                            @elseif ($i == 3)
+                                                3 - Tinggi
+                                            @elseif ($i == 4)
+                                                4 - Sangat Tinggi
+                                            @endif
+                                        </label>
+                                    </div>
+                                @endfor
+                                <small class="text-danger d-none" id="error-question{{ $questionIndex }}">* Wajib diisi</small>
+                            </div>
                                 @php $questionIndex++; @endphp
                             @endforeach
                         @endforeach
@@ -122,3 +121,44 @@
         </div>
     </main>
 @endsection
+
+@section('pages-script')
+<script>
+    document.getElementById('tesForm').addEventListener('submit', function(e) {
+        let totalQuestions = {{ $questionIndex - 1 }};
+        let isValid = true;
+
+        // Reset semua error dulu
+        for (let i = 1; i <= totalQuestions; i++) {
+            document.getElementById('error-question' + i).classList.add('d-none');
+            document.getElementById('question-group-' + i).classList.remove('border', 'border-danger', 'p-2');
+        }
+
+        for (let i = 1; i <= totalQuestions; i++) {
+            let options = document.getElementsByName('question' + i);
+            let answered = false;
+
+            for (let j = 0; j < options.length; j++) {
+                if (options[j].checked) {
+                    answered = true;
+                    break;
+                }
+            }
+
+            if (!answered) {
+                // Tampilkan error
+                document.getElementById('error-question' + i).classList.remove('d-none');
+                document.getElementById('question-group-' + i).classList.add('border', 'border-danger', 'p-2');
+                isValid = false;
+            }
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll ke atas biar user langsung sadar
+        }
+    });
+</script>
+@endsection
+
+
