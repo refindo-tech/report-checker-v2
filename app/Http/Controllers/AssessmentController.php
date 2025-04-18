@@ -35,7 +35,7 @@ class AssessmentController extends Controller
         // Inisialisasi array untuk menyimpan permission role
         $reports = finalReport::with(['user', 'mahasiswa', 'assesment'])
             ->where('user_id', $id)
-            ->where('status', '2')
+            ->whereIn('status', [2,4])
             ->orderBy('created_at', 'desc')
             ->first();
         // dd($reports);
