@@ -35,24 +35,27 @@ class AssessmentController extends Controller
         // Inisialisasi array untuk menyimpan permission role
         $reports = finalReport::with(['user', 'mahasiswa', 'assesment'])
             ->where('user_id', $id)
+            ->whereIn('status', [2,4])
             ->orderBy('created_at', 'desc')
-            ->get();
-        // dd($reports, $report);
+            ->first();
+        // dd($reports);
         // Inisialisasi array untuk menyimpan permission role
         $reportAssesment = [];
 
-        foreach ($reports as $item) {
-            $reportAssesment[$item->id] = $item->assesment->map(function ($assesment) {
+        if ($reports) {
+            $reportAssesment[$reports->id] = $reports->assesment->map(function ($assesment) {
                 return [
-                    'id'    => $assesment->pivot->id ?? null, // Pastikan pivot memiliki field id
-                    'name' => $assesment->name,
-                    'nilai' => $assesment->pivot->nilai ?? 0, // Ambil nilai dari pivot
+                    'id'    => $assesment->pivot->id ?? null,        // ID dari pivot
+                    'name'  => $assesment->name,                     // Nama assesment
+                    'nilai' => $assesment->pivot->nilai ?? 0,        // Nilai dari pivot
                 ];
             })->toArray();
         }
 
 
-        // dd($reportAssesment);
+
+
+        // dd($reports, $reportAssesment);
         return view('assessment.index', compact('matkul', 'reports', 'reportAssesment', 'reportFirst'));
         // return view('assessment.index', compact('mikroskill', 'kampus', 'reports', 'reportMikroskill'));
     }

@@ -31,12 +31,14 @@
         <x-panel.show title="Data Penilaian" subtitle="Silakan lakukan penilaian">
             @can('tambah-mikroskill')
                 <x-slot name="paneltoolbar">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <!-- Button Upload -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
-                            <i class="fa fa-plus"></i> Pilih Mata Kuliah
-                        </button>
-                    </div>
+                    @if ($reportFirst->status != 4)
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <!-- Button Upload -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploaddata">
+                                <i class="fa fa-plus"></i> Pilih Mata Kuliah
+                            </button>
+                        </div>
+                    @endif
                     <!-- Modal Large -->
                     <div class="modal fade @if ($errors->any()) show @endif" id="uploaddata" tabindex="-1"
                         role="dialog" aria-hidden="true">
@@ -93,8 +95,10 @@
                                         </table>
 
                                         <!-- Tombol Tambah Data & Reset -->
-                                        <button type="button" class="btn btn-success" id="add-field">Tambah Data</button>
-                                        <button type="button" class="btn btn-danger" id="reset-field">Reset</button>
+                                        @if ($reportFirst->status != 4)
+                                            <button type="button" class="btn btn-success" id="add-field">Tambah Data</button>
+                                            <button type="button" class="btn btn-danger" id="reset-field">Reset</button>
+                                        @endif
 
                                         <div class="modal-footer mt-3">
                                             <button type="submit" class="btn btn-primary">Simpan</button>
@@ -121,83 +125,72 @@
                                 <th>Nama Mata Kuliah</th>
                                 <th>SKS</th>
                                 <th>Nilai</th>
-                                <th>Aksi</th>
+                                @if ($reportFirst->status != 4)
+                                    <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody id="data-table-body">
-                            @foreach ($reports as $report)
-                                @php
-                                    // $firstAssessment = $report->assesment->first();
-                                    // $pivotData = $firstAssessment ? $firstAssessment->pivot : null;
-
-                                    $assesments = $report->assesment->isNotEmpty() ? $report->assesment : []; // Jika kosong, buat array dengan satu elemen null
-                                @endphp
-                                {{-- @dd($assesments); --}}
-
-                                @foreach ($assesments as $assesment)
+                            @if ($reports && $reports->assesment->isNotEmpty())
+                                @foreach ($reports->assesment as $assesment)
                                     <tr>
                                         <td style="display:none;">
                                             <input type="hidden" class="assessment-id"
                                                 value="{{ $assesment->pivot->id ?? '' }}">
                                         </td>
-                                        <!-- Pilihan Mata Kuliah -->
-                                        {{-- @dd($assesment->pivot, $report, $firstAssessment, $pivotData); --}}
+
+                                        <!-- Mata Kuliah -->
                                         <td>
-                                            <select name="matakuliah[{{ $report->id }}][]"
+                                            <select @if($reportFirst->status == 4) disabled @endif name="matakuliah[{{ $reports->id }}][]"
                                                 class="form-control select-mata-kuliah editable"
-                                                data-id="{{ $report->id }}" data-column="matakuliah">
-                                                <option value="" data-sks="0">Pilih Mata Kuliah</option>
+                                                data-id="{{ $reports->id }}" data-column="matakuliah">
+                                                <option value="" data-sks="0" @if($reportFirst->status == 4) readonly @endif>Pilih Mata Kuliah</option>
                                                 @foreach ($matkul as $component)
-                                                    <option value="{{ $component->id }}" data-sks="{{ $component->sks }}"
+                                                    <option @if($reportFirst->status == 4) disabled @endif value="{{ $component->id }}" data-sks="{{ $component->sks }}"
                                                         data-id="{{ $component->id }}" data-column="matakuliah"
-                                                        @if ($assesment && $component->id == $assesment->id) selected @endif>
+                                                        @if ($component->id == $assesment->id) selected @endif>
                                                         {{ $component->name }} ({{ $component->sks }} SKS)
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </td>
 
-                                        <!-- Jumlah SKS (Readonly) -->
+                                        <!-- SKS -->
                                         <td>
                                             <input type="number" class="form-control total-sks" min="1"
-                                                max="10" data-id="{{ $report->id }}"
-                                                data-maks-sks="{{ $report->maks_sks }}" value="{{ $assesment->sks ?? 0 }}"
+                                                max="10" data-id="{{ $reports->id }}"
+                                                data-maks-sks="{{ $reports->maks_sks }}" value="{{ $assesment->sks ?? 0 }}"
                                                 readonly>
                                         </td>
 
-                                        <!-- Input Nilai -->
+                                        <!-- Nilai -->
                                         <td>
-                                            <input type="number" class="form-control editable-nilai"
-                                                data-id="{{ $report->id }}" data-column="nilai"
+                                            <input @if($reportFirst->status == 4) readonly @endif type="number" class="form-control editable-nilai"
+                                                data-id="{{ $reports->id }}" data-column="nilai"
                                                 value="{{ $assesment->pivot->nilai ?? '' }}" min="0" max="100">
                                         </td>
-
-                                        <td>
-                                            <button class="btn btn-danger btn-sm delete">Hapus</button>
-                                        </td>
+                                        @if ($reports->status != 4)
+                                            <td>
+                                                <button class="btn btn-danger btn-sm delete">Hapus</button>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
-                            @endforeach
+                            @endif
+
                         </tbody>
                     </table>
                 </div>
                 <div class="d-flex justify-content-end mt-3 ">
-                    {{-- <a href="{{ route('rekomendasi.print', $reportFirst->id) }}" class="btn btn-success mr-1">
-                        <i class="fa fa-download"></i> Nilai Rekomendasi
-                    </a> --}}
-                    {{-- <div class="modal-footer mt-3">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div> --}}
-                    <a href="#" type="submit" class="btn btn-primary mr-1">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan
-                    </a>
-                    @if ($report->status == 4)
-                        <a href="{{ route('assessment.unpublish', $report->id) }}" class="btn btn-warning mr-1">
-                            <i class="fa-solid fa-upload"></i> Tidak Terbitkan
+
+                    @if ($reportFirst->status == 4)
+                        <a href="{{ route('assessment.unpublish', $reportFirst->id) }}" class="btn btn-warning mr-1">
+                            <i class="fa-solid fa-download"></i> Tidak Terbitkan
+
+                    
                         </a>
                     @else
-                        <a href="{{ route('assessment.publish', $report->id) }}" class="btn btn-warning mr-1">
+                        <a href="{{ route('assessment.publish', $reportFirst->id) }}" class="btn btn-warning mr-1">
                             <i class="fa-solid fa-upload"></i> Terbitkan
                         </a>
                     @endif
@@ -208,6 +201,7 @@
             @endcan
         </x-panel.show>
     </main>
+    {{-- @dd($reportFirst); --}}
 @endsection
 
 @section('pages-script')
