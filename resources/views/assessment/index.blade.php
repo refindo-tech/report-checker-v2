@@ -118,6 +118,7 @@
                     <strong>{{ $reportFirst->nilai_sertifikat }}</strong></label><br>
                 <label for="nilaitest">Nilai Test Mikroskill: <strong>{{ $reportFirst->nilai_mikroskill }}</strong></label><br>
                 <label for="makssks">Maksimal SKS: <strong>{{ $reportFirst->maks_sks }}</strong></label><br>
+                <span class="text-danger">Nilai akhir tidak boleh melebihi batas nilai sertifikat dan mikroskill.</span>
                 <div class="table-responsive">
                     <table id="dt-mahasiswa" class="table table-bordered">
                         <thead class="bg-primary text-white">

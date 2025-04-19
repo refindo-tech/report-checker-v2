@@ -17,7 +17,7 @@ class TemplateController extends Controller
     public function index()
     {
         // ADMIN DASBOR
-        $valid = finalReport::where('status', 4)->count();
+        $valid = finalReport::where('status', 2)->count();
         $waitingValidasi = finalReport::where('status', 1)->count();
         $notValid = finalReport::where('status', 3)->count();
         $kampusId = Auth::user()->id_kampus; // Ambil prodi_id user yang login

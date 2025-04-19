@@ -216,6 +216,7 @@
             </x-panel.show>
         @else
             <div class="row">
+                {{--dashboard adminPT --}}
                 <div class="col-lg-4 col-md-6 mb-3">
                     <div class="p-3 bg-success-300 rounded overflow-hidden position-relative text-white mb-g stat-card">
                         <div class="">

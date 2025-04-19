@@ -182,8 +182,8 @@
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
                             </td>
-                            <td>{{ $report->nilai_sertifikat ?? 'Belum Tes' }}</td>
-                            <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
+                            <td>{{ $report->nilai_sertifikat ?? '0' }}</td>
+                            <td>{{ $report->nilai_mikroskill ?? '0' }}</td>
                             <td>
                                 @if ($report->nilai_mikroskill != null)
                                     @if ($report->status == 1)
@@ -219,7 +219,7 @@
 
                                 @if ($report->status == 1 || $report->nilai_mikroskill == null)
                                     <a href="{{ route('report.testMikroskill', $report->id) }}" class="btn btn-success">
-                                        <i class="fa fa-clipboard"></i>
+                                        Tes Mikroskill
                                     </a>
                                 @endif
                             </td>

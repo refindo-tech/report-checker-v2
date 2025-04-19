@@ -130,7 +130,7 @@
                         @endif
                     </p>
 
-                    <p><strong>Total Konversi:</strong>
+                    {{-- <p><strong>Total Konversi:</strong>
                         @if ($finalReport->nilai != null)
                             {{ $finalReport->nilai }}
                         @else
@@ -142,7 +142,7 @@
                                 <span class="text-danger">Belum diisi</span>
                             @endif
                         @endif
-                    </p>
+                    </p> --}}
                     <p><strong>Mitra:</strong>
                         {{ $finalReport->mitra }}
                     </p>
