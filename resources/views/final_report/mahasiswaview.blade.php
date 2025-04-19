@@ -180,7 +180,7 @@
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
                             </td>
-                            <td>{{ $report->nilai_sertifikat ?? 'Belum Tes' }}</td>
+                            <td>{{ $report->nilai_sertifikat ?? 'Validasi Nilai Terlebih Dahulu' }}</td>
                             <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
                             <td>
                                 @if ($report->nilai_mikroskill != null)

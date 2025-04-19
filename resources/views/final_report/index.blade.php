@@ -23,11 +23,12 @@
             <x-slot name="paneltoolbar">
                 @can('tambah-laporan-akhir')
                     <x-panel.tool-bar>
-                        @if ($reports?->berkas == null || $reports?->status == 3 || $reports?->status == 4)
+                        {{-- @dd($reports); --}}
+                        @if ($reports?->status == 3 || $reports?->status == 4)
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadberkas">
                                 Upload Berkas
                             </button>
-                        @else
+                        @elseif ($reports?->laprak != null || $reports?->sertifikat != null || $reports?->dokumentasi != null)
                             <button type="button" class="btn btn-secondary" disabled>
                                 Berkas sudah diunggah
                             </button>
@@ -182,8 +183,8 @@
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
                             </td>
-                            <td>{{ $report->nilai_sertifikat ?? '0' }}</td>
-                            <td>{{ $report->nilai_mikroskill ?? '0' }}</td>
+                            <td>{{ $report->nilai_sertifikat ?? 'Menunggu Validasi' }}</td>
+                            <td>{{ $report->nilai_mikroskill ?? 'Belum Test' }}</td>
                             <td>
                                 @if ($report->nilai_mikroskill != null)
                                     @if ($report->status == 1)
@@ -204,18 +205,6 @@
                             <td>
                                 <a href="{{ route('report.show', $report->id) }}" class="btn btn-info">Rincian
                                 </a>
-
-                                {{-- @if ($report->status == 4)
-                                    <a href="{{ route('report.printscore', $report->id) }}" class="btn btn-info">
-                                        <i class="fa fa-download"></i> Nilai Akhir
-                                    </a>
-                                @endif --}}
-                                    {{-- CONTOH --}}
-                                {{-- @if ($report->status == 4)
-                                    <a href="{{ route('report.printscore') }}" target="_blank">
-                                <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
-                                    </a>
-                                @endif --}}
 
                                 @if ($report->status == 1 || $report->nilai_mikroskill == null)
                                     <a href="{{ route('report.testMikroskill', $report->id) }}" class="btn btn-success">

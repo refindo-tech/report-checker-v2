@@ -304,11 +304,16 @@ class FinalReportController extends Controller
             'question18' => 'required|integer',
             'question19' => 'required|integer',
             'question20' => 'required|integer',
+            'question21' => 'required|integer',
+            'question22' => 'required|integer',
+            'question23' => 'required|integer',
+            'question24' => 'required|integer',
+            'question25' => 'required|integer',
         ]);
 
         // Menghitung total score dengan looping
         $totalScore = 0;
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 25; $i++) {
             $totalScore += (int) $request->input("question$i", 0);
         }
 

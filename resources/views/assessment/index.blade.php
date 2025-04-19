@@ -118,7 +118,7 @@
                     <strong>{{ $reportFirst->nilai_sertifikat }}</strong></label><br>
                 <label for="nilaitest">Nilai Test Mikroskill: <strong>{{ $reportFirst->nilai_mikroskill }}</strong></label><br>
                 <label for="makssks">Maksimal SKS: <strong>{{ $reportFirst->maks_sks }}</strong></label><br>
-                <span class="text-danger">Nilai akhir tidak boleh melebihi batas nilai sertifikat dan mikroskill.</span>
+                <span class="text-danger">* Nilai akhir tidak boleh melebihi batas nilai sertifikat dan mikroskill.</span>
                 <div class="table-responsive">
                     <table id="dt-mahasiswa" class="table table-bordered">
                         <thead class="bg-primary text-white">
@@ -132,6 +132,7 @@
                             </tr>
                         </thead>
                         <tbody id="data-table-body">
+                            {{-- @dd($reports); --}}
                             @if ($reports && $reports->assesment->isNotEmpty())
                                 @foreach ($reports->assesment as $assesment)
                                     <tr>
@@ -142,12 +143,15 @@
 
                                         <!-- Mata Kuliah -->
                                         <td>
-                                            <select @if($reportFirst->status == 4) disabled @endif name="matakuliah[{{ $reports->id }}][]"
+                                            <select @if ($reportFirst->status == 4) disabled @endif
+                                                name="matakuliah[{{ $reports->id }}][]"
                                                 class="form-control select-mata-kuliah editable"
                                                 data-id="{{ $reports->id }}" data-column="matakuliah">
-                                                <option value="" data-sks="0" @if($reportFirst->status == 4) readonly @endif>Pilih Mata Kuliah</option>
+                                                <option value="" data-sks="0"
+                                                    @if ($reportFirst->status == 4) readonly @endif>Pilih Mata Kuliah</option>
                                                 @foreach ($matkul as $component)
-                                                    <option @if($reportFirst->status == 4) disabled @endif value="{{ $component->id }}" data-sks="{{ $component->sks }}"
+                                                    <option @if ($reportFirst->status == 4) disabled @endif
+                                                        value="{{ $component->id }}" data-sks="{{ $component->sks }}"
                                                         data-id="{{ $component->id }}" data-column="matakuliah"
                                                         @if ($component->id == $assesment->id) selected @endif>
                                                         {{ $component->name }} ({{ $component->sks }} SKS)
@@ -166,9 +170,10 @@
 
                                         <!-- Nilai -->
                                         <td>
-                                            <input @if($reportFirst->status == 4) readonly @endif type="number" class="form-control editable-nilai"
-                                                data-id="{{ $reports->id }}" data-column="nilai"
-                                                value="{{ $assesment->pivot->nilai ?? '' }}" min="0" max="100">
+                                            <input @if ($reportFirst->status == 4) readonly @endif type="number"
+                                                class="form-control editable-nilai" data-id="{{ $reports->id }}"
+                                                data-column="nilai" value="{{ $assesment->pivot->nilai ?? '' }}"
+                                                min="0" max="100">
                                         </td>
                                         @if ($reports->status != 4)
                                             <td>
@@ -184,20 +189,20 @@
                 </div>
                 <div class="d-flex justify-content-end mt-3 ">
 
-                    @if ($reportFirst->status == 4)
+                    @if ($reports->assesment->isNotEmpty())
                         <a href="{{ route('assessment.unpublish', $reportFirst->id) }}" class="btn btn-warning mr-1">
                             <i class="fa-solid fa-download"></i> Tidak Terbitkan
-
-                    
                         </a>
-                    @else
+                        <a href="{{ route('assessment.printscore', $reportFirst->id) }}" class="btn btn-success mr-1">
+                            <i class="fa fa-download"></i> Hasil Penilaian
+                        </a>
+                    @elseif($reportFirst->status == 4)
                         <a href="{{ route('assessment.publish', $reportFirst->id) }}" class="btn btn-warning mr-1">
                             <i class="fa-solid fa-upload"></i> Terbitkan
                         </a>
+                    @else
                     @endif
-                    <a href="{{ route('assessment.printscore', $reportFirst->id) }}" class="btn btn-success mr-1">
-                        <i class="fa fa-download"></i> Hasil Penilaian
-                    </a>
+
                 </div>
             @endcan
         </x-panel.show>
