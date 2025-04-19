@@ -24,7 +24,7 @@
                 @can('tambah-laporan-akhir')
                     <x-panel.tool-bar>
                         {{-- @dd($reports); --}}
-                        @if ($reports?->status == 3 || $reports?->status == 4)
+                        @if ($reports?->status == 3 || $reports?->status == 4 || $reports?->laprak == null)
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadberkas">
                                 Upload Berkas
                             </button>

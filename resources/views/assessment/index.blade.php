@@ -112,12 +112,13 @@
                 </x-slot>
             @endcan
             @can('lihat-assessment')
-                <label for="nama">Nama Mahasiswa: <strong>{{ $reportFirst->user->name }}</strong></label><br>
-                <label for="nim">NIM: <strong>{{ $reportFirst->user->mahasiswa->nim }}</strong></label><br>
+                <label for="nama">Nama Mahasiswa: <strong>{{ $reportFirst->user->name ?? '-' }}</strong></label><br>
+                <label for="nim">NIM: <strong>{{ $reportFirst->user->mahasiswa->nim ?? '-' }}</strong></label><br>
                 <label for="nilairekomendasi">Nilai Rekomendasi Program:
-                    <strong>{{ $reportFirst->nilai_sertifikat }}</strong></label><br>
-                <label for="nilaitest">Nilai Test Mikroskill: <strong>{{ $reportFirst->nilai_mikroskill }}</strong></label><br>
-                <label for="makssks">Maksimal SKS: <strong>{{ $reportFirst->maks_sks }}</strong></label><br>
+                    <strong>{{ $reportFirst->nilai_sertifikat ?? '-' }}</strong></label><br>
+                <label for="nilaitest">Nilai Test Mikroskill:
+                    <strong>{{ $reportFirst->nilai_mikroskill ?? '-' }}</strong></label><br>
+                <label for="makssks">Maksimal SKS: <strong>{{ $reportFirst->maks_sks ?? '-' }}</strong></label><br>
                 <span class="text-danger">* Nilai akhir tidak boleh melebihi batas nilai sertifikat dan mikroskill.</span>
                 <div class="table-responsive">
                     <table id="dt-mahasiswa" class="table table-bordered">
@@ -189,18 +190,22 @@
                 </div>
                 <div class="d-flex justify-content-end mt-3 ">
 
-                    @if ($reports->assesment->isNotEmpty())
+                    @if ($reports->assesment->isNotEmpty() && $reports->status == 2)
+                        <a href="{{ route('assessment.publish', $reportFirst->id) }}" class="btn btn-warning mr-1">
+                            <i class="fa-solid fa-upload"></i> Terbitkan
+                        </a>
+                        <a href="{{ route('assessment.printscore', $reportFirst->id) }}" class="btn btn-success mr-1">
+                            <i class="fa fa-download"></i> Hasil Penilaian
+                        </a>
+                    @elseif($reports->status == 4)
                         <a href="{{ route('assessment.unpublish', $reportFirst->id) }}" class="btn btn-warning mr-1">
                             <i class="fa-solid fa-download"></i> Tidak Terbitkan
                         </a>
                         <a href="{{ route('assessment.printscore', $reportFirst->id) }}" class="btn btn-success mr-1">
                             <i class="fa fa-download"></i> Hasil Penilaian
                         </a>
-                    @elseif($reportFirst->status == 4)
-                        <a href="{{ route('assessment.publish', $reportFirst->id) }}" class="btn btn-warning mr-1">
-                            <i class="fa-solid fa-upload"></i> Terbitkan
-                        </a>
                     @else
+                    {{-- tidak ada button --}}
                     @endif
 
                 </div>
