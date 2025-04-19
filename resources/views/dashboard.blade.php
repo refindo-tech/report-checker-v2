@@ -200,15 +200,21 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($item->status != 3)
-                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
-                                            class="btn-sm btn-success mr-1">
+                                    @if ($item->status == 4)
+                                        <a href="{{ route('assessment.printscore', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                            Hasil Penilaian
+                                        </a>
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                            Nilai Rekomendasi
+                                        </a>
+                                    @elseif ($item->status == 2)
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
                                             Nilai Rekomendasi
                                         </a>
                                     @else
-                                        <span class="text-danger">Dokumen Dikembalikan</span>
+                                        <span class="text-danger">Belum tersedia</span>
                                     @endif
-                                </td>
+                                </td>                                                       
                             </tr>
                         @endforeach
                     </tbody>
@@ -293,15 +299,21 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($item->status != 3)
-                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
-                                            class="btn-sm btn-success mr-1">
+                                    @if ($item->status == 4)
+                                        <a href="{{ route('assessment.printscore', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                            Hasil Penilaian
+                                        </a>
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                            Nilai Rekomendasi
+                                        </a>
+                                    @elseif ($item->status == 2)
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
                                             Nilai Rekomendasi
                                         </a>
                                     @else
-                                        <span class="text-danger">Dokumen Dikembalikan</span>
+                                        <span class="text-danger">Belum tersedia</span>
                                     @endif
-                                </td>
+                                </td>                                                                
                             </tr>
                         @endforeach
                     </tbody>
