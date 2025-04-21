@@ -20,12 +20,45 @@ class TemplateController extends Controller
         $valid = finalReport::whereIn('status', [2, 4])->count();
         $waitingValidasi = finalReport::where('status', 1)->count();
         $notValid = finalReport::where('status', 3)->count();
-        $kampusId = Auth::user()->id_kampus; // Ambil prodi_id user yang login
-        // Ambil semua user yang memiliki prodi_id yang sama
-        $userIds = User::where('id_kampus', $kampusId)->pluck('id')->toArray();
-        // Ambil finalReport berdasarkan user_id yang memiliki prodi_id tersebut
-        $adminFirst = optional(FinalReport::whereIn('user_id', $userIds)->with('user')->latest()->first());
-        $adminGet = FinalReport::whereIn('user_id', $userIds)->whereIn('status', [1, 4, 3])->with('user')->get() ?? collect();
+
+        // INI UNTUK ADMIN KAMPUS
+        $idKampus = auth()->user()->id_kampus; // atau kamu ambil dari mana pun
+
+        $validAdmin = finalReport::whereIn('status', [2, 4])
+            ->whereHas('user', function ($query) use ($idKampus) {
+                $query->where('id_kampus', $idKampus);
+            })
+            ->count();
+
+        $waitingValidasiAdmin = finalReport::where('status', 1)
+            ->whereHas('user', function ($query) use ($idKampus) {
+                $query->where('id_kampus', $idKampus);
+            })
+            ->count();
+
+        $notValidAdmin = finalReport::where('status', 3)
+            ->whereHas('user', function ($query) use ($idKampus) {
+                $query->where('id_kampus', $idKampus);
+            })
+            ->count();
+
+        $kampusId = Auth::user()->id_kampus;
+        $role = Auth::user()->getRoleNames()->first(); // atau is_superadmin === true
+
+        if ($role === 'SuperAdmin') {
+            // Tampilkan semua data tanpa filter kampus
+            $adminFirst = optional(FinalReport::with('user')->latest()->first());
+            $adminGet = FinalReport::whereIn('status', [1, 4, 3])->with('user')->get() ?? collect();
+        } else {
+            // Filter berdasarkan kampus
+            $userIds = User::where('id_kampus', $kampusId)->pluck('id')->toArray();
+            $adminFirst = optional(FinalReport::whereIn('user_id', $userIds)->with('user')->latest()->first());
+            $adminGet = FinalReport::whereIn('user_id', $userIds)
+                ->whereIn('status', [1, 4, 3])
+                ->with('user')
+                ->get() ?? collect();
+        }
+
         // dd($valid, $waitingValidasi, $notValid, $adminFirst, $adminGet);
 
         // MAHASISWA DASBOR
@@ -54,7 +87,7 @@ class TemplateController extends Controller
 
 
 
-        return view('dashboard', compact('mahasiswaViewFirst', 'mahasiswaViewGet', 'prodiFirst', 'prodiGet', 'prodiDinilai', 'waitingAssesment', 'valid', 'waitingValidasi', 'notValid', 'adminFirst', 'adminGet'));
+        return view('dashboard', compact('validAdmin', 'waitingValidasiAdmin', 'notValidAdmin', 'mahasiswaViewFirst', 'mahasiswaViewGet', 'prodiFirst', 'prodiGet', 'prodiDinilai', 'waitingAssesment', 'valid', 'waitingValidasi', 'notValid', 'adminFirst', 'adminGet'));
     }
     public function about()
     {

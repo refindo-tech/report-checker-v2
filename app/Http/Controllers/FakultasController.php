@@ -6,6 +6,7 @@ use App\Models\Fakultas;
 use App\Models\Kampus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -35,11 +36,19 @@ class FakultasController extends Controller
      */
     public function store(Request $request)
     {
+
         $validation = Validator::make($request->all(), [
-            'name' => 'required|string|unique:fakultas,name',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('fakultas')->where(function ($query) use ($request) {
+                    return $query->where('id_kampus', $request->kampus);
+                }),
+            ],
             'kampus' => 'required',
         ]);
-        
+
+
         if ($validation->fails()) {
             return redirect()->back()->withErrors($validation)->withInput();
         }

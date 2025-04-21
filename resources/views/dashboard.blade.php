@@ -201,20 +201,125 @@
                                 </td>
                                 <td>
                                     @if ($item->status == 4)
-                                        <a href="{{ route('assessment.printscore', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                        <a href="{{ route('assessment.printscore', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
                                             Hasil Penilaian
                                         </a>
-                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
                                             Nilai Rekomendasi
                                         </a>
                                     @elseif ($item->status == 2)
-                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
                                             Nilai Rekomendasi
                                         </a>
                                     @else
                                         <span class="text-danger">Belum tersedia</span>
                                     @endif
-                                </td>                                                       
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </x-panel.show>
+        @elseif(Auth::user()->getRoleNames()->first() == 'AdminPT')
+            <div class="row">
+                {{-- dashboard adminPT --}}
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-success-300 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="valid-count">{{ $validAdmin ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Tervalidasi</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-check-circle position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-warning-400 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="pending-count">{{ $waitingValidasiAdmin ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Menunggu Validasi</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-hourglass-half position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="p-3 bg-primary-400 rounded overflow-hidden position-relative text-white mb-g stat-card">
+                        <div class="">
+                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                                <span id="invalid-count">{{ $notValidAdmin ?? 0 }}</span>
+                                <small class="m-0 l-h-n">Dokumen Dikembalikan</small>
+                            </h3>
+                        </div>
+                        <i class="fal fa-times-circle position-absolute pos-right pos-bottom opacity-50 mb-n1 mr-n1"
+                            style="font-size:6rem"></i>
+                    </div>
+                </div>
+            </div>
+
+            <x-panel.show title="Data Status Validasi Mahasiswa">
+                <table id="dt-basic-example-admin" class="table table-bordered table-hover table-striped w-100">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Fakultas</th>
+                            <th>Program Studi</th>
+                            <th>Nama</th>
+                            <th>NIM</th>
+                            <th>Status</th>
+                            <th>Lihat Hasil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($adminGet as $item)
+                            <tr tr onclick="window.location='{{ route('report.indexMahasiswa', $item->user->id) }}';"
+                                style="cursor: pointer;">
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->user->programStudi->fakultas->name ?? '-' }}</td>
+                                <td>{{ $item->user->programStudi->name ?? '-' }}</td>
+                                <td>{{ $item->user->name ?? '-' }}</td>
+                                <td>{{ $item->user->mahasiswa->nim ?? '-' }}</td>
+                                <td>
+                                    @if ($item->nilai_mikroskill != null)
+                                        @if ($item->status == 1)
+                                            <span class="badge badge-danger">MENUNGGU VALIDASI</span>
+                                        @elseif ($item->status == 2)
+                                            <span class="badge badge-warning">MENUNGGU PENILAIAN</span>
+                                        @elseif ($item->status == 3)
+                                            <span class="badge badge-primary">DOKUMEN DIKEMBALIKAN</span>
+                                        @elseif ($item->status == 4)
+                                            <span class="badge badge-info">SUDAH DINILAI</span>
+                                        @endif
+                                    @else
+                                        <span class="text-danger">Belum Isi Tes Mikroskill</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->status == 4)
+                                        <a href="{{ route('assessment.printscore', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
+                                            Hasil Penilaian
+                                        </a>
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
+                                            Nilai Rekomendasi
+                                        </a>
+                                    @elseif ($item->status == 2)
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
+                                            Nilai Rekomendasi
+                                        </a>
+                                    @else
+                                        <span class="text-danger">Belum tersedia</span>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -222,7 +327,7 @@
             </x-panel.show>
         @else
             <div class="row">
-                {{--dashboard adminPT --}}
+                {{-- dashboard adminPT --}}
                 <div class="col-lg-4 col-md-6 mb-3">
                     <div class="p-3 bg-success-300 rounded overflow-hidden position-relative text-white mb-g stat-card">
                         <div class="">
@@ -300,20 +405,23 @@
                                 </td>
                                 <td>
                                     @if ($item->status == 4)
-                                        <a href="{{ route('assessment.printscore', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                        <a href="{{ route('assessment.printscore', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
                                             Hasil Penilaian
                                         </a>
-                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
                                             Nilai Rekomendasi
                                         </a>
                                     @elseif ($item->status == 2)
-                                        <a href="{{ route('rekomendasi.print', $item->id) }}" class="btn btn-sm btn-success mr-1">
+                                        <a href="{{ route('rekomendasi.print', $item->id) }}"
+                                            class="btn btn-sm btn-success mr-1">
                                             Nilai Rekomendasi
                                         </a>
                                     @else
                                         <span class="text-danger">Belum tersedia</span>
                                     @endif
-                                </td>                                                                
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
