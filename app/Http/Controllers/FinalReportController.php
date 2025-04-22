@@ -96,9 +96,13 @@ class FinalReportController extends Controller
     // ini buat dosen atau prodi
     public function indexDosen()
     {
+        // Ambil id_prodi dosen yang sedang login
+        $id_prodi = Auth::user()->id_prodi;
+
         $report = finalReport::selectRaw('final_reports.user_id, COUNT(*) as total')
             ->join('users', 'users.id', '=', 'final_reports.user_id') // Join dengan tabel users
             ->where('users.id_kampus', Auth::user()->id_kampus) // Filter berdasarkan id_kampus di tabel users
+            ->where('users.id_prodi', $id_prodi) // Filter berdasarkan id_prodi dosen yang sedang login
             ->groupBy('final_reports.user_id')
             ->with('user.mahasiswa') // Ambil relasi mahasiswa
             ->get();
