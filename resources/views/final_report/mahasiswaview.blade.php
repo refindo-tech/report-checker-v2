@@ -134,8 +134,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- onclick="window.location='{{ route('assessment.index', $report->user_id) }}'" --}}
                     @foreach ($report as $report)
-                        <tr onclick="window.location='{{ route('assessment.index', $report->user_id) }}'"
+                        <tr
                             style="cursor: pointer;">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $report->user->name }}</td>
