@@ -78,7 +78,7 @@
                         <div class="card shadow-lg border-0 rounded-lg">
                             <div class="card-body text-center">
                                 {{-- Logo Kampus --}}
-                                <img src="{{ $kampusAdmin->image ? asset('storage/kampus/' . $kampusAdmin->image) : asset('admin/img/users/user.jpg') }}"
+                                <img src="{{ $kampusAdmin->image ? asset('kampus/' . $kampusAdmin->image) : asset('admin/img/users/user.jpg') }}"
                                     class="rounded-circle shadow img-thumbnail" style="width: 120px; height: 120px;"
                                     alt="Logo Kampus">
 

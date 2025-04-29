@@ -51,7 +51,7 @@
                     <p><strong>Website:</strong>
                         <a href="{{ 'https://' . $kampus->website }}" target="_blank">{{ $kampus->website }}</a>
                     </p>
-                    <img src="{{ asset('storage/kampus/' . $kampus->image) }}" alt="{{ $kampus->name }}">
+                    <img src="{{ asset('kampus/' . $kampus->image) }}" alt="{{ $kampus->name }}">
                     <br><hr>
                     @canany(['edit-laporan-akhir', 'hapus-laporan-akhir'])
                         @can('edit-laporan-akhir')

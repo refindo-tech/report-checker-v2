@@ -85,7 +85,7 @@
                 <div class="form-group">
                     <label for="image" class="position-relative d-inline-block">
                         <img id="profileImage"
-                            src="{{ $kampus->image ? asset('storage/kampus/' . $kampus->image) : asset('admin/img/users/user.jpg') }}"
+                            src="{{ $kampus->image ? asset('kampus/' . $kampus->image) : asset('admin/img/users/user.jpg') }}"
                             class="rounded-circle shadow img-thumbnail" style="width: 120px; height: 120px;">
                         <span class="position-absolute" style="bottom: 5px; right: 5px;">
                             <i class="fas fa-camera text-primary" style="font-size: 20px;"></i>

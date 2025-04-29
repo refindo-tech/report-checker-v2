@@ -99,7 +99,7 @@ class AssessmentController extends Controller
         }
 
         $img_path = public_path('admin/img/logountirta.png');
-        $img_kampus = public_path('storage/kampus/' . $kampus->image);
+        $img_kampus = public_path('kampus/' . $kampus->image);
         // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
         // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
         // $img_base_64 = base64_encode($data);
@@ -139,7 +139,7 @@ class AssessmentController extends Controller
         );
 
         $img_path = public_path('admin/img/logountirta.png');
-        $img_kampus = public_path('storage/kampus/' . $kampus->image);
+        $img_kampus = public_path('kampus/' . $kampus->image);
         // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
         // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
         // $img_base_64 = base64_encode($data);

@@ -2,15 +2,15 @@
     <div class="page-logo" style="align-items: center">
         {{-- <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
             data-toggle="modal" data-target="#modal-shortcut"> --}}
-            <img src="/admin/img/logountirta.png" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
-                aria-roledescription="logo" style="height: 50px; width: auto;">
-            <img src="/admin/img/simikro2.png" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
-                aria-roledescription="icon" style="height: 50px; width: auto; position: relative; margin-left: 10px;">
-            {{-- <img src="/admin/img/{{ $profileApp->app_logo ?? '' }}" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
+        <img src="/admin/img/logountirta.png" alt="{{ $profileApp->app_nama ?? '' }} WebApp" aria-roledescription="logo"
+            style="height: 50px; width: auto;">
+        <img src="/admin/img/simikro2.png" alt="{{ $profileApp->app_nama ?? '' }} WebApp" aria-roledescription="icon"
+            style="height: 50px; width: auto; position: relative; margin-left: 10px;">
+        {{-- <img src="/admin/img/{{ $profileApp->app_logo ?? '' }}" alt="{{ $profileApp->app_nama ?? '' }} WebApp"
                 aria-roledescription="logo"> --}}
-            {{-- <span class="page-logo-text mr-1">{{ $profileApp->app_nama ?? '' }}</span> --}}
-            {{-- <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span> --}}
-            {{-- <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+        {{-- <span class="page-logo-text mr-1">{{ $profileApp->app_nama ?? '' }}</span> --}}
+        {{-- <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span> --}}
+        {{-- <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
         </a> --}}
     </div>
     <!-- BEGIN PRIMARY NAVIGATION -->
@@ -27,7 +27,7 @@
         </div>
         <div class="info-card">
             @if (auth()->user()->image)
-                <img src="{{ asset('storage/profile/' . auth()->user()->image) }}" class="profile-image rounded-circle"
+                <img src="{{ asset('profile/' . auth()->user()->image) }}" class="profile-image rounded-circle"
                     alt="{{ auth()->user()->name }}" style="width: 110px; height: 110px;">
             @else
                 <img src="/admin/img/users/user.jpg" class="profile-image rounded-circle"
@@ -39,7 +39,8 @@
                         {{ auth()->user()->name }}
                     </span>
                 </a>
-                <span class="d-inline-block text-truncate text-truncate-sm">{{ auth()->user()->getRoleNames()->first() }}</span>
+                <span
+                    class="d-inline-block text-truncate text-truncate-sm">{{ auth()->user()->getRoleNames()->first() }}</span>
             </div>
             <img src="/admin/img/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
             <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle"

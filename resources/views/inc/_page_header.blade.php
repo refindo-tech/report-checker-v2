@@ -65,7 +65,7 @@
             <a href="#" data-toggle="dropdown" title="drlantern@gotbootstrap.com"
                 class="header-icon d-flex align-items-center justify-content-center ml-2">
                 @if (auth()->user()->image)
-                    <img src="{{ asset('storage/profile/' . auth()->user()->image) }}"
+                    <img src="{{ asset('profile/' . auth()->user()->image) }}"
                         style="width: 30px; height: 30px;" class="profile-image rounded-circle"
                         alt="{{ auth()->user()->name }}">
                 @else
@@ -83,7 +83,7 @@
                     <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
                         <span class="mr-2">
                             @if (auth()->user()->image)
-                                <img src="{{ asset('storage/profile/' . auth()->user()->image) }}"
+                                <img src="{{ asset('profile/' . auth()->user()->image) }}"
                                     class="rounded-circle profile-image" alt="{{ auth()->user()->name }}">
                             @else
                                 <img src="/admin/img/users/user.jpg" class="rounded-circle profile-image"

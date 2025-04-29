@@ -142,10 +142,10 @@
                             <td>{{ $report->user->name }}</td>
                             <td>
                                 @if ($report->laprak)
-                                    <a href="{{ asset('storage/report/' . $report->laprak) }}" target="_blank">
+                                    <a href="{{ asset('report/' . $report->laprak) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
-                                    @if ($report->laprak_status == true)
+                                    @if ($report->laprak_status)
                                         <i class="fa-solid fa-square-check text-success"></i>
                                     @else
                                         <i class="fa-solid fa-square-xmark text-danger"></i>
@@ -156,10 +156,10 @@
                             </td>
                             <td>
                                 @if ($report->sertifikat)
-                                    <a href="{{ asset('storage/sertifikat/' . $report->sertifikat) }}" target="_blank">
+                                    <a href="{{ asset('sertifikat/' . $report->sertifikat) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
-                                    @if ($report->sertifikat_status == true)
+                                    @if ($report->sertifikat_status)
                                         <i class="fa-solid fa-square-check text-success"></i>
                                     @else
                                         <i class="fa-solid fa-square-xmark text-danger"></i>
@@ -170,10 +170,10 @@
                             </td>
                             <td>
                                 @if ($report->dokumentasi)
-                                    <a href="{{ asset('storage/dokumentasi/' . $report->dokumentasi) }}" target="_blank">
+                                    <a href="{{ asset('dokumentasi/' . $report->dokumentasi) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
-                                    @if ($report->dokumentasi_status == true)
+                                    @if ($report->dokumentasi_status)
                                         <i class="fa-solid fa-square-check text-success"></i>
                                     @else
                                         <i class="fa-solid fa-square-xmark text-danger"></i>
@@ -271,7 +271,7 @@
 
         });
     </script>
-    @if ($reports->nilai_mikroskill === null)
+    @if (isset($reports) && $reports->nilai_mikroskill === null)
         <script>
             Swal.fire({
                 icon: 'warning',
@@ -281,5 +281,4 @@
             });
         </script>
     @endif
-
 @endsection

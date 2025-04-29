@@ -37,10 +37,9 @@
                             <div class="card shadow-lg border-0 rounded-lg">
                                 <div class="card-body text-center">
                                     {{-- Foto Profil --}}
-                                    <img src="{{ auth()->user()->image ? asset('storage/profile/' . auth()->user()->image) : asset('admin/img/users/user.jpg') }}"
+                                    <img src="{{ auth()->user()->image ? asset('profile/' . auth()->user()->image) : asset('admin/img/users/user.jpg') }}"
                                         class="rounded-circle shadow img-thumbnail" style="width: 120px; height: 120px;"
                                         alt="User Profile Picture">
-
                                     {{-- Nama dan Email --}}
                                     <h4 class="mt-3 mb-1">{{ auth()->user()->name }}</h4>
                                     <p class="text-muted">{{ auth()->user()->email }}</p>

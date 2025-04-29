@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kampus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -102,14 +103,21 @@ class KampusController extends Controller
 
             // dd($old_image);
 
-            // hapus file gambar lama dari folder slider
-            Storage::delete('public/kampus/' . $old_image);
+            // Hapus file gambar lama dari folder kampus
+            $filePath = public_path('kampus/' . $old_image);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
 
-            // ubah nama file
+            // Pastikan folder 'kampus' sudah ada
+            $destinationPath = public_path('kampus');
+            if (!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, 0755, true);
+            }
+
             $imageName = time() . '.' . $request->image->extension();
+            $request->image->move($destinationPath, $imageName);
 
-            // simpan file ke folder public/product
-            Storage::putFileAs('public/kampus', $request->image, $imageName);
 
             // update data product
             Kampus::where('id', $id)->update([

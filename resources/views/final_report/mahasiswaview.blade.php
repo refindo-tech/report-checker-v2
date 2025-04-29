@@ -136,16 +136,15 @@
                 <tbody>
                     {{-- onclick="window.location='{{ route('assessment.index', $report->user_id) }}'" --}}
                     @foreach ($report as $report)
-                        <tr
-                            style="cursor: pointer;">
+                        <tr style="cursor: pointer;">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $report->user->name }}</td>
                             <td>
                                 @if ($report->laprak)
-                                    <a href="{{ asset('storage/report/' . $report->laprak) }}" target="_blank">
+                                    <a href="{{ asset('report/' . $report->laprak) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
-                                    @if ($report->laprak_status == true)
+                                    @if ($report->laprak_status)
                                         <i class="fa-solid fa-square-check text-success"></i>
                                     @else
                                         <i class="fa-solid fa-square-xmark text-danger"></i>
@@ -156,10 +155,10 @@
                             </td>
                             <td>
                                 @if ($report->sertifikat)
-                                    <a href="{{ asset('storage/sertifikat/' . $report->sertifikat) }}" target="_blank">
+                                    <a href="{{ asset('sertifikat/' . $report->sertifikat) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
-                                    @if ($report->sertifikat_status == true)
+                                    @if ($report->sertifikat_status)
                                         <i class="fa-solid fa-square-check text-success"></i>
                                     @else
                                         <i class="fa-solid fa-square-xmark text-danger"></i>
@@ -170,10 +169,10 @@
                             </td>
                             <td>
                                 @if ($report->dokumentasi)
-                                    <a href="{{ asset('storage/dokumentasi/' . $report->dokumentasi) }}" target="_blank">
+                                    <a href="{{ asset('dokumentasi/' . $report->dokumentasi) }}" target="_blank">
                                         <i class="fas fa-file-pdf" style="font-size: 24px;"></i>
                                     </a>
-                                    @if ($report->dokumentasi_status == true)
+                                    @if ($report->dokumentasi_status)
                                         <i class="fa-solid fa-square-check text-success"></i>
                                     @else
                                         <i class="fa-solid fa-square-xmark text-danger"></i>
@@ -182,6 +181,7 @@
                                     <span class="text-danger">Belum diisi</span>
                                 @endif
                             </td>
+
                             <td>{{ $report->nilai_sertifikat ?? 'Validasi Nilai Terlebih Dahulu' }}</td>
                             <td>{{ $report->nilai_mikroskill ?? 'Belum Tes' }}</td>
                             <td>

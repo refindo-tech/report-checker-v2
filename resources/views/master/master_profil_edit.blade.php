@@ -30,7 +30,7 @@
                             <div class="col-md-12 text-center mb-4">
                                 <label for="image" class="position-relative d-inline-block">
                                     <img id="profileImage"
-                                        src="{{ auth()->user()->image ? asset('storage/profile/' . auth()->user()->image) : asset('admin/img/users/user.jpg') }}"
+                                        src="{{ auth()->user()->image ? asset('profile/' . auth()->user()->image) : asset('admin/img/users/user.jpg') }}"
                                         class="rounded-circle shadow img-thumbnail" style="width: 120px; height: 120px;">
                                     <span class="position-absolute" style="bottom: 5px; right: 5px;">
                                         <i class="fas fa-camera text-primary" style="font-size: 20px;"></i>

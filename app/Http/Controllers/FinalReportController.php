@@ -54,7 +54,7 @@ class FinalReportController extends Controller
         );
 
         $img_path = public_path('admin/img/logountirta.png');
-        $img_kampus = public_path('storage/kampus/' . $kampus->image);
+        $img_kampus = public_path('kampus/' . $kampus->image);
         // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
         // $data = file_get_contents($img_path, false, stream_context_create($opciones_ssl));
         // $img_base_64 = base64_encode($data);
@@ -201,22 +201,37 @@ class FinalReportController extends Controller
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
-        // Ubah nama file gambar dengan angka random
-        $fileName = Auth()->user()->name . '-' . 'laprak' . '-' . time() . '.' . $request->file('laprak')->extension();
-        $fileNameSertif = Auth()->user()->name . '-' . 'sertifikat' . '-' . time() . '.' . $request->file('sertifikat')->extension();
-        $fileNameDok = Auth()->user()->name . '-' . 'dokumentasi' . '-' . time() . '.' . $request->file('dokumentasi')->extension();
+        // Buat nama file unik
+        $fileName = Auth()->user()->name . '-laprak-' . time() . '.' . $request->file('laprak')->getClientOriginalExtension();
+        $fileNameSertif = Auth()->user()->name . '-sertifikat-' . time() . '.' . $request->file('sertifikat')->getClientOriginalExtension();
+        $fileNameDok = Auth()->user()->name . '-dokumentasi-' . time() . '.' . $request->file('dokumentasi')->getClientOriginalExtension();
 
-        // upload file gambar ke folder slider
-        Storage::putFileAs('public/report', $request->file('laprak'), $fileName);
-        Storage::putFileAs('public/sertifikat', $request->file('sertifikat'), $fileNameSertif);
-        Storage::putFileAs('public/dokumentasi', $request->file('dokumentasi'), $fileNameDok);
+        // Path tujuan di dalam folder public
+        $destinationPathReport = public_path('report');
+        $destinationPathSertifikat = public_path('sertifikat');
+        $destinationPathDokumentasi = public_path('dokumentasi');
 
+        // Buat folder jika belum ada
+        if (!file_exists($destinationPathReport)) {
+            mkdir($destinationPathReport, 0755, true);
+        }
+        if (!file_exists($destinationPathSertifikat)) {
+            mkdir($destinationPathSertifikat, 0755, true);
+        }
+        if (!file_exists($destinationPathDokumentasi)) {
+            mkdir($destinationPathDokumentasi, 0755, true);
+        }
 
-        // Insert data ke table finalReport
+        // Pindahkan file
+        $request->file('laprak')->move($destinationPathReport, $fileName);
+        $request->file('sertifikat')->move($destinationPathSertifikat, $fileNameSertif);
+        $request->file('dokumentasi')->move($destinationPathDokumentasi, $fileNameDok);
+
+        // Simpan ke database
         $report = finalReport::create([
             'user_id' => Auth::user()->id,
             'status' => '1',
-            'laprak' => $fileName, // Sekarang tidak null
+            'laprak' => $fileName,
             'sertifikat' => $fileNameSertif,
             'dokumentasi' => $fileNameDok,
             'mitra' => $request->mitra,
@@ -230,9 +245,9 @@ class FinalReportController extends Controller
             'mikroskill_status' => false,
         ]);
 
-        // Redirect ke halaman report.index dengan pesan sukses
         return redirect()->route('report.index')->with('success', 'Berkas berhasil diupload.');
     }
+
 
 
     /**
@@ -325,12 +340,12 @@ class FinalReportController extends Controller
         return redirect()->route('report.index')->with('success', "Tes Mikroskil berhasil disimpan. Total score: $totalScore");
     }
 
-    
+
 
     // public function print()
     // {
     //     {
-            
+
     //         return view('final_report.printscore');
     //     }
     //     $report = finalReport::with('user', 'reviewer', 'mahasiswa', 'dosen')->find($id);

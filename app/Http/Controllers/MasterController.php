@@ -11,6 +11,7 @@ use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,33 +49,38 @@ class MasterController extends Controller
         $id = $user->id;
         // dd($id);
         if ($request->hasFile('image')) {
-            // dd($request->all());
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|min:3',
                 'email' => 'required|email|unique:users,email,' . $id,
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
-
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator->errors())->withInput();
             }
 
-            // ambil nama file gambar lama dari database
-            $old_image = Auth::user()->image;
+            // ambil nama file lama
+            $old_image = $user->image;
 
-            // dd($old_image);
+            // path folder tujuan
+            $destinationPath = public_path('profile');
 
-            // hapus file gambar lama dari folder slider
-            Storage::delete('public/profile/' . $old_image);
+            // buat folder jika belum ada
+            if (!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, 0755, true);
+            }
 
-            // ubah nama file
+            // hapus gambar lama jika ada
+            $oldPath = $destinationPath . '/' . $old_image;
+            if ($old_image && File::exists($oldPath)) {
+                File::delete($oldPath);
+            }
+
+            // simpan gambar baru
             $imageName = time() . '.' . $request->image->extension();
+            $request->image->move($destinationPath, $imageName);
 
-            // simpan file ke folder public/product
-            Storage::putFileAs('public/profile', $request->image, $imageName);
-
-            // update data product
+            // update user
             User::where('id', $id)->update([
                 'id_kampus' => $user->id_kampus,
                 'id_prodi' => $request->id_prodi,
@@ -82,10 +88,11 @@ class MasterController extends Controller
                 'email' => $request->email,
                 'image' => $imageName,
             ]);
-            if ($user->roles[0]->name == 'Prodi' || $user->roles[0]->name == 'AdminPT') {
 
+            // update detail tambahan
+            if ($user->roles[0]->name == 'Prodi' || $user->roles[0]->name == 'AdminPT') {
                 Prodi::updateOrCreate(
-                    ['user_id' => $id], // Kondisi pencarian
+                    ['user_id' => $id],
                     [
                         'nip' => $request->nip,
                         'gender' => $request->gender,
@@ -94,9 +101,8 @@ class MasterController extends Controller
                     ]
                 );
             } else if ($user->roles[0]->name == 'Mahasiswa') {
-
                 Mahasiswa::updateOrCreate(
-                    ['user_id' => $id], // Kondisi pencarian
+                    ['user_id' => $id],
                     [
                         'nim' => $request->nim,
                         'gender' => $request->gender,
