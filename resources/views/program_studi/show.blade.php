@@ -39,11 +39,11 @@
             <div class="card">
                 <div class="card-body">
                     <p><strong>Fakultas</strong>
-                        {{ $ProgramStudi->fakultas }}
+                        {{ $ProgramStudi->fakultas->name ?? 'Tidak Ada Fakultas' }}
                     </p>
                     <p><strong>Nama:</strong> {{ $ProgramStudi->name }}</p>
                     <hr>
-                    @can('edit-laporan-akhir')
+                    @can('edit-programstudi')
                         <a href="{{ route('programstudi.edit', $ProgramStudi->id) }}" class="btn btn-primary">Edit</a>
                     @endcan
                     {{-- @can('hapus-laporan-akhir')

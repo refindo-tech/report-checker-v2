@@ -53,8 +53,8 @@
                     </p>
                     <img src="{{ asset('kampus/' . $kampus->image) }}" alt="{{ $kampus->name }}">
                     <br><hr>
-                    @canany(['edit-laporan-akhir', 'hapus-laporan-akhir'])
-                        @can('edit-laporan-akhir')
+                    @canany(['edit-kampus', 'hapus-kampus'])
+                        @can('edit-kampus')
                             <a href="{{ route('kampus.edit', $kampus->id) }}" class="btn btn-primary">Edit</a>
                         @endcan
                         {{-- @can('hapus-laporan-akhir')

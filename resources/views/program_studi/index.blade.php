@@ -21,7 +21,7 @@
         </div>
         <x-panel.show title="Daftar" subtitle="Program Studi">
             <x-slot name="paneltoolbar">
-                @can('tambah-kampus')
+                @can('tambah-programstudi')
                     <x-panel.tool-bar>
                         <a href="{{ route('programstudi.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
                     </x-panel.tool-bar>
@@ -48,19 +48,19 @@
                                 <a href="{{ route('programstudi.show', $item->id) }}" class="btn btn-info btn-sm">
                                     <i class="fa fa-eye"></i>
                                 </a>
-                                @can('edit-kampus')
+                                @can('edit-programstudi')
                                     <a href="{{ route('programstudi.edit', $item->id) }}" class="btn btn-primary btn-sm"><i
                                             class="fa fa-edit"></i></a>
                                 @endcan
                                 {{-- Tombol Hapus --}}
-                                @can('hapus-kampus')
+                                @can('hapus-programstudi')
                                     <button type="button" class="btn btn-danger btn-sm"
                                         onclick="confirmDelete({{ $item->id }})">
                                         <i class="fa fa-trash"></i></button>
                                 @endcan
 
                                 {{-- Form Hapus --}}
-                                @can('hapus-kampus')
+                                @can('hapus-programstudi')
                                     <form id="delete-form-{{ $item->id }}" action="{{ route('programstudi.destroy', $item->id) }}"
                                         method="POST" style="display:none;">
                                         @csrf
